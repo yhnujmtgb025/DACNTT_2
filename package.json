@@ -1,0 +1,25 @@
+{
+  "name": "instagram",
+  "version": "1.0.0",
+  "description": "Social media for people",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yhnujmtgb025/DACNTT_2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yhnujmtgb025/DACNTT_2/issues"
+  },
+  "homepage": "https://github.com/yhnujmtgb025/DACNTT_2#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+  }
+}

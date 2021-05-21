@@ -1,0 +1,143 @@
+body{
+    background:#F7F7F7;
+}
+.container {
+    width: 100%;
+    margin-bottom: -6rem;
+    margin-top: -1.5rem;
+}
+
+input[type=text], select, textarea {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    resize: vertical;
+  }
+  input[type=password], select, textarea {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    resize: vertical;
+  }
+#input-log1:focus{
+  outline: none;
+  box-shadow: none;
+}
+#input-log2:focus{
+  outline: none;
+  box-shadow: none;
+}
+
+.login-form {
+    width: 50%;
+    margin: 7em auto;
+    border-radius: 1.5em;
+    box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+    text-align: center;
+    background-color: #fff;
+}
+@font-face {
+  font-family: 'Instagram';
+  src: url('/fontWord/Billabong-Font/Billabong.ttf'); /* IE9 Compat Modes */
+}
+.login-form__title{
+    color: black;
+    margin-top: 5px;
+    padding: -13px 5px -11px 5px;
+    text-align: center;
+    font-family: 'Instagram', Fallback, sans-serif;
+    font-size:60px;
+    font-style: italic;
+    /* margin: 0 20px; */
+}
+
+
+
+
+
+/* button */
+.btn-login{
+    width: 80%;
+    border-radius: 50px;
+ 
+    padding: 12px; 
+    font-family: Poppins-Medium;
+   
+
+    line-height: 1.2;
+    background-color: #333333;
+    color: #fff; 
+    font-size: 1.5rem;
+    
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    transition: all 0.4s;
+    position: relative;
+    z-index: 1;
+}
+.btn-login::before {
+    content: "";
+    display: block;
+    position: absolute;
+   
+    z-index: -1;
+    width: 101.5%;
+    height: 105%;
+    border-radius: 50px;
+    top: -2;
+    left: -3;
+    background: #a64bf4;
+    background: -webkit-linear-gradient(45deg, #00dbde, #fc00ff);
+    background: -o-linear-gradient(45deg, #00dbde, #fc00ff);
+    background: -moz-linear-gradient(45deg, #00dbde, #fc00ff);
+    background: linear-gradient(45deg, #00dbde, #fc00ff);
+    opacity: 0;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    transition: all 0.4s;
+  }
+  .btn-login:hover {
+    color: #fff;
+  }
+  .btn-login:hover:before {
+    opacity: 1;
+  }
+
+ 
+
+/* icon google */
+#google{
+    width: 20%;  
+}
+#googleImg{
+  width: 5%;  
+}
+#logGoogle{
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+  background: -webkit-linear-gradient(#FFFDE4, #005AA7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.forPass{
+  text-decoration: none;
+  color: #00376B;
+  font-weight: 400;
+  font-size: 15px;
+  cursor: pointer;
+}
+#forgotPas{
+  text-decoration: none;
+  cursor: pointer;
+  margin:0 0 3rem 15px;
+}
+
+
+.contain-icon{
+    padding-top: 15px;
+}
