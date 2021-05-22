@@ -1,0 +1,53 @@
+@import "//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css";
+#navColor{
+     background-color: #FFFFFF !important; 
+     border-bottom: 1.5px solid #DBDBDB;
+     position: relative;
+}
+.img-brand{
+    max-height: 100%;
+    max-width: 100%;
+    -o-object-fit: contain;
+    object-fit: contain;
+    margin: -10px 0px -10px 0px;
+}
+#searchNav{
+    float: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#searchNav input{
+    text-align: center;
+    background-color: #FAFAFA;
+    width: 90%;
+    height: 100%;
+    margin-top: 2.5rem;
+}
+.topnav-right {
+    padding-top: 0.6em;
+    float: right;
+    margin-right: 10rem;
+}
+.topnav-right a + a {
+    padding-left: 1.5em;
+}
+.topnav-right a i {
+    font-size: 35px;
+    color: #333;
+}
+
+.mainLoginInput::-webkit-input-placeholder { 
+font-family: FontAwesome;
+font-weight: normal;
+overflow: visible;
+vertical-align: top;
+display: inline-block !important;
+}
+.mainLoginInput:focus{
+    outline: none;
+    box-shadow: none;
+    border:1px solid #E7E9EC;
+}
+
