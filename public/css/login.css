@@ -2,7 +2,7 @@ body{
     background:#F7F7F7;
 }
 .container {
-    width: 100%;
+    width: 90%;
     margin-bottom: -6rem;
     margin-top: -1.5rem;
 }
@@ -21,14 +21,11 @@ input[type=text], select, textarea {
     border-radius: 50px;
     resize: vertical;
   }
-#input-log1:focus{
+.form-group input{
   outline: none;
   box-shadow: none;
 }
-#input-log2:focus{
-  outline: none;
-  box-shadow: none;
-}
+
 
 .login-form {
     width: 50%;
