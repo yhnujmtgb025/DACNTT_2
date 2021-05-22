@@ -52,7 +52,9 @@ input[type=text], select, textarea {
     font-style: italic;
     /* margin: 0 20px; */
 }
-
+.login-form__title#reset{
+  padding-top: 15px;
+}
 
 
 
@@ -107,7 +109,26 @@ input[type=text], select, textarea {
     opacity: 1;
   }
 
- 
+/* button reset */
+#res{
+  width: 80%;
+  border-radius: 50px;
+
+  padding: 12px;
+  margin-bottom: 15px;
+  font-family: Poppins-Medium;
+  
+
+  line-height: 1.2;
+  background-color:#333333 ;
+  color: #fff; 
+  font-size: 1.5rem;
+  
+}
+#res:hover{
+  background: #a64bf4;
+}
+
 
 /* icon google */
 #google{
