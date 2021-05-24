@@ -1,15 +1,21 @@
 @import "//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css";
+
+
+
 #navColor{
      background-color: #FFFFFF !important; 
      border-bottom: 1.5px solid #DBDBDB;
-     position: relative;
+     width: 100%;
+     height: 60px;
+
 }
+
 .img-brand{
     max-height: 100%;
     max-width: 100%;
     -o-object-fit: contain;
     object-fit: contain;
-    margin: -10px 0px -10px 0px;
+    margin-top: -15px;
 }
 #searchNav{
     float: none;
@@ -21,20 +27,21 @@
 #searchNav input{
     text-align: center;
     background-color: #FAFAFA;
-    width: 90%;
-    height: 100%;
+    width: 80%;
+    height: 35px;
     margin-top: 2.5rem;
+    font-size: 15px;
 }
 .topnav-right {
-    padding-top: 0.6em;
+    margin-right: 7rem;
     float: right;
-    margin-right: 10rem;
+    margin-bottom: 0.5rem;
 }
 .topnav-right a + a {
     padding-left: 1.5em;
 }
 .topnav-right a i {
-    font-size: 35px;
+    font-size: 25px;
     color: #333;
 }
 
@@ -44,6 +51,7 @@ font-weight: normal;
 overflow: visible;
 vertical-align: top;
 display: inline-block !important;
+
 }
 .mainLoginInput:focus{
     outline: none;
@@ -51,3 +59,70 @@ display: inline-block !important;
     border:1px solid #E7E9EC;
 }
 
+/* responsive */
+@media screen and (max-width: 992px)  {
+    .topnav-right {
+        margin-right: 2rem;
+    }
+    .navbar-brand.ml-3{
+        width: 150px;
+    }
+}
+@media screen and (max-width: 768px)  {
+    .topnav-right {
+        margin-right: 1rem;
+    }
+    .navbar-brand.ml-3{
+        width: 150px;
+    }
+    .topnav-right a + a {
+        padding-left: 0.75em;
+    }
+}
+@media screen and (max-width: 645px)  {
+    .topnav-right {
+        margin-right: 0.5rem;
+    }
+    .navbar-brand.ml-3{
+        width: 100px;
+    }
+    .topnav-right a + a {
+        padding-left: 0.5em;
+    }
+    #searchNav input{
+        width: 75%;
+    }
+}
+@media screen and (max-width: 574px)  {
+    .topnav-right {
+        margin-right: 0.5rem;
+    }
+    .topnav-right #iconProfile{
+        margin-right: -0.5rem;
+   
+    }
+    .navbar-brand.ml-3{
+        width: 100px;
+        margin-left: -0.5rem !important;
+    }
+    .topnav-right a + a {
+        padding-left: 0.65em;
+    }
+    #searchNav input{
+        margin-top: 3.5rem;
+        width: 75%;
+    }
+    #searchNav{
+        left: 48%;
+    }
+}
+@media screen and (max-width: 500px)  {
+    #searchNav{
+        visibility: hidden;
+    }
+}
+@media screen and (max-width: 311px)  {
+    html, body {
+        min-width: 350px;
+    }
+}
