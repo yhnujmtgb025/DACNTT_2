@@ -14,62 +14,202 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/navBar.css">
     <link rel="stylesheet" href="/css/style.css">
-    
+
     <title>Document</title>
 </head>
 
 <body>
     <!-- Just an image -->
-    
-        <nav class="navbar sticky-top navbar-light " id="navColor">
-        
-            <a class="navbar-brand ml-3" href="#">
-                <img src="/img/instagram-logo.png" class="img-brand" width="350" height="40" alt="">
-            </a>
-    
-            <form class="form-inline" id="searchNav">
-                <input class="form-control mr-sm-2 mainLoginInput" type="search" placeholder="&#61442; Search"
-                    aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
-                    style="visibility: hidden;">Search</button>
-            </form>
-            <div class="topnav-right">
-                <div class="row">
-                    <a href="#search"><i class="fas fa-home"></i></a>
-                    <a href="#search"><i class="far fa-paper-plane"></i></a>
-                    <a href="#search"><i class="far fa-compass"></i></a>
-                    <a href="#search" id="endIcon"><i class="far fa-heart"></i></a>
-                    <img src="/img/google.png" id="iconProfile" width="50" height="28" alt="" style="padding-left:1em">
-                </div>
-        
-            </div>
-        
-        </nav>
-  
 
+    <nav class="navbar sticky-top navbar-light " id="navColor">
 
-     <div class="container bodyNewfeed">
-        <div class="row">
-            <div class="col-lg-7 cardNew" >
-                <div class="card nameCard">
-                    <div class="row nameInfor">
-                        <img class="iconUser" width="45" height="45" src="/img/kim.png" alt="Card image cap" style="border-radius: 50% 50%;">
-                        <span class="card-title "><a  href="#" class="nameOf">leejoon</a></span>
-                        <i class="fas fa-ellipsis-h action-icon" id="threeDot"></i>
-                    </div>
-                    <img class="card-img-top" src="/img/sontung.png" alt="Card image cap" style="border-radius: 0%;">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                  </div>
+        <a class="navbar-brand ml-3" href="#">
+            <img src="/img/instagram-logo.png" class="img-brand" width="350" height="40" alt="">
+        </a>
+
+        <form class="form-inline" id="searchNav">
+            <input class="form-control mr-sm-2 mainLoginInput" type="search" placeholder="&#61442; Search"
+                aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
+                style="visibility: hidden;">Search</button>
+        </form>
+        <div class="topnav-right">
+            <div class="row">
+                <a href="#search"><i class="fas fa-home"></i></a>
+                <a href="#search"><i class="far fa-paper-plane"></i></a>
+                <a href="#search"><i class="far fa-compass"></i></a>
+                <a href="#search" id="endIcon"><i class="far fa-heart"></i></a>
+                <img src="/img/google.png" id="iconProfile" width="50" height="28" alt="" style="padding-left:1em">
             </div>
-            <div class="col-lg-5">
-                <h3>hello world</h3>
-            </div>
+
         </div>
-    </div> 
+
+    </nav>
+
+
+
+    <div class="container bodyNewfeed">
+        <div class="row">
+            <div class="col-lg-7 ">
+                <div class="cardNew">
+                    <div class="card nameCard">
+                        <div class="row nameInfor">
+                            <img class="iconUser" width="45" height="45" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                            <span class="card-title "><a href="#" class="nameOf">leejoon</a></span>
+                            <i class="fas fa-ellipsis-h action-icon" class="threeDot"></i>
+                        </div>
+                        <img class="card-img-top" src="/img/sontung.png" alt="Card image cap" style="border-radius: 0%;">
+                        <div class="card-body">
+                            <div class="row iconCard">
+                                <button> <i class="fas fa-heart"></i> </button>
+                                <button> <i class="fas fa-comment"></i> </button>
+                                <button> <i class="far fa-paper-plane"></i></button>
+                                <button id="savePost"> <i class="far fa-bookmark"></i> </button>
+                            </div>
+                            <p style="font-size: 15px; font-weight: 500; padding-left: 15px;">255,578 likes</p>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                                additional content. This content is a little bit longer.</p>
+                            <hr width="100%" style="margin-bottom: 0rem">
+                            <div class="row postComment">
+                                <img class="iconComment" width="40" height="40" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                                <form method="post">
+                                    <input type="hidden" name="" value="">
+                                    <textarea name="comment" class="textComment" id="0" placeholder="Add comment..." maxlength="200"></textarea>
+                                    <button class="btn  btnComment btnOpacity"  type="submit">Post</button>
+                                </form>   
+                            </div>
+                               
+                        </div>
+                    </div>
+                </div>
+
+                <div class="friendNew">
+                    <div class="row">
+                        <div class="card cardChild">
+                            <img class="" width="70" height="70" src="/img/kim.png" alt="Card image cap">
+                            <div class="card-body">
+                              <h5 class="card-title">Card title</h5>
+                              <p class="card-text"> content.</p>
+                              <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+
+                <div class="cardNew">
+                    <div class="card nameCard">
+                        <div class="row nameInfor">
+                            <img class="iconUser" width="45" height="45" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                            <span class="card-title "><a href="#" class="nameOf">leejoon</a></span>
+                            <i class="fas fa-ellipsis-h action-icon" class="threeDot"></i>
+                        </div>
+                        <img class="card-img-top" src="/img/sontung.png" alt="Card image cap" style="border-radius: 0%;">
+                        <div class="card-body">
+                            <div class="row iconCard">
+                                <button> <i class="fas fa-heart"></i> </button>
+                                <button> <i class="fas fa-comment"></i> </button>
+                                <button> <i class="far fa-paper-plane"></i></button>
+                                <button id="savePost"> <i class="far fa-bookmark"></i> </button>
+                            </div>
+                            <p style="font-size: 15px; font-weight: 500; padding-left: 15px;">255,578 likes</p>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                                additional content. This content is a little bit longer.</p>
+                            <hr width="100%" style="margin-bottom: 0rem">
+                            <div class="row postComment">
+                                <img class="iconComment" width="40" height="40" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                                <form method="post">
+                                    <input type="hidden" name="" value="">
+                                    <textarea name="comment" class="textComment" id="1" placeholder="Add comment..." maxlength="200"></textarea>
+                                    <button class="btn  btnComment btnOpacity"  type="submit">Post</button>
+                                </form>   
+                            </div>
+                               
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+
+            <div class="col-lg-5 " >
+                <div class="rightCard">
+
+                        <!-- infor left of current user -->
+                        <div class="row rightInfor">
+                            <img class="imgUser" width="70" height="70" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                            <span class="card-title "><a href="#" class="nameImg">leejoon</a></span>
+                            <small id="midName" >leejoon</small>
+                            <a class="wordImg" style="margin-top:1rem">Display</a>
+                        </div>
+
+                        <!-- suggest for you -->
+                        <div class="row rightInfor">
+                            <p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions For You</p>
+                            <a id="seeAll" >See all</a>
+                        </div>
+
+                        <!-- list user -->
+                        <div class="row belowSuggest">
+                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                            <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
+                            <small class="midNameUser">Suggested for you</small>
+                            <a class="wordImg">Follow</a>
+
+                        </div>
+                        <div class="row belowSuggest">
+                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                            style="border-radius: 50% 50%;">
+                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
+                        <small class="midNameUser">Suggested for you</small>
+                        <a class="wordImg">Follow</a>
+                        </div>
+                        <div class="row belowSuggest">
+                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                                style="border-radius: 50% 50%;">
+                            <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
+                            <small class="midNameUser">Suggested for you</small>
+                            <a class="wordImg">Follow</a>
+
+                        </div>
+                        <div class="row belowSuggest">
+                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                            style="border-radius: 50% 50%;">
+                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
+                        <small class="midNameUser">Suggested for you</small>
+                        <a class="wordImg">Follow</a>
+                        </div>
+
+                        <!-- copy right -->
+                        <div class="optionBelow">
+                            <ul class="listHelp">
+                               <li><a href="">About</a></li> 
+                                <li><a href="">Help</a></li>
+                                <li><a href="">Press</a></li>
+                                <li><a href="">Api</a></li>
+                                <li><a href="">Jobs</a></li>
+                                <li><a href="">Privacy</a></li>
+                                <li><a href="">Terms</a></li>
+                                <br>
+                                <li><a href="">Locations</a></li>
+                               <li> <a href="">Top Accounts</a></li>
+                               <li><a href="">Hashtags</a></li> 
+                               <li> <a href="">Language</a></li>
+                            </ul>
+                        <p style="margin-left:2rem; color:#C7C7C7">© 2021 INSTAGRAM FROM FACEBOOK</p>
+                        </div>
+                </div>
+           
+                
+            </div>
+            
+        </div>
+    
+    </div>
 
 
 
@@ -80,19 +220,20 @@
             <ul class="list-group listDot">
                 <li style="color:red; font-weight:500">Unfollow</li>
                 <hr class="hrList">
-                <li >Go to post</li>
+                <li>Go to post</li>
                 <hr class="hrList">
-                <li >Edit</li>
+                <li>Edit</li>
                 <hr class="hrList">
-                <li >Delete</li>
+                <li>Delete</li>
                 <hr class="hrList">
                 <li class="cancelList">Cancel</li>
-              </ul>
+            </ul>
         </div>
-      
-      </div>
+
+    </div>
 
 
 </body>
-<script src="/js/icon.js"></script>
+<script src="/js/iconModal.js"></script>
+
 </html>
