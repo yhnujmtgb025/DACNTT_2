@@ -16,4 +16,10 @@ app.get('/forget', function (req, res) {
 app.get('/signup', function (req, res) {
   res.render('handleLogin/signup')
 })
+
+app.get('/listUnfollow', function (req, res) {
+  res.render('homePage/listUnfollow')
+})
+
+
 app.listen(8080, () => console.log('http://localhost:8080'))

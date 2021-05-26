@@ -155,8 +155,6 @@ body{
     color: inherit;
 }
 
-
-
 .btnFloSug{
     width: 7rem;
     height: 1.5rem;
@@ -249,6 +247,8 @@ body{
     right: -1.20rem;
 
     font-size: 13px;
+    text-decoration: none;
+    color: #333;
     cursor: pointer;
 }
 
@@ -309,7 +309,7 @@ body{
     text-decoration: none;
 }
 
-div li:not(:last-child)::after {
+.listHelp li:not(:last-child)::after {
     content: " \00B7";
     color: #C7C7C7;
 }
@@ -494,10 +494,9 @@ ul.listHelp li {
    }
 }
 
-@media screen and (min-width: 768px)  {
+@media screen and (max-width: 768px)  {
     .postComment .textComment{
-        width: 230%; 
-        max-width: 230%;
+        width: 130%; 
    }
 }
 
