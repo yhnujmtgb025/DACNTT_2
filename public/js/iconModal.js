@@ -1,6 +1,7 @@
 
 // Get the modal
 var modal = document.getElementById("myModal");
+
 // Get the button that opens the modal
 var btn = document.getElementsByClassName("action-icon");
 // Get the <span> element that closes the modal
@@ -17,6 +18,7 @@ for(var i = 0; i < btn.length; i++) {
 // When the user clicks on button cancle the modal
 span.onclick = function() {
   modal.style.display = "none";
+  
 }
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {

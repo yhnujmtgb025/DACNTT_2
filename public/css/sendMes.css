@@ -1,0 +1,12 @@
+.container.sendMes{
+    width: 75%;
+    min-width: 75%;
+
+    background-color: #FFFFFF;
+
+    margin: 20px auto 10px auto;
+}
+
+p {
+    color: red;
+}

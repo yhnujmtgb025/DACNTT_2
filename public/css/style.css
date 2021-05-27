@@ -10,7 +10,7 @@ body{
 
 /* Card newfeed */
 .card{
-    border: none;
+    border: 0.5px solid #DBDBDB;
 }
 .cardNew{
     margin:5px 0px 15px 45px;
@@ -67,116 +67,6 @@ body{
     color: #333;
 }
 
-/* suggest Friend New Card*/
-.friendNew{
-    background-color: #FFFFFF;
-    border: 0.5px solid #DBDBDB;
-    border-radius: 4px;
-
-    padding: 10px 10px 10px 20px;
-    margin: 35px 0px 35px 45px;
-}
-
-.cardChild{
-    position: relative;
-    top: 0;
-    left: 0;
-
-    width: 30%;
-    height: 11.5rem;
-    border: 0.5px solid #DBDBDB;
-    padding: 1px 10px 10px 10px;
-    margin: 35px 5px 15px 10px;
-}
-
-.imgSug{
-    position: absolute;
-    top: 3px;
-    left: 40px;
-
-    margin: 15px 15px;
-    border-radius: 50% 50%;
-    
-}
-
-.titSug{
-    position: absolute;
-    top: 6.5rem;
-    left: 1.9rem;
-
-    color:#8E8E8E; 
-    font-size: 12px;
-}
-
-.coverSee{
-    position: relative;
-    top: 0;
-    left: 0;
-}
-
-.sugCard{
-    position: absolute;
-    top: 5px;
-    left: 0;
-
-    font-size: 14px;
-    color: #8E8E8E;
-    font-weight: 500;
-}
-
-.seeCard{
-    position: absolute;
-    top: 5px;
-    right: 10px;
-
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-.seeCard:hover{
-    text-decoration: none;
-    color: #007BFF;
-}
-
-.titCard{
-    margin: 5rem auto;
-    text-align: center;
-}
-
-.titCard .close{
-    position: absolute;
-    top: 4px;
-    right: 9px;
-    
-    cursor: pointer;
-    font-weight: normal;
-    font-size: 25px;
-    color: inherit;
-}
-
-.btnFloSug{
-    width: 7rem;
-    height: 1.5rem;
-
-    margin-top: 1.25rem;
-    background-color: #0095F6;
-}
-
-.btnFloSug a{
-    position: relative;
-    top: -0.65rem;
-
-    color: white;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.btnFloSug:focus{
-    outline: none;
-    box-shadow: none;
-}
 
 /* rightCard */
 .rightCard{
@@ -460,50 +350,82 @@ ul.listHelp li {
 
 /* responsive card */
 @media screen and (max-width: 285px)  {
-    .cardNew{
-        margin:5px 5px 15px 5px;
+   
+    .bodyNewfeed .cardNew{
+       width: 110%;
+       max-width: 120%;
     }
     .postComment .textComment{
         width: 85% ; 
    }
+   #navColor{
+    width: 110%;
+    max-width: 120%;
+}
+}
+@media screen and (max-width: 320px)  {
+    .cardNew{
+        margin:5px 5px 15px 5px;
+    }
+    .card .card-body .postComment .textComment{
+        width: 75% !important; 
+   }
 }
 @media screen and (max-width: 375px)  {
-    .cardNew{
-        margin:5px 3px 15px 3px;
-    }
-    .postComment .textComment{
+    #navColor{
+        width: 110%;
+        max-width: 110%;
+   }
+    .bodyNewfeed .cardNew{
+        width: 105%;
+        margin:5px 0px 15px 3px;
+     }
+    .card-body .postComment .textComment{
         width: 90% !important; 
    }
+ 
 }
 
 @media screen and (max-width: 414px)  {
-    .cardNew{
-        margin:5px 3px 15px 3px;
-    }
+    #navColor{
+        width: 110%;
+        max-width: 110%;
+   }
     .postComment .textComment{
         width: 90% !important; 
    }
 }
 
 @media screen and (max-width: 540px)  {
-    .cardNew{
-        margin:5px 3px 15px 3px;
-    }
+    #navColor{
+        width: 110%;
+        max-width: 110%;
+   }
+  .card-body  .postComment .textComment{
+        width: 110% ; 
+   }
+
+}
+
+@media screen and (max-width: 768px)  {
     .postComment .textComment{
         width: 130% ; 
    }
 }
 
-@media screen and (max-width: 768px)  {
-    .postComment .textComment{
-        width: 130%; 
-   }
-}
-
-@media screen and (min-width: 1024px)  {
+@media screen and (max-width: 1024px)  {
     .postComment .textComment{
         width: 165%; 
         max-width: 200%;
-  
+   }
+   .rightCard{
+    position: relative;
+    margin: 5px auto  ;
+}
+}
+@media screen and (min-width: 1025px)  {
+    .postComment .textComment{
+        width: 165%; 
+        max-width: 165%;
    }
 }

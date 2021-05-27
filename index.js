@@ -20,6 +20,9 @@ app.get('/signup', function (req, res) {
 app.get('/listUnfollow', function (req, res) {
   res.render('homePage/listUnfollow')
 })
+app.get('/sendMessage', function (req, res) {
+  res.render('homePage/sendMessage')
+})
 
 
 app.listen(8080, () => console.log('http://localhost:8080'))

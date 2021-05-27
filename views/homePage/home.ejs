@@ -1,52 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/css/navBar.css">
-    <link rel="stylesheet" href="/css/style.css">
-
-    <title>Document</title>
-</head>
-
-<body>
-    <!-- Just an image -->
-
-    <nav class="navbar sticky-top navbar-light " id="navColor">
-
-        <a class="navbar-brand ml-3" href="#">
-            <img src="/img/instagram-logo.png" class="img-brand" width="350" height="40" alt="">
-        </a>
-
-        <form class="form-inline" id="searchNav">
-            <input class="form-control mr-sm-2 mainLoginInput" type="search" placeholder="&#61442; Search"
-                aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
-                style="visibility: hidden;">Search</button>
-        </form>
-        <div class="topnav-right">
-            <div class="row">
-                <a href="#search"><i class="fas fa-home"></i></a>
-                <a href="#search"><i class="far fa-paper-plane"></i></a>
-                <a href="#search"><i class="far fa-compass"></i></a>
-                <a href="#search" id="endIcon"><i class="far fa-heart"></i></a>
-                <img src="/img/google.png" id="iconProfile" width="50" height="28" alt="" style="padding-left:1em">
-            </div>
-
-        </div>
-
-    </nav>
-
-
+<%- include ("shares/header") %>
     <!-- New feed -->
     <div class="container bodyNewfeed">
         <div class="row">
@@ -61,7 +13,8 @@
                             <span class="card-title "><a href="#" class="nameOf">leejoon</a></span>
                             <i class="fas fa-ellipsis-h action-icon" class="threeDot"></i>
                         </div>
-                        <img class="card-img-top" src="/img/sontung.png" alt="Card image cap" style="border-radius: 0%;">
+                        <img class="card-img-top" src="/img/sontung.png" alt="Card image cap"
+                            style="border-radius: 0%;">
                         <div class="card-body">
                             <div class="row iconCard">
                                 <button> <i class="fas fa-heart"></i> </button>
@@ -75,204 +28,179 @@
                             <hr width="100%" style="margin-bottom: 0rem">
                             <div class="row postComment">
                                 <img class="iconComment" width="40" height="40" src="/img/kim.png" alt="Card image cap"
-                                style="border-radius: 50% 50%;">
+                                    style="border-radius: 50% 50%;">
                                 <form method="post">
                                     <input type="hidden" name="" value="">
-                                    <textarea name="comment" class="textComment" id="0" placeholder="Add comment..." maxlength="200"></textarea>
-                                    <button class="btn  btnComment btnOpacity"  type="submit">Post</button>
-                                </form>   
+                                    <textarea name="comment" class="textComment" id="0" placeholder="Add comment..."
+                                        maxlength="200"></textarea>
+                                    <button class="btn  btnComment btnOpacity" type="submit">Post</button>
+                                </form>
                             </div>
-                               
+
                         </div>
                     </div>
                 </div>
 
-                <div class="cardNew">
-                    <div class="card nameCard">
-                        <div class="row nameInfor">
-                            <img class="iconUser" width="45" height="45" src="/img/kim.png" alt="Card image cap"
-                                style="border-radius: 50% 50%;">
-                            <span class="card-title "><a href="#" class="nameOf">leejoon</a></span>
-                            <i class="fas fa-ellipsis-h action-icon" class="threeDot"></i>
-                        </div>
-                        <img class="card-img-top" src="/img/sontung.png" alt="Card image cap" style="border-radius: 0%;">
-                        <div class="card-body">
-                            <div class="row iconCard">
-                                <button> <i class="fas fa-heart"></i> </button>
-                                <button> <i class="fas fa-comment"></i> </button>
-                                <button> <i class="far fa-paper-plane"></i></button>
-                                <button id="savePost"> <i class="far fa-bookmark"></i> </button>
-                            </div>
-                            <p style="font-size: 15px; font-weight: 500; padding-left: 15px;">255,578 likes</p>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
-                            <hr width="100%" style="margin-bottom: 0rem">
-                            <div class="row postComment">
-                                <img class="iconComment" width="40" height="40" src="/img/kim.png" alt="Card image cap"
-                                style="border-radius: 50% 50%;">
-                                <form method="post">
-                                    <input type="hidden" name="" value="">
-                                    <textarea name="comment" class="textComment" id="1" placeholder="Add comment..." maxlength="200"></textarea>
-                                    <button class="btn  btnComment btnOpacity"  type="submit">Post</button>
-                                </form>   
-                            </div>
-                               
-                        </div>
-                    </div>
-                </div>
-              
-                
                 <!-- List card horizontal scroll -->
-                <div class="friendNew">
-                    <div class="coverSee">
-                        <p class="sugCard">Suggestions For You</p>
-                        <a href="/listUnfollow" class="seeCard">See All</a>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="card cardChild">
-                            <img class="imgSug" width="65" height="65" src="/img/kim.png" alt="Card image cap">
-                            <div class="card-body titCard">
-                              <span class="close">&times;</span>
-                              <p class="card-text "> leejoon <br> 
-                                <span class="titSug">Suggested for you</span> 
-                              </p>
-                              <button class="btn btnFloSug">
-                                  <a href="#">Follow</a>
-                              </button>
+                <div class="viewport">
+                    <p class="sugCard">Suggestions For You</p>
+                    <a href="/listUnfollow" class="seeCard">See All</a>
+                    <i class="fas fa-chevron-circle-right next-prev" id="next"></i>
+                    <i class="fas fa-chevron-circle-left next-prev" id="prev"></i>
+                    <ul class="list" id="scroll">
+                        <li class="item" id="1" >
+                            <div class="cardSug" id="item_1">
+                                <span id="" class="close">&times;</span>
+                                <img class="imgCardSug" width="65" height="65" src="/img/kim.png" alt="Card image cap"
+                                    style="border-radius: 50% 50%;">
+                                <div class="nameBelow">
+                                    <a href="#" class="nameLink">kimbum</a>
+                                    <p class="sug">Suggested for you</p>
+                                </div>
+                                <button class="btn btnFollow">
+                                    <a href="#" class="centerFollow">Follow</a>
+                                </button>
                             </div>
-                        </div>
-                        <div class="card cardChild">
-                            <img class="imgSug" width="65" height="65" src="/img/kim.png" alt="Card image cap">
-                            <div class="card-body titCard">
+                        </li>
+                        <li class="item" id="2">
+                            <div class="cardSug">
                                 <span class="close">&times;</span>
-                              <p class="card-text "> leejoon <br> 
-                                <span class="titSug">Suggested for you</span> 
-                              </p>
-                              <button class="btn btnFloSug">
-                                  <a href="#">Follow</a>
-                              </button>
+                                <img class="imgCardSug" width="65" height="65" src="/img/hyun.jpg" alt="Card image cap"
+                                    style="border-radius: 50% 50%;">
+                                <div class="nameBelow">
+                                    <a href="#" class="nameLink">leehyun</a>
+                                    <p class="sug">Suggested for you</p>
+                                </div>
+                                <button class="btn btnFollow">
+                                    <a href="#" class="centerFollow">Follow</a>
+                                </button>
                             </div>
-                        </div>
-                        <div class="card cardChild">
-                            <img class="imgSug" width="65" height="65" src="/img/kim.png" alt="Card image cap">
-                            <div class="card-body titCard">
+                        </li>
+                        <li class="item" id="3">
+                            <div class="cardSug">
                                 <span class="close">&times;</span>
-                              <p class="card-text "> leejoon <br> 
-                                <span class="titSug">Suggested for you</span> 
-                              </p>
-                              <button class="btn btnFloSug">
-                                  <a href="#">Follow</a>
-                              </button>
+                                <img class="imgCardSug" width="65" height="65" src="/img/shin.jpg" alt="Card image cap"
+                                    style="border-radius: 50% 50%;">
+                                <div class="nameBelow">
+                                    <a href="#" class="nameLink">shin</a>
+                                    <p class="sug">Suggested for you</p>
+                                </div>
+                                <button class="btn btnFollow">
+                                    <a href="#" class="centerFollow">Follow</a>
+                                </button>
                             </div>
-                        </div>
-                    </div>
+                        </li>
+                        <li class="item" id="4">
+                            <div class="cardSug">
+                                <span class="close">&times;</span>
+                                <img class="imgCardSug" width="65" height="65" src="/img/tae.jpg" alt="Card image cap"
+                                    style="border-radius: 50% 50%;">
+                                <div class="nameBelow">
+                                    <a href="#" class="nameLink">leejoon</a>
+                                    <p class="sug">Suggested for you</p>
+                                </div>
+                                <button class="btn btnFollow">
+                                    <a href="#" class="centerFollow">Follow</a>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
+
+                <!-- <div class="card cardChild">
+                            <img class="imgSug" width="65" height="65" src="/img/kim.png" alt="Card image cap">
+                            <div class="card-body titCard">
+                                <span class="close">&times;</span>
+                              <p class="card-text "> leejoon <br> 
+                                <span class="titSug">Suggested for you</span> 
+                              </p>
+                              <button class="btn btnFloSug">
+                                  <a href="#">Follow</a>
+                              </button>
+                            </div>
+                        </div> -->
+
+
 
 
             </div>
 
             <!-- Right bar -->
-            <div class="col-lg-5 " >
+            <div class="col-lg-5 ">
                 <div class="rightCard">
+                    <!-- infor left of current user -->
+                    <div class="row rightInfor">
+                        <img class="imgUser" width="70" height="70" src="/img/kim.png" alt="Card image cap"
+                            style="border-radius: 50% 50%;">
+                        <span class="card-title "><a href="#" class="nameImg">leejoon</a></span>
+                        <small id="midName">leejoon</small>
+                        <a class="wordImg" style="margin-top:1rem">Display</a>
+                    </div>
 
-                        <!-- infor left of current user -->
-                        <div class="row rightInfor">
-                            <img class="imgUser" width="70" height="70" src="/img/kim.png" alt="Card image cap"
-                                style="border-radius: 50% 50%;">
-                            <span class="card-title "><a href="#" class="nameImg">leejoon</a></span>
-                            <small id="midName" >leejoon</small>
-                            <a class="wordImg" style="margin-top:1rem">Display</a>
-                        </div>
+                    <!-- suggest for you -->
+                    <div class="row rightInfor">
+                        <p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions
+                            For You</p>
+                        <a id="seeAll" href="/listUnfollow">See all</a>
+                    </div>
 
-                        <!-- suggest for you -->
-                        <div class="row rightInfor">
-                            <p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions For You</p>
-                            <a id="seeAll" href="/listUnfollow">See all</a>
-                        </div>
-
-                        <!-- list user -->
-                        <div class="row belowSuggest">
-                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                                style="border-radius: 50% 50%;">
-                            <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
-                            <small class="midNameUser">Suggested for you</small>
-                            <a class="wordImg">Follow</a>
-
-                        </div>
-                        <div class="row belowSuggest">
-                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                    <!-- list user -->
+                    <div class="row belowSuggest">
+                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
                             style="border-radius: 50% 50%;">
                         <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
                         <small class="midNameUser">Suggested for you</small>
                         <a class="wordImg">Follow</a>
-                        </div>
-                        <div class="row belowSuggest">
-                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                                style="border-radius: 50% 50%;">
-                            <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
-                            <small class="midNameUser">Suggested for you</small>
-                            <a class="wordImg">Follow</a>
 
-                        </div>
-                        <div class="row belowSuggest">
-                            <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                    </div>
+                    <div class="row belowSuggest">
+                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
                             style="border-radius: 50% 50%;">
                         <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
                         <small class="midNameUser">Suggested for you</small>
                         <a class="wordImg">Follow</a>
-                        </div>
+                    </div>
+                    <div class="row belowSuggest">
+                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                            style="border-radius: 50% 50%;">
+                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
+                        <small class="midNameUser">Suggested for you</small>
+                        <a class="wordImg">Follow</a>
 
-                        <!-- copy right -->
-                        <div class="optionBelow">
-                            <ul class="listHelp">
-                               <li><a href="">About</a></li> 
-                                <li><a href="">Help</a></li>
-                                <li><a href="">Press</a></li>
-                                <li><a href="">Api</a></li>
-                                <li><a href="">Jobs</a></li>
-                                <li><a href="">Privacy</a></li>
-                                <li><a href="">Terms</a></li>
-                                <br>
-                                <li><a href="">Locations</a></li>
-                               <li> <a href="">Top Accounts</a></li>
-                               <li><a href="">Hashtags</a></li> 
-                               <li> <a href="">Language</a></li>
-                            </ul>
+                    </div>
+                    <div class="row belowSuggest">
+                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
+                            style="border-radius: 50% 50%;">
+                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
+                        <small class="midNameUser">Suggested for you</small>
+                        <a class="wordImg">Follow</a>
+                    </div>
+
+                    <!-- copy right -->
+                    <div class="optionBelow">
+                        <ul class="listHelp">
+                            <li><a href="">About</a></li>
+                            <li><a href="">Help</a></li>
+                            <li><a href="">Press</a></li>
+                            <li><a href="">Api</a></li>
+                            <li><a href="">Jobs</a></li>
+                            <li><a href="">Privacy</a></li>
+                            <li><a href="">Terms</a></li>
+                            <br>
+                            <li><a href="">Locations</a></li>
+                            <li> <a href="">Top Accounts</a></li>
+                            <li><a href="">Hashtags</a></li>
+                            <li> <a href="">Language</a></li>
+                        </ul>
                         <p style="margin-left:2rem; color:#C7C7C7">© 2021 INSTAGRAM FROM FACEBOOK</p>
-                        </div>
+                    </div>
                 </div>
-           
-                
+
+
             </div>
-            
-        </div>
-    
-    </div>
 
-
-
-    <!-- modal ...  -->
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <ul class="list-group listDot">
-                <li style="color:red; font-weight:500">Unfollow</li>
-                <hr class="hrList">
-                <li>Go to post</li>
-                <hr class="hrList">
-                <li>Edit</li>
-                <hr class="hrList">
-                <li>Delete</li>
-                <hr class="hrList">
-                <li class="cancelList">Cancel</li>
-            </ul>
         </div>
 
     </div>
+<%- include ("shares/footer") %>
 
-
-</body>
-<script src="/js/iconModal.js"></script>
-
-</html>
