@@ -56,20 +56,29 @@
 }
 
 /* handle scroll horizonal */
+.coverList{
+  position: relative;
+  top: 0;
+  left: 2.25rem;
 
-.list {
-  display: flex;
+  border: 0.5px solid #DBDBDB;
+  background-color:#FFFFFF ;
+  border-radius: 4px;
+
+  margin-right: 2.15rem;
+}
+
+#list{
   overflow-x: scroll;
+}
+
+#scroll {
+  display:flex;
   z-index: -1;
 
   list-style: none;
-  border: 0.5px solid #DBDBDB;
-  background-color:#FFFFFF ;
-  padding: 45px 15px 20px 15px;
-  border-radius: 4px;
+  padding: 45px 15px 5px 15px;
   
-  margin:5px 0px 15px 45px;
-
   /* prevent accidentally going back or triggering other swipe events */
   overscroll-behavior: contain;
   /* hide scroll bar */
@@ -88,12 +97,12 @@
 }
 
 /* hide scroll bar */
-
-.list::-webkit-scrollbar {
+#list::-webkit-scrollbar {
   display: none;
 }
 
 .item {
+  
   height: 210px;
   width: 175px;
   flex-shrink: 0;
@@ -150,6 +159,7 @@
   position: absolute;
   top:1rem;
   left: 3.25rem;
+  z-index: 1;
 
   font-size: 14px;
   color: #8E8E8E;
@@ -160,6 +170,7 @@
   position: absolute;
   top: 1rem;
   right: 1.25rem;
+  z-index: 1;
 
   font-size: 14px;
   font-weight: 500;
@@ -178,7 +189,7 @@
   z-index: 1;
 
   font-size:25px;
-  opacity: 0.4;
+  opacity: 0.2;
   cursor: pointer;
 }
 
@@ -189,15 +200,58 @@
 
   z-index: 1;
   font-size:25px;
-  opacity: 0.4;
+  opacity: 0;
 
   cursor: pointer;
 }
 /* responsive */
+@media screen and (max-width: 280px)  {
+  .coverList{
+    position: relative;
+    top: 0;
+    left: 0.25rem;
+    
+    min-width: 340px;
+  }
+
+}
+@media screen and (max-width: 280px)  {
+  .coverList{
+    position: relative;
+    top: 0;
+    left: 0.25rem;
+    
+    min-width: 340px;
+  }
+
+}
+
+@media screen and (max-width: 320px)  {
+  .coverList{
+    position: relative;
+    top: 0;
+    left: 0.25rem;
+    max-width: 305px !important;
+  }
+}
+
+@media screen and (max-width: 360px)  {
+  .coverList{
+    position: relative;
+    top: 0;
+    left: 0.25rem;
+    max-width: 345px;
+  }
+
+}
+
 @media screen and (max-width: 375px)  {
-  .list {
-    width: 105%;
-    margin:5px 0px 15px 3px;
+  .coverList{
+    position: relative;
+    top: 0;
+    left: 0.25rem;
+    
+    width: 360px;
   }
   .sugCard{
     position: absolute;

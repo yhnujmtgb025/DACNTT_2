@@ -7,6 +7,12 @@
     margin: 20px auto 10px auto;
 }
 
-p {
-    color: red;
+.table{
+    width: 90%;
+    max-width: 90%;
+    height: 600px;
+
+    background-color: #FFFFFF;
+    margin: 20px auto;
+    
 }
