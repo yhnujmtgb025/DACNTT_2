@@ -1,141 +1,129 @@
-body{
+body {
     background-color: #FAFAFA;
-
     height: 1500px;
 }
 
-.bodyNewfeed{
+.bodyNewfeed {
     margin: 35px auto 15px auto;
 }
 
 /* Card newfeed */
-.card{
+
+.card {
     border: 0.5px solid #DBDBDB;
-}
-.cardNew{
-    margin:5px 0px 15px 45px;
+    z-index: 0;
 }
 
-.card.nameCard{
+.cardNew {
+    margin: 5px 0px 15px 45px;
+}
+
+.card.nameCard {
     border-radius: 4px 4px;
 }
 
-.nameInfor{
+.nameInfor {
     position: relative;
     top: 0;
     left: 0;
-    
     padding: 10px 7px 5px 3px;
 }
 
-.iconUser{
-    position:absolute;
+.iconUser {
+    position: absolute;
     top: 0;
     left: 1rem;
-
     padding: 5px 5px;
     margin: 5px 7px 5px 3px;
 }
 
-.action-icon{
-    position:absolute;
+.action-icon {
+    position: absolute;
     top: 8px;
     right: 20px;
-
     padding: 5px 5px;
     margin: 5px 7px 5px 3px;
-
     font-size: 15px;
     color: rgb(38, 38, 38);
-
     cursor: pointer;
 }
 
-.action-menu{
+.action-menu {
     display: none;
 }
 
-.nameOf{
+.nameOf {
     margin-left: 4rem;
     font-size: 15px;
     font-weight: 600;
 }
 
-.card-title a{
+.card-title a {
     text-decoration: none;
     cursor: pointer;
     color: #333;
 }
 
-
 /* rightCard */
-.rightCard{
+
+.rightCard {
     position: fixed;
-    margin: 5px 5px ;
+    margin: 5px 5px;
 }
 
-.rightInfor{
+.rightInfor {
     position: relative;
     top: 0;
     left: 0;
-    
     padding: 25px 7px 5px 10px;
 }
 
-.imgUser{
-    position:absolute;
+.imgUser {
+    position: absolute;
     top: 0.5rem;
     left: 0.2rem;
-
     padding: 5px 5px;
     margin: 5px 7px 5px 3px;
 }
 
-.nameImg{
+.nameImg {
     margin-left: 4rem;
     font-size: 15px;
     font-weight: 600;
 }
 
-#midName{
-    position:absolute;
+#midName {
+    position: absolute;
     top: 2rem;
     left: 4.15rem;
-
     padding: 5px 5px;
     margin: 5px 7px 5px 3px;
-
-    font-size:13px ;
+    font-size: 13px;
     color: #8E8E8E;
 }
 
-.wordImg{
-    position:absolute;
+.wordImg {
+    position: absolute;
     top: 15px;
     right: -35px;
-
     padding: 5px 5px;
     margin: 5px 7px 5px 3px;
-
     font-size: 12px;
- 
-
     cursor: pointer;
 }
 
-.rightInfor .wordImg{
+.rightInfor .wordImg {
     color: #0095F6;
 }
 
-.rightInfor .wordImg:hover{
+.rightInfor .wordImg:hover {
     color: #0095F6;
 }
 
-#seeAll{
-    position:absolute;
+#seeAll {
+    position: absolute;
     top: 1.65rem;
     right: -1.20rem;
-
     font-size: 13px;
     text-decoration: none;
     color: #333;
@@ -143,58 +131,55 @@ body{
 }
 
 /* icon different user */
-.belowSuggest{
+
+.belowSuggest {
     position: relative;
     top: 0;
     left: 0;
-    
     padding: 20px 7px 25px 10px;
 }
 
-.imgUserOther{
-    position:absolute;
+.imgUserOther {
+    position: absolute;
     top: 0.5rem;
     left: 0.8rem;
-
     padding: 5px 5px;
 }
 
-.nameOfUser{
-    position:absolute;
+.nameOfUser {
+    position: absolute;
     top: 0.85rem;
     left: 3.5rem;
-
     font-size: 15px;
     font-weight: 600;
 }
 
-.belowSuggest .wordImg{
+.belowSuggest .wordImg {
     color: #0095F6;
 }
 
-.belowSuggest .wordImg:hover{
+.belowSuggest .wordImg:hover {
     color: #0095F6;
 }
 
-.midNameUser{
-    position:absolute;
+.midNameUser {
+    position: absolute;
     top: 1.5rem;
     left: 3.10rem;
-
     padding: 5px 5px;
     margin: 5px 7px 5px 3px;
-
-    font-size:11px ;
+    font-size: 11px;
     color: #8E8E8E;
 }
 
 /* copy right */
+
 .optionBelow {
     margin: 35px 0px 0px -45px;
-    font-size: 11px;    
+    font-size: 11px;
 }
 
-.optionBelow a{
+.optionBelow a {
     color: #C7C7C7;
     text-decoration: none;
 }
@@ -205,227 +190,303 @@ body{
 }
 
 ul.listHelp li {
-	display: inline;
+    display: inline;
 }
 
+/* modal Card */
 
-
-
-/* modal */
 /* The Modal (background) */
+
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 200px; /*Location of the box */
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 200px;
+    /*Location of the box */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content */
-  .modal-content {
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+
+.modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px 0 20px 0;
     border: 1px solid #888;
     border-radius: 16px 16px;
     width: 30%;
-  }
-  
-  /* show popup */
-  .listDot li{
-      list-style: none;
-      text-align: center;
-      font-size: 15px;
-      cursor: pointer;
-      line-height: 0.6rem;
-  }
-  .listDot li:hover{
-      color:red;
-  }
-  .hrList {
-      width: 100%;
-  }
+}
 
-  /* card body */
-  .card-body{
-      padding:0;
-  }
+/* show popup */
 
-  ul li{
+.listDot li {
     list-style: none;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    line-height: 0.6rem;
+}
+
+.listDot li:hover {
+    color: red;
+}
+
+.hrList {
+    width: 100%;
+}
+
+/* modal Profile */
+
+/* The Modal (background) */
+.mol{
+    position: relative;
+    top: 0;
+    right: 0;
+
+    
+}
+
+.coverPro{
+    position: absolute;
+    top: 2.25rem;
+    right: -1.25rem;
+
+    visibility: hidden;
+    z-index: 1;
+
+    width: 200px;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 1px rgb(0 0 0 / 10%);
+    background-color: #FFFFFF;
+}
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
   }
 
-  .iconCard button + button {
+
+
+.conProfile ul li{
+   padding: 2px 0 15px 10px;
+}
+.conProfile ul li:nth-child(2){
+    margin-bottom: -20px;
+ }
+ .conProfile ul li:last-child{
+    margin-top: -20px;
+ }
+
+.conProfile .listPro1 li a{
+    color: #333;
+    font-size: 14px;
+    padding-left: 5px;
+ }
+ 
+.conProfile .listPro1 li a{
+    text-decoration: none;
+    color: #333;
+ }
+
+
+ #rhombus{
+     position: absolute;
+     top: -0.85rem;
+     right: 1.25rem;
+ }
+
+
+
+.conProfile ul li:hover{
+    background-color: #FAFAFA;
+ }
+
+/* card body */
+
+.card-body {
+    padding: 0;
+}
+
+ul li {
+    list-style: none;
+}
+
+.iconCard button+button {
     padding-left: 0.5em;
-  }
+}
 
-  .iconCard button{
-      margin-top: -0.8rem;
-      margin-left: 0.4rem;
-      border: none;
-      background-color: #FFFFFF;
-  }
-
-  .iconCard button:focus{
-      outline: none;
-      box-shadow: none;
-  }
-
-  .iconCard button{
+.iconCard button {
+    margin-top: -0.8rem;
+    margin-left: 0.4rem;
     border: none;
     background-color: #FFFFFF;
-  }
+}
 
-  .iconCard button i{
+.iconCard button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.iconCard button {
+    border: none;
+    background-color: #FFFFFF;
+}
+
+.iconCard button i {
     font-size: 25px;
-   }
+}
 
-   .iconCard {
-       position: relative;
-       top: 0;
-       right: 0;
+.iconCard {
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 20px 0 0 15px;
+}
 
-       padding: 20px 0 0 15px;
-   }
+#savePost {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
 
-   #savePost{
-       position: absolute;
-       top: 1rem;
-       right: 1rem;
-   }
+/* comment  */
 
-   /* comment  */
-   .postComment{
-        position: relative;
-        top: 0;
-        left: 0;
-   }
-   .iconComment {
-        position: absolute;
-        top: -5px;
-        left: 10px;
+.postComment {
+    position: relative;
+    top: 0;
+    left: 0;
+}
 
-        margin: 15px 15px;
-   }
-   .postComment .textComment{
-        width: 200%; 
-        max-width: 200%;
-        height: 40px;
-        max-height:80px;
+.iconComment {
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    margin: 15px 15px;
+}
 
-        overflow: hidden;
+.postComment .textComment {
+    width: 200%;
+    max-width: 200%;
+    height: 40px;
+    max-height: 80px;
+    overflow: hidden;
+    font-size: 15px;
+    margin: 0.9rem 0 0 4rem;
+    border: none;
+    resize: none;
+    outline: none;
+}
 
-        font-size:15px ;
-        margin: 0.9rem 0 0 4rem;
+.btnComment {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background-color: #FFFFFF;
+    color: #0095F6;
+    opacity: 0.3;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 0.5px;
+}
 
-        border: none;
-        resize: none;
-        outline: none;
-   }
-
-   .btnComment{
-       position: absolute;
-       top: 20px;
-       right:25px;
-
-       background-color:#FFFFFF;
-       color: #0095F6;  
-       opacity: 0.3;
-       font-size: 15px;
-       font-weight: 500;
-
-       padding: 0.5px;
-    }
-
-    .btnComment:hover{
-        color: #0095F6;
-    }
-
+.btnComment:hover {
+    color: #0095F6;
+}
 
 /* responsive card */
-@media screen and (max-width: 285px)  {
-   
-    .bodyNewfeed .cardNew{
-       width: 110%;
-       max-width: 120%;
+
+@media screen and (max-width: 285px) {
+    .bodyNewfeed .cardNew {
+        width: 110%;
+        max-width: 120%;
     }
-    .postComment .textComment{
-        width: 85% ; 
-   }
-   #navColor{
-    width: 110%;
-    max-width: 120%;
-}
-}
-@media screen and (max-width: 320px)  {
-    .cardNew{
-        margin:5px 5px 15px 5px;
+    .postComment .textComment {
+        width: 85%;
     }
-    .card .card-body .postComment .textComment{
-        width: 75% !important; 
-   }
+    #navColor {
+        width: 110%;
+        max-width: 120%;
+    }
 }
-@media screen and (max-width: 375px)  {
-    #navColor{
+
+@media screen and (max-width: 320px) {
+    .cardNew {
+        margin: 5px 5px 15px 5px;
+    }
+    .card .card-body .postComment .textComment {
+        width: 75% !important;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    #navColor {
         width: 110%;
         max-width: 110%;
-   }
-    .bodyNewfeed .cardNew{
+    }
+    .bodyNewfeed .cardNew {
         width: 105%;
-        margin:5px 0px 15px 3px;
-     }
-    .card-body .postComment .textComment{
-        width: 90% !important; 
-   }
- 
+        margin: 5px 0px 15px 3px;
+    }
+    .card-body .postComment .textComment {
+        width: 90% !important;
+    }
 }
 
-@media screen and (max-width: 414px)  {
-    #navColor{
+@media screen and (max-width: 414px) {
+    #navColor {
         width: 110%;
         max-width: 110%;
-   }
-    .postComment .textComment{
-        width: 90% !important; 
-   }
+    }
+    .postComment .textComment {
+        width: 90% !important;
+    }
 }
 
-@media screen and (max-width: 540px)  {
-    #navColor{
+@media screen and (max-width: 540px) {
+    #navColor {
         width: 110%;
         max-width: 110%;
-   }
-  .card-body  .postComment .textComment{
-        width: 110% ; 
-   }
-
+    }
+    .card-body .postComment .textComment {
+        width: 110%;
+    }
 }
 
-@media screen and (max-width: 768px)  {
-    .postComment .textComment{
-        width: 130% ; 
-   }
+@media screen and (max-width: 768px) {
+    .postComment .textComment {
+        width: 130%;
+    }
 }
 
-@media screen and (max-width: 1024px)  {
-    .postComment .textComment{
-        width: 165%; 
+@media screen and (max-width: 1024px) {
+    .postComment .textComment {
+        width: 165%;
         max-width: 200%;
-   }
-   .rightCard{
-    position: relative;
-    margin: 5px auto  ;
+    }
+    .rightCard {
+        position: relative;
+        margin: 5px auto;
+    }
 }
-}
-@media screen and (min-width: 1025px)  {
-    .postComment .textComment{
-        width: 165%; 
+
+@media screen and (min-width: 1025px) {
+    .postComment .textComment {
+        width: 165%;
         max-width: 165%;
-   }
+    }
 }

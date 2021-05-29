@@ -1,12 +1,10 @@
 
-// Get the modal
-var modal = document.getElementById("myModal");
+// handle modal card
 
-// Get the button that opens the modal
-var btn = document.getElementsByClassName("action-icon");
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("cancelList")[0];
-// When the user clicks the button, open the modal 
+var modal = document.getElementById("myModal"); // Get the modal card
+var btn = document.getElementsByClassName("action-icon"); // Get the button that opens the modal
+var span = document.getElementsByClassName("cancelList")[0]; // Get the <span> element that closes the modal
+// When the user clicks the button, open the modal card
 for(var i = 0; i < btn.length; i++) {
   (function(index) {
     btn[index].addEventListener("click", function(e) {
@@ -14,21 +12,39 @@ for(var i = 0; i < btn.length; i++) {
      })
   })(i);
 }
-
 // When the user clicks on button cancle the modal
 span.onclick = function() {
   modal.style.display = "none";
-  
 }
-// When the user clicks anywhere outside of the modal, close it
+
+
+// handle modal profile
+var myProfile = document.getElementById("modalProfile");    // modal icon profile
+var btnIcon = document.getElementById("iconProfile");  // icon profile
+var nav = document.getElementById("navColor");  // nav 
+var feed = document.getElementById("Newfeed");  // card
+var rightCard = document.getElementById("rightCard");  // right card
+
+
+// click icon profile, open modal 
+btnIcon.addEventListener("click", function(e) {
+  myProfile.classList.toggle("show");
+ })
+
+
+ // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
   if (event.target == modal) {
+    nav.style.zIndex= "1";
+    feed.style.zIndex = "0";
     modal.style.display = "none";
   }
+
 }
 
 
-// get input
+
+// handle textarea card
 const messageEle =  document.getElementsByClassName('textComment');
 const btnOpa = document.getElementsByClassName("btnOpacity")
 
