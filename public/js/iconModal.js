@@ -20,29 +20,33 @@ span.onclick = function() {
 
 // handle modal profile
 var myProfile = document.getElementById("modalProfile");    // modal icon profile
+const coverPro = document.querySelector('.coverPro');
 var btnIcon = document.getElementById("iconProfile");  // icon profile
 var nav = document.getElementById("navColor");  // nav 
 var feed = document.getElementById("Newfeed");  // card
 var rightCard = document.getElementById("rightCard");  // right card
-
+var t = 0;
+var c = 0;
 
 // click icon profile, open modal 
 btnIcon.addEventListener("click", function(e) {
-  myProfile.classList.toggle("show");
- })
+  if(coverPro.classList.contains('show')){
+    myProfile.classList.remove('show')
+  }else{
+    myProfile.classList.add('show') 
+  }
+},true)
 
 
- // When the user clicks anywhere outside of the modal, close it
+ // When the user clicks anywhere outside of the modal or body, close it
 window.onclick = function(event) {
-  if (event.target == modal) {
+  if (event.target == modal || event.target == document.body || event.target == nav) {
     nav.style.zIndex= "1";
     feed.style.zIndex = "0";
     modal.style.display = "none";
+    myProfile.classList.remove('show')
   }
-
 }
-
-
 
 // handle textarea card
 const messageEle =  document.getElementsByClassName('textComment');
@@ -75,6 +79,14 @@ for(var i = 0; i < messageEle.length; i++) {
 }
 
 
-  
+
+// fill color icon nav
+const home = document.getElementById("house")
+const plan = document.getElementById("plan")
+const compass = document.getElementById("compass")
+const heart = document.getElementById("heart")
+
+
+
 
 

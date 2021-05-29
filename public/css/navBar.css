@@ -39,6 +39,9 @@
     padding-left: 1em;
 }
 
+.topnav-right #heart svg{
+    fill: rgb(38, 38, 38);
+}
 
 .mainLoginInput::-webkit-input-placeholder { 
 font-family: FontAwesome;
