@@ -1,0 +1,32 @@
+.container.formEdit{
+    width: 50%;
+    min-width: 610px;
+
+    background-color: #FFFFFF;
+
+    margin: 4.5rem auto;
+}
+
+.editImg{
+    text-align: center;
+    align-items: center;
+
+    padding-top: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.editImg a{
+    color: #262626;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.editImg a:hover{
+    text-decoration: none;
+}
+
+.coForm{
+    padding: 0 1rem;
+}
+

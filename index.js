@@ -32,6 +32,13 @@ app.get('/myProfile', function (req, res) {
   res.render('profile/myProfile')
 })
 
+app.get('/myProfile/saved', function (req, res) {
+  res.render('profile/saved')
+})
+app.get('/myProfile/editProfile', function (req, res) {
+  res.render('profile/editProfile')
+})
+
 
 
 app.listen(8080, () => console.log('http://localhost:8080'))
