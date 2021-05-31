@@ -24,5 +24,14 @@ app.get('/sendMessage', function (req, res) {
   res.render('homePage/sendMessage')
 })
 
+app.get('/savePost', function (req, res) {
+  res.render('homePage/savePost')
+})
+
+app.get('/myProfile', function (req, res) {
+  res.render('profile/myProfile')
+})
+
+
 
 app.listen(8080, () => console.log('http://localhost:8080'))

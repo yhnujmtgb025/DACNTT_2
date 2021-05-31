@@ -39,9 +39,6 @@
     padding-left: 1em;
 }
 
-.topnav-right #heart svg{
-    fill: rgb(38, 38, 38);
-}
 
 .mainLoginInput::-webkit-input-placeholder { 
 font-family: FontAwesome;
@@ -56,6 +53,18 @@ display: inline-block !important;
     box-shadow: none;
     border:1px solid #E7E9EC;
 }
+
+/* change color icon */
+path {
+    cursor: pointer;
+  }
+.selected {
+    fill: white;
+    stroke: black;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+}
+
 
 /* icon profile */
 #iconProfile{

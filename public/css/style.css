@@ -4,8 +4,9 @@ body {
 }
 
 .bodyNewfeed {
-    margin: 35px auto 15px auto;
+    margin: 35px auto 15px auto; 
 }
+
 
 /* Card newfeed */
 
@@ -256,7 +257,6 @@ ul.listHelp li {
     position: relative;
     top: 0;
     right: 0;
-
     
 }
 
@@ -272,21 +272,21 @@ ul.listHelp li {
     border-radius: 6px;
     box-shadow: 0 0 5px 1px rgb(0 0 0 / 10%);
     background-color: #FFFFFF;
+
 }
 
 .show {
     visibility: visible;
 }
 
-.offShow {
-    visibility: hidden;
-}
-
-
 
 .conProfile ul li{
    padding: 2px 0 15px 10px;
 }
+.conProfile ul li:hover{
+    cursor: pointer;
+ }
+
 .conProfile ul li:nth-child(2){
     margin-bottom: -20px;
  }
@@ -360,10 +360,49 @@ ul li {
     padding: 20px 0 0 15px;
 }
 
-#savePost {
+.savePost {
     position: absolute;
     top: 1rem;
     right: 1rem;
+}
+
+
+/* animation icon heart card */
+.anime{
+    animation: scallin .5s;
+}
+
+.ani{
+    animation: scaling .5s;
+}
+
+@keyframes scaling{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+@keyframes scallin{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+/* icon save */
+.savePost:hover{
+    opacity: 0.5;
 }
 
 /* comment  */
