@@ -41,16 +41,20 @@
                             <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
                                 additional content. This content is a little bit longer.</p>
                             <hr width="100%" style="margin-bottom: 0rem">
-                            <div class="row postComment">
-                                <img class="iconComment" width="40" height="40" src="/img/kim.png" alt="Card image cap"
+                            <div class="container textChat">
+                                <div class="comment">
+                                  <div class="commenter">
+                                    <img class="iconComment" width="40" height="40" src="/img/kim.png" alt="Card image cap"
                                     style="border-radius: 50% 50%;">
-                                <form method="post">
-                                    <input type="hidden" name="" value="">
-                                    <textarea name="comment" class="textComment" id="0" placeholder="Add comment..."
-                                        maxlength="200"></textarea>
+                                  </div>
+                                  <div class="comment-text-area">
+                                    <textarea class="textinput  textComment " placeholder="Add comment ..."></textarea>
                                     <button class="btn  btnComment btnOpacity" type="submit">Post</button>
-                                </form>
-                            </div>
+
+                                </div>
+
+                                </div>
+                              </div>
 
                         </div>
                     </div>
@@ -62,7 +66,7 @@
                     <a href="/listUnfollow" class="seeCard">See All</a>
                     <i class="fas fa-chevron-circle-right " id="next" onclick="slide('right')"></i>
                     <i class="fas fa-chevron-circle-left " id="prev" onclick="slide('left')"></i>
-                    <div class="coverList">
+                    <div class="coverList" id="co">
                         <div id="list">
                             <ul id="scroll">
                                 <li class="item" id="1" >

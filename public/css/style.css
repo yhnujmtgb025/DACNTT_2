@@ -366,7 +366,9 @@ ul li {
     right: 1rem;
 }
 
-
+.coverList{
+    display:block;
+}
 /* animation icon heart card */
 .anime{
     animation: scallin .5s;
@@ -401,133 +403,115 @@ ul li {
 }
 
 /* icon save */
-.savePost:hover{
+.savePost svg:hover{
     opacity: 0.5;
 }
 
 /* comment  */
 
-.postComment {
+.container.textChat{
     position: relative;
-    top: 0;
-    left: 0;
-}
+    max-width: 650px;
+  }
+  
+  .comment {
+    float: left;
+    width: 100%;
+    height: auto;
 
-.iconComment {
+    margin: 10px auto;
+  }
+  
+  .commenter {
+    float: left;
+  }
+  
+  .commenter img {
     position: absolute;
-    top: -5px;
+    top: 10px;
     left: 10px;
-    margin: 15px 15px;
-}
 
-.postComment .textComment {
-    width: 200%;
-    max-width: 200%;
-    height: 40px;
-    max-height: 80px;
-    overflow: hidden;
-    font-size: 15px;
-    margin: 0.9rem 0 0 4rem;
-    border: none;
-    resize: none;
+  }
+  
+  .comment-text-area {
+    display: flex;
+    float: right;
+    width: calc(100% - 65px);
+    height: auto;
+    
+    margin-right: 20px;
+  }
+  
+  .textinput {
+    float:left;
+    width: 100%;
+    height: 35px;
+    min-height: 15px;
+
+    overflow:hidden;
+    margin-top: 3px;
+    font-size: 18px;
+    padding: 35px auto;
     outline: none;
-}
+    resize: none;
+    border: none;
+  }
 
 .btnComment {
     position: absolute;
     top: 20px;
-    right: 25px;
-    background-color: #FFFFFF;
+    right: 10px;
     color: #0095F6;
     opacity: 0.3;
     font-size: 15px;
     font-weight: 500;
     padding: 0.5px;
+    
 }
+
 
 .btnComment:hover {
     color: #0095F6;
-}
+} 
 
 /* responsive card */
+@media screen and (max-width: 280px) {
+    #list{
+        width: 80% !important;
+    }
+   .bodyNewfeed .viewport .coverList{
 
-@media screen and (max-width: 285px) {
-    .bodyNewfeed .cardNew {
-        width: 110%;
-        max-width: 120%;
-    }
-    .postComment .textComment {
-        width: 85%;
-    }
-    #navColor {
-        width: 110%;
-        max-width: 120%;
-    }
-}
+        min-width: 90px;
 
-@media screen and (max-width: 320px) {
-    .cardNew {
-        margin: 5px 5px 15px 5px;
     }
-    .card .card-body .postComment .textComment {
-        width: 75% !important;
-    }
-}
+    
+ }
 
 @media screen and (max-width: 375px) {
-    #navColor {
-        width: 110%;
-        max-width: 110%;
+   .sugCard{
+       margin-left: 1rem;
+   }
+   #list{
+       width: 86%;
+       height: auto;
+   }
+    .coverList{
+        width: 86% !important;
+        margin-left: 2rem;
     }
-    .bodyNewfeed .cardNew {
-        width: 105%;
-        margin: 5px 0px 15px 3px;
-    }
-    .card-body .postComment .textComment {
-        width: 90% !important;
-    }
-}
-
-@media screen and (max-width: 414px) {
-    #navColor {
-        width: 110%;
-        max-width: 110%;
-    }
-    .postComment .textComment {
-        width: 90% !important;
-    }
-}
-
-@media screen and (max-width: 540px) {
-    #navColor {
-        width: 110%;
-        max-width: 110%;
-    }
-    .card-body .postComment .textComment {
-        width: 110%;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .postComment .textComment {
-        width: 130%;
-    }
+   
 }
 
 @media screen and (max-width: 1024px) {
-    .postComment .textComment {
-        width: 165%;
-        max-width: 200%;
-    }
-    .rightCard {
-        position: relative;
-        margin: 5px auto;
-    }
+   #idContain{
+       margin-left: -1rem;
+   }
 }
 
-@media screen and (min-width: 1025px) {
-    .postComment .textComment {
-        width: 165%;
-        max-width: 165%;
+@media screen and (max-width: 1024px) {
+   
+    .rightCard {
+        position: relative;
+        margin: 5px 40px;
     }
 }
