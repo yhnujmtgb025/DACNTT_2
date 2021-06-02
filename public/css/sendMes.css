@@ -16,3 +16,273 @@
     margin: 20px auto;
     
 }
+:root {
+    --white: #fafafa;
+    --grey: #717171;
+    --medium-grey: #dbdbdb;
+    --strong-grey: #545454;
+    --header-color: #fff;
+    --text-color:#262626;
+    
+}
+
+
+
+main {
+  margin-left: 8rem;
+  margin-top: 1rem;
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+  height: 83.25vh;
+  width: 70vw;
+  border: none;
+  background-color: #FFFFFF;
+ 
+  border: 1px solid #dbdbdb
+}
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  width: 40%;
+  border-right: 1px solid var(--medium-grey);
+  
+}
+.preview>div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  height: 70px;
+  width: 100%;
+}
+.chats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow:hidden;
+  height: 80vh;
+  width: 60%;
+  overflow-y: scroll;
+  overflow-x: none;
+  
+}
+
+
+
+.chat-banner {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--medium-grey);
+  
+    background-color: #FFFFFF;
+}
+.chat-banner>div {
+   
+  padding: 10px;
+}
+#user-name {
+  min-height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400;
+  font-size: 1.5em;
+   border-bottom: 1px solid var(--medium-grey);
+}
+#user-name i {
+  font-size: 1em;
+  padding-left: 5px;
+}
+#pic-div, #pic, #chat-pic {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+#pic {
+    height: 50px;
+    width: 50px;
+  margin-left: 0.5em;
+}
+
+
+
+#chat-pic {
+  height:20px;
+  width: 20px;
+}
+#chat-username {
+  padding: 10px;
+  margin-left: 0.5em;
+  display: flex;
+  flex-direction: column;
+}
+#chat-username>span {
+  height: 50%;
+  width: auto;
+}
+#name {
+    
+    cursor: pointer; 
+    text-decoration: none; 
+    color: #333;
+}
+#msg {
+  color:var(--grey);
+  font-size: 13px;
+}
+.sender, .receiver, .user-input {
+  margin: 0.8em;
+  padding: 10px;
+  height: auto;
+  width: auto;
+  max-width: 140px;
+  border-radius: 20px;
+  border: 1px solid var(--medium-grey);
+  transition: all .2s ease;
+}
+.sender:hover {
+  background-color: pink;
+  cursor: pointer;
+}
+.receiver, .user-input {
+  margin-left: 22vw;
+  background-color: var(--medium-grey);
+}
+.user-input {
+  display : none;
+}
+#heart {
+  height: 30px;
+  width: 30px;
+  margin-top: -1.5em;
+  margin-left: 1em;
+  visibility: hidden;
+}
+.inputFlex{
+
+    width: 100%;
+    height: auto;
+}
+
+.input-msg {
+    position: relative;
+    top: 0;
+    left: 0;
+
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-shrink: 0;
+
+  height: 50px;
+  width: 100%;
+  margin-top: 1rem;
+  padding-top: 10px;
+
+  border-top: 1px solid var(--medium-grey);
+}
+
+.input-msg a {
+  padding:0 10px;
+}
+
+.btnSmile{
+    position:absolute;
+    top: 16px;
+    left: 24px;
+
+   
+    background-color: #FFFFFF;
+    
+    outline: none;
+    border: none;
+}
+
+.btnCover{
+    margin: -5px -5px;
+}
+
+.faSmile{
+    margin-top: -0.15rem;
+}
+
+
+.btnSmile:focus{
+    outline: none;
+    border: none;
+}
+
+#send-input {
+  font-size: 15px; 
+  padding-left: 50px;
+  margin-left: 12px;
+  margin-top: -1px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #dbdbdb;
+  width: 100%;
+}
+
+#send-input:focus{
+    border: 1px solid #dbdbdb;
+    outline: none;
+}
+
+@media screen and (max-width: 375px)
+{
+    main {
+        align-items: center !important;
+        min-width: 100%;
+        
+        margin-left: 1rem !important;
+        margin-top: 1rem;
+      
+    }
+}
+
+@media screen and (min-width: 900px)
+{
+  .receiver, .user-input {
+    margin-left: 28vw;
+  }
+  .sender, .receiver, .user-input {
+    min-width: 140px;
+    width: auto;
+  }
+}
+@media screen and (max-width: 600px)
+{
+  main {
+    height: 100vh;
+    width: 100vw;
+  }
+}
+@media only screen and (max-width: 768px) {
+   main {
+    margin-left: 0;
+    height: 82vh;
+    width: 100vw;
+  }
+  .preview {
+    display: none;
+  }
+  .chats {
+    width: 100%;
+
+  }
+
+  .receiver, .user-input {
+    margin-left: 70vw;
+  }
+}

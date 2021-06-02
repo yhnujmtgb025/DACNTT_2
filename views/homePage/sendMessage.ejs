@@ -2,38 +2,67 @@
 
     <!-- List user not follow -->
     
-    <div class="container ">
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered ">
-                    <thead>
-                      <tr>
-                        <th scope="col"  style="text-align: center; max-width: 100px;">leejoon</th>
-                        <th scope="col" colspan="2">Firstdadadd</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td rowspan="3">
-                            <ul>
-                                <li>h</li>
-                                <li>h</li>
-                                <li>h</li>
-                            </ul>
-                        </td> 
-                        <td rowspan="3">
-                            <ul>
-                                <li>h</li>
-                                <li>h</li>
-                                <li>h</li>
-                            </ul>
-                        </td>           
-                      </tr>
-                    </tbody>
-                  </table>
-             
+
+        <main>
+          <div class="preview">
+            <div id="user-name">__fibo_freak <i class='fas fa-angle-down'></i></div>
+            <div>
+              <span id="pic-div">
+                <img id="pic" src="/img/hyun.jpg">
+              </span>
+              <div id="chat-username">
+                <a href="#" id="name" style=""> <span >leehyun</span></a>
+                <span id="msg">I picked up some kambucha..</span>
+              </div>
             </div>
-        </div>
-    </div>
+        
+          </div>
+          <div class="chats">
+         
+              <div class="sticky-top chat-banner">
+                  <div>
+                    <span id="chat-pic"> 
+                    <img id="pic" src="/img/kim.png"  style="margin-bottom: 0.5rem;" />
+                    </span>
+                    <a href="#"  style="margin-left:5px;cursor: pointer; text-decoration: none; color: #333;"> <span>leejoon</span></a>
+                  </div>
+              </div>
+          
+              <div class="sender" onclick="like()">hello! how are you?</div><div id="heart">❤️</div>
+              <div class="receiver">heyy! much better</div>
+            <div class="sender" onclick="like()">Thats great!🥰</div><div id="heart">❤️</div>
+              <div class="receiver">How did the interview go?</div>
+           
+
+            <div class="user-input " ></div>
+            <div class="inputFlex ">
+              <div class="input-msg">
+
+                <button class="btnSmile" type="button" >
+                  <div class="btnCover" >
+                    <svg aria-label="Emoji" class="faSmile" fill="#262626" height="25" viewBox="0 0 48 48" width="25">
+                      <path d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24zm0-45C12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21S35.6 3 24 3z"></path>
+                      <path d="M34.9 24c0-1.4-1.1-2.5-2.5-2.5s-2.5 1.1-2.5 2.5 1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5zm-21.8 0c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5-1.1 2.5-2.5 2.5-2.5-1.1-2.5-2.5zM24 37.3c-5.2 0-8-3.5-8.2-3.7-.5-.6-.4-1.6.2-2.1.6-.5 1.6-.4 2.1.2.1.1 2.1 2.5 5.8 2.5 3.7 0 5.8-2.5 5.8-2.5.5-.6 1.5-.7 2.1-.2.6.5.7 1.5.2 2.1 0 .2-2.8 3.7-8 3.7z"></path>
+                    </svg>
+                  </div>
+                </button>
+
+                <input type="text" id="send-input" placeholder="Message..." onfocus="this.value=''"/>
+               <a href="#" onclick="send()">
+                <svg aria-label="Direct" class="_8-yf5 "  height="30" viewBox="0 0 48 48" width="30">
+                  <path
+                  id="#" d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">
+                  </path>
+                </svg>
+              </a>
+              
+            </div>
+            </div>
+          
+         
+          </div>
+        
+        </main>
+      
     
 <%- include ("../shares/footer") %>

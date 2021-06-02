@@ -227,6 +227,9 @@ img.imaProfile {
 /* Media Query */
 
 @media screen and (max-width:411px){
+    #navColor{
+        min-width: 380px;
+    }
     .gallery-content img{
         margin-left: 1.5rem !important;
     }
