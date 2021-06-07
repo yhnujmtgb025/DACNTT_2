@@ -1,43 +1,65 @@
-const express = require('express')
-const app = express()
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const session = require('express-session');
+const passport = require('passport');
+const cookieParser = require('cookie-parser');
+const flash = require('express-flash');
+const socketio = require('socket.io');
+
+const UserRouter = require('./routes/UserRouter');
+const db = require('./config/database/connect');
+
+
+db.connect();
+
+const app = express();
+
 
 app.set('view engine', 'ejs')
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({
+  extended: true,
+}));
+app.use((req, res, next) => {
+  res.locals.path = req.path;
+  next();
+});
+app.use(express.json());
 
-app.get('/', function (req, res) {
-  res.render('homePage/home')
-})
-app.get('/login', function (req, res) {
-  res.render('handleLogin/login')
-})
-app.get('/forget', function (req, res) {
-  res.render('handleLogin/forget')
-})
-app.get('/signup', function (req, res) {
-  res.render('handleLogin/signup')
-})
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: 'SECRET' ,
+  cookie: { maxAge: 1000000 }
+}));
 
-app.get('/listUnfollow', function (req, res) {
-  res.render('homePage/listUnfollow')
-})
-app.get('/sendMessage', function (req, res) {
-  res.render('homePage/sendMessage')
-})
+app.use(cookieParser('keyboard cat'));
+app.use(flash());
 
-app.get('/savePost', function (req, res) {
-  res.render('homePage/savePost')
-})
 
-app.get('/myProfile', function (req, res) {
-  res.render('profile/myProfile')
-})
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-app.get('/myProfile/saved', function (req, res) {
-  res.render('profile/saved')
-})
-app.get('/myProfile/editProfile', function (req, res) {
-  res.render('profile/editProfile')
-})
+// passport.serializeUser(function(user, cb) {
+//   cb(null, user);
+// });
+
+// passport.deserializeUser(function(obj, cb) {
+//   cb(null, obj);
+// });
+// routes
+app.get('/', (req, res) => {
+
+  res.redirect('/login');
+});
+
+
+
+// login routes
+app.use('/login', UserRouter );
+
+// route(app)
 
 
 
