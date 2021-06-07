@@ -2,163 +2,143 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
-const  validationResult = require('express-validator')
+const  {validationResult} = require('express-validator')
 
-class LoginController{
+const index = (req, res) => {
+    res.render("homePage/home")
+}
+  
 
-    // [GET] /login
-    main(req, res) {
-        const error = req.flash('error')
-        const message = req.flash('message')
-        
-        res.render('handleLogin/login');
+const login_get = (req, res) => {
+    const error = req.flash('error') || ''
+    const password = req.flash('password') || ''
+    const email = req.flash('email') || ''
+    res.render('handleLogin/login',{error, password, email})
+  }
+
+
+const login_post = (req, res) => {
+    let result = validationResult(req);
+    if(result.errors.length === 0){
+        let {email,password} = req.body
+        console.log("email  "+email)
+        let acc = undefined
+        User.findOne({email:email})
+        .then(acc=>{
+            account = acc
+            return bcrypt.compare(password,acc.password)
+        })
+        .then(passwordMatch=>{
+            if(passwordMatch){
+                jwt.sign({
+                    email:account.email,
+                    name:account.name
+                },process.env.JWT_SECRET,{
+                    expiresIn:'30s'
+                },(err,token)=>{
+                    if(err) throw err
+                    console.log("token :"+token) 
+                })
+                return res.render("homePage/home")
+            }
+            else{
+                return res.render("handleLogin/login",{error:"Sai email hoặc password",email:email,password:password})
+            }
+        })
+    .catch(e=>{return res.render("handleLogin/login",{error:"Sai email hoặc password",email:email,password:password})})
+    }else{
+        result = result.mapped()
+    
+        let message;
+        for (fields in result ){
+            message = result[fields].msg
+            break;    
+        }
+    
+        const { email, password} = req.body
+    
+        req.flash('error',message)
+        req.flash('password',password)
+        req.flash('email',email)
+        res.redirect('/')
     }
 
+      
     
 }
 
-module.exports = new LoginController();
+
+
+const register_get = (req, res) => {
+    const error = req.flash('error') || ''
+    const name = req.flash('name') || ''
+    const email = req.flash('email') || ''
+    const password = req.flash('password') || ''
+    res.render('handleLogin/signup',{error, name, email, password})
+}
 
 
 
-
-// const login_post = (req, res) => {
-//     let result = validationResult(req);
-//     if(result.errors.length === 0){
-//         const { email, password} = req.body
-        
-//         const sql = 'SELECT * FROM account WHERE email = ?' 
-//         const params = [email]
-
-//         db.query(sql,params,(err,results,fields)=>{
-//             if(err){
-//                 req.flash('error',err.message)
-//                 req.flash('email',email)
-//                 req.flash('password',email)
-//                 return res.redirect('/user/login')
-//             }else if (result.length===0){
-//                 req.flash('error','email ko ton tai')
-//                 req.flash('email',email)
-//                 req.flash('password',email)
-//                 return res.redirect('/user/login')
-//             }else{
-//                 const hased = results[0].password
-//                 const match = bcrypt.compareSync(password,hased)
-//                 if(!match){
-//                     req.flash('error','Mat khau khong chinh xac')
-//                     req.flash('email',email)
-//                     req.flash('password',email)
-//                     return res.redirect('/login')
-//                 }else{
-//                     // delete result[0].password
-//                     let user = results[0]
-//                     user.userRoot = `${req.vars.root}/users/${user.email}`
-//                     req.session.user = user
-                    
-//                     // dang ki phuc vu thu muc goc cua user
-//                     req.app.use(express.static(user.userRoot))
-
-
-//                     return res.redirect('/')
-//                 }
-//             }
-//         })
-//     }
-//     else{
-//         result = result.mapped()
-//         console.log(result)
+const register_post = (req, res) => {
+    let result = validationResult(req);
+    if(result.errors.length === 0){
+        const {name, email, password} = req.body
+        User.findOne({email:email})
+        .then(acc =>{
+            if(acc){
+                throw new Error('Tài khoản này đã tồn tại email')
+            }
+        })
+        .then(()=> bcrypt.hashSync(password,10))
+        .then(hashed =>{
+            let user = new User({
+                name:req.body.name,
+                email: req.body.email,
+                password: hashed
+            })
+            return user.save()
+        })
+        .then( () => {
+           return res.redirect('/')
+        })
+        .catch(error =>{
+            res.render('handleLogin/signup',{error:"Email này đã tồn tại",name:name,email:email,password:password})
+        })
     
-//         let message;
-//         for (fields in result ){
-//             message = result[fields].msg
-//             break;    
-//         }
+    }else{
+        result = result.mapped()
     
-//         const { email, password} = req.body
+        let message;
+        for (fields in result ){
+            message = result[fields].msg
+            break;    
+        }
     
-//         req.flash('error',message)
-//         req.flash('password',password)
-//         req.flash('email',email)
-//         res.redirect('/user/login')
-//     }
-// }
-
-
-
-// const register_get = (req, res) => {
-//     const error = req.flash('error') || ''
-//     const name = req.flash('name') || ''
-//     const email = req.flash('email') || ''
-//     res.render('register',{error, name, email})
-// }
-
-// const register_post = (req, res) => {
-//     let result = validationResult(req);
-//     console.log(result)
-//     if(result.errors.length === 0){
-//         const {name, email, password} = req.body
-//         const hased = bcrypt.hashSync(password,10)
-        
-//         const userNew = new User(req.body);
-//         userNew.save()
-//         .then(result => {
-//         res.redirect('/blogs');
-//         })
-//         .catch(err => {
-//         console.log(err);
-//         });
-
-//         const params = [name,email,hased]
-
-//         db.query(sql,params,(err,results,fields)=>{
-//             if(err){
-//                 req.flash('error',err.message)
-//                 req.flash('name',name)
-//                 req.flash('email',email)
-//                 return res.redirect('/user/register')
-//             }
-//             else if(results.affectedRows === 1){
-//                 const {root} = req.vars // tach root ra de su dung
-//                 const userDir = `${root}/users/${email}`
-//                 fs.mkdir(userDir,()=>{
-//                     return res.redirect('/user/login')
-//                 })
-//             }
-//             else{
-//             req.flash('error','Dang ki that bai')
-//             req.flash('name',name)
-//             req.flash('email',email)
-//             return res.redirect('/user/register')
-//             }
-
-//         })
+        const {name, email, password} = req.body
     
-//     }
-//     else{
-//         result = result.mapped()
-//         console.log(result)
+            req.flash('error',message)
+            req.flash('name',name)
+            req.flash('email',email)
+        req.flash('password',password)
+        res.redirect('/register')
+    }
+       
     
-//         let message;
-//         for (fields in result ){
-//             message = result[fields].msg
-//             break;    
-//         }
-    
-//         const {name, email, password} = req.body
-    
-//         req.flash('error',message)
-//         req.flash('name',name)
-//         req.flash('email',email)
-//         res.redirect('/user/register')
-//     }
-// }
+}
 
 
   
-// module.exports = {
-//     login_get,
-//     login_post,
-//     register_get,
-//     register_post
-// }
+module.exports = {
+    index,
+    login_get,
+    login_post,
+    register_get,
+    register_post
+}
+
+
+
+
+
+
 

@@ -5,7 +5,11 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
     username: {type: String, require: true},
     password: {type: String},
-    email: {type: String},
+    email: {type: String,
+        required: true,
+        match: /.+\@.+\..+/,
+        unique: true
+    },
     fullname: {type: String},
     googleId: {type: String},
     role: {type: String},

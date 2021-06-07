@@ -67,8 +67,11 @@ input[type=text], select, textarea {
   padding-top: 15px;
 }
 
-
-
+.error-text{
+  font-size: 13px;
+  font-weight: 300;
+  color: red;
+}
 
 /* button */
 .btn-login{

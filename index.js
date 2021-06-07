@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const socketio = require('socket.io');
 
-const UserRouter = require('./routes/UserRouter');
+const route = require('./routes/main');
 const db = require('./config/database/connect');
 
 
@@ -48,19 +48,12 @@ app.use(flash());
 // passport.deserializeUser(function(obj, cb) {
 //   cb(null, obj);
 // });
+
 // routes
-app.get('/', (req, res) => {
 
-  res.redirect('/login');
-});
+route(app)
 
 
 
-// login routes
-app.use('/login', UserRouter );
-
-// route(app)
-
-
-
-app.listen(8080, () => console.log('http://localhost:8080'))
+const port = process.env.PORT || 8080
+app.listen(port, ()=>console.log(`http://localhost:${port}`))

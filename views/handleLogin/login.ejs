@@ -17,16 +17,16 @@
             <p class="login-form__title">Instagram</p>
             <form method="post" action="/login" class="form1">
                 <div class="form-group">
-                    <input autocomplete="off" name="username" type="text" align="center" placeholder="Username" id="input-log1">
+                    <input autocomplete="off" value="<%= email %>" name="email" type="text" align="center" placeholder="Email" id="input-log1">
                 </div>
                 <div class="form-group">
-                    <input name="password" type="password" align="center" placeholder="Password" id="input-log2">
+                    <input name="password" value="<%= password %>" type="password" align="center" placeholder="Password" id="input-log2">
                 </div>
-
-                <div class="login-form__error-text text-center" role="alert">
-
+                <% if(error.length > 0) {%>
+                <div class="form-group error-text" role="alert">
+                    <%= error%>  
                 </div>
-
+                <%}%>
                 <div class="form-group" id="login1">
                     <button class="btn btn-login" type="submit">Login</button>
                 </div>
@@ -50,7 +50,7 @@
         <div class="login-form">
             <p class="forgot" align="center" style="padding: 5px 10px 10px 10px;">
                 Don't have an account?
-                <a href="/signup" id ="forgotPas" style="margin-bottom: 15px;margin-left: -2px ;font-size: 20px; font-weight: bold;">Sign up</a>
+                <a href="/register" id ="forgotPas" style="margin-bottom: 15px;margin-left: -2px ;font-size: 20px; font-weight: bold;">Sign up</a>
             </p>
         </div>
     </div>

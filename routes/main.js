@@ -5,11 +5,8 @@ const UserRouter = require('./UserRouter');
 
 
 function route(app) {
-    app.route('/login',UserRouter)
-    console.log("okok")
-
-
-
+    app.use('/',UserRouter)
+  
     // app.use('/logout', (req, res) => {
     //     req.logout();
     //     req.session.destroy();
