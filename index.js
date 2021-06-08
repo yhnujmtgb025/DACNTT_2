@@ -7,9 +7,10 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const socketio = require('socket.io');
 
-const route = require('./routes/main');
+
 const db = require('./config/database/connect');
 
+const route = require('./routes/mainRoute')
 
 db.connect();
 
@@ -50,8 +51,8 @@ app.use(flash());
 // });
 
 // routes
-
 route(app)
+
 
 
 

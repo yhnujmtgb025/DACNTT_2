@@ -4,9 +4,12 @@ const bcrypt = require('bcrypt')
 const fs = require('fs')
 const  {validationResult} = require('express-validator')
 
+
+
+
 const index = (req, res) => {
-    res.render("homePage/home")
-}
+    res.render('homePage/home')
+  }
   
 
 const login_get = (req, res) => {
@@ -18,11 +21,12 @@ const login_get = (req, res) => {
 
 
 const login_post = (req, res) => {
+
     let result = validationResult(req);
     if(result.errors.length === 0){
         let {email,password} = req.body
-        console.log("email  "+email)
         let acc = undefined
+        let tok = undefined
         User.findOne({email:email})
         .then(acc=>{
             account = acc
@@ -31,15 +35,14 @@ const login_post = (req, res) => {
         .then(passwordMatch=>{
             if(passwordMatch){
                 jwt.sign({
-                    email:account.email,
-                    name:account.name
+                    _id:account._id,
                 },process.env.JWT_SECRET,{
                     expiresIn:'30s'
                 },(err,token)=>{
                     if(err) throw err
-                    console.log("token :"+token) 
+                    res.cookie('token', token)
+                    return res.redirect('/')
                 })
-                return res.render("homePage/home")
             }
             else{
                 return res.render("handleLogin/login",{error:"Sai email hoặc password",email:email,password:password})
@@ -60,7 +63,7 @@ const login_post = (req, res) => {
         req.flash('error',message)
         req.flash('password',password)
         req.flash('email',email)
-        res.redirect('/')
+        res.redirect('/login')
     }
 
       
@@ -126,14 +129,22 @@ const register_post = (req, res) => {
     
 }
 
+const profile_get = (req, res) => {
+    res.render('profile/myProfile')
+}
 
+const message_get = (req, res) => {
+    res.render('homePage/sendMessage')
+}
   
 module.exports = {
     index,
     login_get,
     login_post,
     register_get,
-    register_post
+    register_post,
+    profile_get,
+    message_get 
 }
 
 

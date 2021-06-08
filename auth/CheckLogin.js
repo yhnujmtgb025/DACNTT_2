@@ -1,19 +1,27 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken') 
+const User = require('../models/UserModel');
 
-
-module.exports = (req, res, next )=>{
-    const {token} = req.body
-    console.log("token "+token)
-    const {JWT_SECRET} = process.env.JWT_SECRET
-    if(!token){
-        return res.render("handleLogin/login", {error:"",email:"",password:""})
+module.exports = (req,res,next)=>{
+    try {
+        var toke = req.cookies.token
+        var idUser =  jwt.verify(toke,process.env.JWT_SECRET)
+        User.findOne({
+            _id:idUser
+        })
+        .then(data=>{
+            if(data){
+                req.data = data
+                next()
+            }else{
+                return res.redirect('/login')
+            }
+        })
+        .catch(err=>{
+            return res.redirect('/')
+        })
+    } catch (error) {
+        return res.redirect('/login')
     }
-    jwt.verify(token,JWT_SECRET,(err,data)=>{
-        if(err){
-            return res.render("handleLogin/login", {error:"",email:"",password:""})
-        }
-        console.log(" ko co loi")
-        req.user = data 
-        next();
-    })
+    
+     
 }
