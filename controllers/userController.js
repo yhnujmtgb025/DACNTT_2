@@ -2,16 +2,19 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
+const session = require('express-session');
 const  {validationResult} = require('express-validator')
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy
 
 
 
-
+// trang home
 const index = (req, res) => {
     res.render('homePage/home')
-  }
+}
   
-
+// display form login
 const login_get = (req, res) => {
     const error = req.flash('error') || ''
     const password = req.flash('password') || ''
@@ -19,36 +22,55 @@ const login_get = (req, res) => {
     res.render('handleLogin/login',{error, password, email})
   }
 
-
-const login_post = (req, res) => {
-
+// Login local 
+passport.use(new LocalStrategy({
+    usernameField:'email'
+},
+function(username, password, done) {
+    User.findOne({ email: username })
+    .then(data=>{
+        account = data
+        if(!data){
+            done(null,false)
+        }
+        else{
+            bcrypt.compare(password,account.password)
+            .then((result)=>{
+                if(result){
+                    done(null,data)
+                }
+                else{
+                    done(null,false)
+                }
+            })
+        }
+      
+    })
+    .catch(err=>{
+        console.log("catch  "+err)
+        done(err)
+    })
+}
+  ));
+// post login
+const login_post = (req, res,next) => {
     let result = validationResult(req);
+    let {email,password} = req.body
     if(result.errors.length === 0){
-        let {email,password} = req.body
-        let acc = undefined
-        let tok = undefined
-        User.findOne({email:email})
-        .then(acc=>{
-            account = acc
-            return bcrypt.compare(password,acc.password)
-        })
-        .then(passwordMatch=>{
-            if(passwordMatch){
-                jwt.sign({
-                    _id:account._id,
-                },process.env.JWT_SECRET,{
-                    expiresIn:'30s'
-                },(err,token)=>{
-                    if(err) throw err
-                    res.cookie('token', token)
-                    return res.redirect('/')
-                })
-            }
-            else{
-                return res.render("handleLogin/login",{error:"Sai email hoặc password",email:email,password:password})
-            }
-        })
-    .catch(e=>{return res.render("handleLogin/login",{error:"Sai email hoặc password",email:email,password:password})})
+        passport.authenticate('local', function(err, user) {
+            if (err) { return res.render('handleLogin/login',{error:"Tài khoản không tồn tại",email:email,password:password}); }
+            if (!user) { return res.render('handleLogin/login',{error:"Sai email hoặc password",email:email,password:password}); }
+            jwt.sign(user.toObject(),process.env.JWT_SECRET,{expiresIn:'15s'},function(err,token){
+                if(err){
+                    return res.render('handleLogin/login',{error:"Lỗi server",email:user.email,password:user.password});
+                }
+                else{
+                    res.cookie('token',token)
+                    res.redirect('/');
+                }
+            })
+
+          })(req, res, next)
     }else{
         result = result.mapped()
     
@@ -66,9 +88,10 @@ const login_post = (req, res) => {
         res.redirect('/login')
     }
 
-      
-    
 }
+
+
+
 
 
 
@@ -144,7 +167,7 @@ module.exports = {
     register_get,
     register_post,
     profile_get,
-    message_get 
+    message_get
 }
 
 

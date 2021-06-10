@@ -4,13 +4,14 @@ const checkUser = require('../auth/CheckUser')
 
 const UserController = require('../controllers/UserController')
 
+
 const loginValidator = require('../validators/loginValidator')
 const registerValidator = require('../validators/registerValidator')
 
 function route(app) {
     
-    app.get('/',checkLogin,UserController.index );
-    
+    app.get('/',UserController.index );
+
 
     app.get('/login', UserController.login_get );
     app.post('/login',loginValidator,UserController.login_post );
