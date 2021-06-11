@@ -11,11 +11,18 @@ const LocalStrategy = require('passport-local').Strategy
 
 // trang home
 const index = (req, res) => {
-    res.render('homePage/home')
+    if(!req.session.user ){
+        return res.redirect('/login')
+      }
+    user = req.session.user
+    res.render('homePage/home',{user})
 }
   
 // display form login
 const login_get = (req, res) => {
+    if(req.session.user){
+      return res.redirect('/')
+    }
     const error = req.flash('error') || ''
     const password = req.flash('password') || ''
     const email = req.flash('email') || ''
@@ -65,6 +72,7 @@ const login_post = (req, res,next) => {
                     return res.render('handleLogin/login',{error:"Lỗi server",email:user.email,password:user.password});
                 }
                 else{
+                    req.session.user = user
                     res.cookie('token',token)
                     res.redirect('/');
                 }
@@ -91,7 +99,12 @@ const login_post = (req, res,next) => {
 }
 
 
-
+//logout
+const logout_get = (req, res) => {
+    
+    req.session.destroy();
+   res.redirect('/login'); 
+}
 
 
 
@@ -125,7 +138,7 @@ const register_post = (req, res) => {
             return user.save()
         })
         .then( () => {
-           return res.redirect('/')
+           return res.redirect('/index')
         })
         .catch(error =>{
             res.render('handleLogin/signup',{error:"Email này đã tồn tại",name:name,email:email,password:password})
@@ -161,9 +174,11 @@ const message_get = (req, res) => {
 }
   
 module.exports = {
+
     index,
     login_get,
     login_post,
+    logout_get,
     register_get,
     register_post,
     profile_get,

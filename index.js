@@ -31,7 +31,6 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
-
 app.use(session({
   resave: false,
   saveUninitialized: true,
@@ -43,7 +42,12 @@ app.use(session({
 
 app.use(cookieParser('keyboard cat'));
 app.use(flash());
-
+app.use(function(req, res, next) {
+  if (!req.user)
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  next();
+});
 
 app.use(passport.initialize());  // khởi tạo chế độ passport
 app.use(passport.session());
@@ -56,9 +60,11 @@ passport.serializeUser(function (user, done) {
 });
 // used to deserialize the user
 passport.deserializeUser(function (id, done) {
-  User.findById(id).then((user)=>{
+  User.findById(id)
+  .then((user)=>{
     done(null,user)
   })
+
 });
 
 
@@ -74,12 +80,10 @@ passport.use(new GoogleStrategy({
 },
 function(accessToken, refreshToken, profile, cb) {
   User.findOne({email: profile.emails[0].value}, function (err, user) {
-
     if (err){
       return cb(err);
     }
     if (user) {
-     
         // if a user is found, log them in
         return cb(null, user);
     } else {
@@ -95,7 +99,6 @@ function(accessToken, refreshToken, profile, cb) {
             if (err){
               throw err;
             }
-            console.log("mot ngay au")
             return cb(null, newUser);
         });
     }
@@ -107,29 +110,18 @@ function(accessToken, refreshToken, profile, cb) {
 app.get('/auth/google/callback',
   passport.authenticate('google'),
   (req, res, next)=>{
-
       if (!req.user) { 
         return res.redirect('/login') 
       }
-      jwt.sign(req.user.toObject(),process.env.JWT_SECRET,{expiresIn:'15s'},function(err,token){
-        if(err){
-            return res.redirect('/login') 
-        }
-        else{
-            res.cookie('tokenGoo',token)
-            res.redirect('/');
-        }
-    })
-
+      req.session.user = req.user
+      res.redirect('/')
   }
-
 )
-  
-
- 
-
 
 route(app)
+
+
+
 
 
 
