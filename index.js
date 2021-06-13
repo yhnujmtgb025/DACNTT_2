@@ -3,12 +3,17 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
+require('./auth/passport')(passport);
+const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const socketio = require('socket.io');
+const methodOveride = require('method-override')
+
+
 
 
 const db = require('./config/database/connect');
@@ -43,6 +48,12 @@ app.use(session({
 app.use(cookieParser('keyboard cat'));
 app.use(flash());
 app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
+app.use(function(req, res, next) {
   if (!req.user)
       res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -66,9 +77,6 @@ passport.deserializeUser(function (id, done) {
   })
 
 });
-
-
-
 
 // active để hiển thị form login google
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile','email'] }))
@@ -118,6 +126,8 @@ app.get('/auth/google/callback',
   }
 )
 
+
+
 route(app)
 
 
@@ -126,6 +136,8 @@ route(app)
 
 
 
+
 const port = process.env.PORT || 8080
+
 
 app.listen(port, ()=>console.log(`http://localhost:${port}`))

@@ -1,12 +1,13 @@
-const checkLogin = require('../auth/CheckLogin')
 const checkAdmin = require('../auth/CheckAdmin')
-const checkUser = require('../auth/CheckUser')
+const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
 
 const UserController = require('../controllers/UserController')
 
 
 const loginValidator = require('../validators/loginValidator')
 const registerValidator = require('../validators/registerValidator')
+const forgotValidator = require('../validators/forgotValidator')
+const resetValidator = require('../validators/resetValidator')
 
 function route(app) {
     app.get('/',UserController.index );
@@ -17,6 +18,13 @@ function route(app) {
 
     app.get('/register', UserController.register_get );
     app.post('/register', registerValidator,UserController.register_post );
+    app.get('/activate/:token',UserController.handle_activity );
+
+    app.get('/forget',UserController.forgot_get );
+    app.post('/forget',forgotValidator,UserController.forgot_post );
+    app.get('/forget/:token',UserController.forgot_activity );
+    app.get('/reset/:id',UserController.reset_get );
+    app.post('/reset/:id',resetValidator,UserController.reset_post );
 
     app.get('/sendMessage',UserController.message_get  );
     app.get('/myProfile',UserController.profile_get  );

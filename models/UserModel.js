@@ -11,6 +11,9 @@ const UserSchema = new Schema({
         unique: true
     },
     fullname: {type: String},
+    resetLink: {type: String,default: ''},
+    isVerified:{type: Boolean},
+    emailToken:{type: String},
     googleId: {type: String},
     role: {type: Number,
     validate : {

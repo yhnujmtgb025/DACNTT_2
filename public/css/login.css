@@ -176,3 +176,9 @@ input[type=text], select, textarea {
 .contain-icon{
     padding-top: 15px;
 }
+
+@media screen and (max-width: 990px)  {
+    .alert{
+      margin-left: 2rem !important;
+    }
+}

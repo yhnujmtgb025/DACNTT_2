@@ -1,16 +1,8 @@
-<html>
-
-<head>
-    <title>Google SignIn</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro">
-    <link rel="stylesheet" type="text/css" href="/css/login.css">
-</head>
+<%- include ("./headerLogin") %>
 
 <body>
-    <div class="container">
-        <div class="login-form">
+    <div class="container" >
+        <div class="login-form" style="margin-top:4.5rem">
             <p class="login-form__title" style="font-size: 75px;">Instagram</p>
             <p style="margin-top: -25px; font-weight: 500; opacity: 0.5;">Sign up to see photos and videos <br> from your friends.</p>
             <p class="forgot" align="center">
@@ -23,6 +15,7 @@
                 <hr size="5" width="150" text-align="right" style="position: relative; top: -.35em;right: 1.5rem;">
             </div>
             <form method="post" action="/register" class="form1">
+                <%- include ("../shares/message") %> 
                 <div class="form-group">
                     <input autocomplete="off" value="<%= name%>" name="name" id="name" type="text" align="center" placeholder="Username" >
                 </div>
@@ -36,6 +29,7 @@
                 <div class="form-group">
                     <input name="rePassword" type="password" align="center" placeholder="Confirm Password" >
                 </div>
+               
                 <% if(error.length > 0) {%>
                     <div class="form-group error-text" role="alert">
                         <%= error%>  

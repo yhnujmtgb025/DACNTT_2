@@ -5,3 +5,8 @@ $(".gallery-img").magnificPopup({
       enabled: true
     }
   });
+
+  $( "#Flash1" ).click(function() {
+    alert( "Handler for .click() called." );
+    $(".alert-success").css("color","red");
+  });

@@ -1,9 +1,15 @@
-
-module.exports = (req,res,next)=>{
-    var role = req.data.role
-    if(role >= 1){
-        next()
-    }else{
-        return res.redirect("/")
+//------------ Routing via Auth ------------//
+module.exports = {
+    ensureAuthenticated: function (req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/login');
+    },
+    forwardAuthenticated: function (req, res, next) {
+        if (!req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/');
     }
-}
+};
