@@ -16,6 +16,7 @@
                 <div class="form-group "  >
                     <input name="password" value="<%=password%>" type="password"   placeholder="Password" id="input-log2">
                 </div>
+               
                 <div class="form-group">
                     <% if(error.length > 0) {%>
                     <div class="alert alert-danger alert-dismissible " style="width: 80%;">
@@ -24,8 +25,14 @@
                     </div>
                   <%}%>
                   </div> 
+
+                  <div class="form-check" style="text-align: left; margin-left: 4rem; margin-bottom: 1rem;">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                  </div>
+
                 <div class="form-group" id="login1">
-                    <button class="btn btn-login" type="submit" >Login</button>
+                    <button class="btn btn-login" type="submit" onclick="lsRememberMe()" >Login</button>
                 </div>
 
                 <div class="row" id="lineRow" >
@@ -52,8 +59,37 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script >
+   const rmCheck = document.getElementById("rememberMe"),
+    emailInput = document.getElementById("input-log1"),
+    passInput = document.getElementById("input-log2");
+    
+   
+    if (localStorage.checkbox && localStorage.checkbox !== "") {
+    rmCheck.setAttribute("checked", "checked");
+    var decrypted = CryptoJS.AES.decrypt( localStorage.password, "Secret Passphrase")
+    emailInput.value = localStorage.username
+    passInput.value = decrypted.toString(CryptoJS.enc.Utf8)
+    } else {
+    rmCheck.removeAttribute("checked");
+    emailInput.value = "";
+    passInput.value = "";
+    }
 
-
+function lsRememberMe() {
+  if (rmCheck.checked && emailInput.value !== "") {
+    var encrypted = CryptoJS.AES.encrypt(passInput.value, "Secret Passphrase");
+    localStorage.username = emailInput.value;
+    localStorage.password = encrypted ;
+    localStorage.checkbox = rmCheck.value;
+  } else {
+    localStorage.username = "";
+    localStorage.password = "";
+    localStorage.checkbox = "";
+  }
+}
+</script>
 
 </body>
 
