@@ -6,14 +6,25 @@
             <p>Enter your email address below and we'll send you a link to reset your password.</p>
             <form method="post" action="/forget" class="form1">
                 <div class="form-group">
+                <% if(success.length > 0) {%>
+                    <div class="alert alert-success alert-dismissible ">
+                        <button type="button" class="close" data-dismiss="alert"  aria-label="close">&times;</button>
+                        <%= success %>  
+                      </div>
+                    </div>
+                <%}%>
+         
+                <div class="form-group">
                     <input name="email" value="<%=email%>" type="text" align="center" placeholder="Email" id="input-log1">
                 </div>
+                <div class="form-group">
                 <% if(error.length > 0) {%>
-                    <div class="form-group error-text" role="alert">
-                        <%= error%>  
-                    </div>
-                    <%}%>
-                <%- include ("../shares/message") %> 
+                    <div class="alert alert-danger alert-dismissible ">
+                        <button type="button" class="close" data-dismiss="alert"  aria-label="close">&times;</button>
+                        <%= error %>  
+                      </div>
+                <%}%>
+            </div>
                 <div class="form-group">
                     <button class="btn btn-reset" type="submit"  id="res">Reset password</button>
                 </div>

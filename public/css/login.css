@@ -33,6 +33,18 @@ input[type=text], select, textarea {
     border-radius: 50px;
     resize: vertical;
   }
+
+  .form-group .alert{
+    width: 80%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    resize: vertical;
+    margin-left: 3.5em;
+  }
+
+
+
 .form-group input{
   outline: none;
   box-shadow: none;

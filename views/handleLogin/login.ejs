@@ -9,19 +9,21 @@
             </div>
             <p class="login-form__title">Instagram</p>
            
-            <form method="post" href="/login" class="form1">
-                <%- include ("../shares/message") %> 
-                <div class="form-group">
-                    <input autocomplete="off" value="<%= email %>" name="email" type="text"  placeholder="Email" id="input-log1">
+            <form name="login-form" method="post" href="/login" class="form1">
+                <div class="form-group "  >       
+                    <input autocomplete="off" value="<%=email%>" name="email" type="text"   placeholder="Email" id="input-log1">
+                </div>
+                <div class="form-group "  >
+                    <input name="password" value="<%=password%>" type="password"   placeholder="Password" id="input-log2">
                 </div>
                 <div class="form-group">
-                    <input name="password" value="<%= password %>" type="password" placeholder="Password" id="input-log2">
-                </div>
-                <% if(error.length > 0) {%>
-                <div class="form-group error-text" role="alert">
-                    <%= error%>  
-                </div>
-                <%}%>
+                    <% if(error.length > 0) {%>
+                    <div class="alert alert-danger alert-dismissible " style="width: 80%;">
+                      <button type="button" class="close" data-dismiss="alert"  aria-label="close">&times;</button>
+                      <%= error%>  
+                    </div>
+                  <%}%>
+                  </div> 
                 <div class="form-group" id="login1">
                     <button class="btn btn-login" type="submit" >Login</button>
                 </div>
@@ -49,5 +51,9 @@
             </p>
         </div>
     </div>
+
+
+
+
 </body>
 

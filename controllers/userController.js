@@ -9,15 +9,12 @@ const passport = require('passport');
 const nodemailer = require('nodemailer')
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-/* 
 
-
-  
-*/
 
 // trang home
 const index = (req, res) => {
     if(!req.session.user){
+        req.flash('')
         return res.redirect('/login')
     }
     res.render('homePage/home')
@@ -29,9 +26,9 @@ const login_get = (req, res) => {
        return  res.redirect('/')
     }
     const error = req.flash('error') || ''
-    const password = req.flash('password') || ''
+    const password = req.flash('password','') || ''
     const email = req.flash('email') || ''
-    res.render('handleLogin/login',{error, password, email})
+    res.render('handleLogin/login',{error,password, email})
   }
 
 
@@ -41,9 +38,12 @@ const login_post = (req, res,next) => {
     let {email,password} = req.body
     if(result.errors.length === 0){
         passport.authenticate('local', function(err, user) {
-            if (err) { return res.render('handleLogin/login',{error:"Tài khoản không tồn tại",email:email,password:password}); }
-            if (!user) { return res.render('handleLogin/login',{error:"Tài khoản không tồn tại",email:email,password:password}); }
-            if (!user.password || !user.email) { return res.render('handleLogin/login',{error:"Sai email hoặc password",email:email,password:password}); }
+            if (err) { 
+                res.render('/login',{error:"Sai email hoặc password",email:email,password:password}); 
+            }
+            if (!user) { 
+                return res.render('handleLogin/login',{error:"Sai email hoặc password",email:email,password:password}); 
+            }
             req.session.user = user
             res.redirect('/')
         })(req, res, next)
@@ -57,7 +57,6 @@ const login_post = (req, res,next) => {
         }
     
         const { email, password} = req.body
-    
         req.flash('error',message)
         req.flash('password',password)
         req.flash('email',email)
@@ -80,7 +79,8 @@ const register_get = (req, res) => {
     const name = req.flash('name') || ''
     const email = req.flash('email') || ''
     const password = req.flash('password') || ''
-    res.render('handleLogin/signup',{error, name, email, password})
+    const success = req.flash('success') || ''
+    res.render('handleLogin/signup',{error,success,name, email, password})
 }
 
 
@@ -92,12 +92,11 @@ const register_post =  (req, res,next) => {
         User.findOne({email:email})
         .then(acc =>{
             if(acc){
-                res.render('handleLogin/signup', {
-                    error:"Email này đã được đăng kí",
-                    name:name,
-                    email:email,
-                    password:password
-                });
+                req.flash('error','Email này đã được đăng kí')
+                req.flash('name',name)
+                req.flash('email',email)
+                req.flash('password',password)
+                res.redirect('/register')
             } else {
                 const oauth2Client = new OAuth2(
                     process.env.GMAIL_CLIENT_ID, // ClientID
@@ -141,14 +140,11 @@ const register_post =  (req, res,next) => {
 
                 transporter.sendMail(mailOptions, (error, info) => {
                     if (error) {
-                        res.render('handleLogin/signup',{error:"Something went wrong on our end. Please register again.",name:name,email:email,password:password});
+                        res.render('handleLogin/signup',{error:"Đã xảy ra lỗi khi đăng kí, vui lòng thử lại",name:name,email:email,password:password});
                     }
                     else {
                         console.log('Mail sent : %s', info.response);
-                        req.flash(
-                            'success_msg',
-                            'Activation link sent to email ID. Please activate to log in.'
-                        );
+                        req.flash('success','Hãy vào mail để xác nhận đăng kí');
                         res.redirect('/register');
                     }
                 })
@@ -166,7 +162,6 @@ const register_post =  (req, res,next) => {
         }
     
         const {name, email, password} = req.body
-     
             req.flash('error',message)
             req.flash('name',name)
             req.flash('email',email)
@@ -181,7 +176,7 @@ const handle_activity = (req,res)=>{
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
             if (err) {
-            req.flash('error','Incorrect or expired link! Please register again.')
+            req.flash('error','Link đã hết hạn, vui lòng thử lại')
             res.redirect('/register');
             }
             else {
@@ -190,7 +185,7 @@ const handle_activity = (req,res)=>{
                 .then(user => {
                     if (user) {
                         //------------ User already exists ------------//
-                        req.flash('error', 'Email ID already registered! Please log in.');
+                        req.flash('error', 'Email này đã đăng kí vui lòng thử lại');
                         res.redirect('/login');
                     } 
                 })
@@ -208,22 +203,22 @@ const handle_activity = (req,res)=>{
                     return res.redirect('/')
                 })
                 .catch(error =>{
-                    res.render('handleLogin/signup',{error:"Email này đã tồn tại",name:name,email:email,password:password})
+                    res.render('handleLogin/signup',{error:error,name:name,email:email,password:password})
                 })
             }
 
         })
     }
     else {
-        res.render('handleLogin/signup',{error:"Account activation error!",name:"",email:"",password:""})
+        res.render('handleLogin/signup',{error:"Lỗi kích hoạt tài khoản",name:"",email:"",password:""})
     }
 }
 
 const forgot_get = (req,res)=>{
     const email = req.flash('email') || ''
     const error = req.flash('error') || ''
-    req.flash('error_msg',"Lỗi reset")
-    res.render("handleLogin/forget",{error,email:email})
+    const success = req.flash('success') || ''
+    res.render("handleLogin/forget",{error,success,email:email})
 }
 
 const forgot_post = (req,res)=>{
@@ -234,7 +229,9 @@ const forgot_post = (req,res)=>{
         User.findOne({ email: email })
         .then(user => {
                 if (!user) {
-                    res.render('handleLogin/forget', {error:"Không tồn tại email này",email:email});
+                    req.flash('error','Không tồn tại email này')
+                    req.flash('email',email)
+                    res.redirect('/forget')
                 } else {
                     const oauth2Client = new OAuth2(
                         process.env.GMAIL_CLIENT_ID, // ClientID
@@ -257,7 +254,8 @@ const forgot_post = (req,res)=>{
                   
                 User.updateOne({ resetLink: token }, (err, success) => {
                     if (err) {
-                        res.render('handleLogin/forget', {error:"Lỗi reset",email});
+                        req.flash('error','Lỗi reset, vui lòng thử lại')
+                        res.redirect('/forget')
                     }
                     else {
                      
@@ -282,14 +280,11 @@ const forgot_post = (req,res)=>{
                         };
                         transporter.sendMail(mailOptions, (error, info) => {
                             if (error) {
-                                res.render('handleLogin/forget',{error:"Something went wrong on our end. Please reset again.",email:email});
-                            }
+                                req.flash('error',"Đã xảy ra lỗi vui lòng thử lại");
+                                res.redirect('/forget');                            }
                             else {
                                 console.log('Mail sent : %s', info.response);
-                                req.flash(
-                                    'success_msg',
-                                    'Activation link sent to email ID. Please activate to log in.'
-                                );
+                                req.flash('success',"Hãy vào email để xác nhận");
                                 res.redirect('/forget');
                             }
                         })
@@ -320,20 +315,14 @@ const forgot_activity=(req,res)=>{
     if (token) {
         jwt.verify(token, process.env.JWT_RESET, (err, decodedToken) => {
             if (err) {
-                req.flash(
-                    'error_msg',
-                    'Incorrect or expired link! Please try again.'
-                );
+                req.flash('error','Link đã hết hạn, vui lòng thử lại !');
                 res.redirect('/forget');
             }
             else {
                 const { _id } = decodedToken;
                 User.findById(_id, (err, user) => {
                     if (err) {
-                        req.flash(
-                            'error_msg',
-                            'User with email ID does not exist! Please try again.'
-                        );
+                        req.flash('error','Không tồn tại email này, vui lòng thử lại !');
                         res.redirect('/forget');
                     }
                     else {
@@ -344,14 +333,16 @@ const forgot_activity=(req,res)=>{
         })
     }
     else {
-        console.log("Password reset error!")
+        req.flash('error','Lỗi token, vui lòng thử lại');
+        res.redirect('/forget');
     }
 }
 
 const reset_get=(req,res)=>{
     const error = req.flash('error') || ''
-    console.log("id : "+req.params.id)
-    res.render('handleLogin/resetPassword', { id: req.params.id,password:"",error})
+    const password = req.flash('password') || ''
+    const rePassword =   req.flash('rePassword') || ''
+    res.render('handleLogin/resetPassword', { id: req.params.id,password:"",error:error,password:password,rePassword:rePassword})
 }
 
 const reset_post=(req,res)=>{
@@ -362,17 +353,12 @@ const reset_post=(req,res)=>{
     if(result.errors.length === 0){
                 User.findByIdAndUpdate({ _id: id}, {password:passNew },function (err, result) {
                     if (err) {
-                        req.flash(
-                            'error_msg',
-                            'Error resetting password!'
-                        );
-                        console.log("err "+err)
+                        req.flash('error','Lỗi khi reset, vui lòng thử lại');
+                        req.flash('password',password);
+                        req.flash('rePassword',rePassword);
                         res.redirect(`/reset/${id}`);
                     } else {
-                        req.flash(
-                            'success_msg',
-                            'Password reset successfully!'
-                        );
+                        req.flash('success','Password đã được thay đổi');
                         res.redirect('/login');
                     }
                 })
@@ -390,7 +376,8 @@ const reset_post=(req,res)=>{
      
             req.flash('error',message)
             req.flash('password',password)
-            res.redirect(`/reset/${_id}`)
+            req.flash('rePassword',rePassword)
+            res.redirect(`/reset/${id}`)
     }
 
 }

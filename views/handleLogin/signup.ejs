@@ -15,7 +15,14 @@
                 <hr size="5" width="150" text-align="right" style="position: relative; top: -.35em;right: 1.5rem;">
             </div>
             <form method="post" action="/register" class="form1">
-                <%- include ("../shares/message") %> 
+                <div class="form-group">
+                    <% if(success.length > 0) {%>
+                        <div class="alert alert-success alert-dismissible ">
+                            <button type="button" class="close" data-dismiss="alert"  aria-label="close">&times;</button>
+                            <%= success %>  
+                          </div>
+                    <%}%>
+                </div> 
                 <div class="form-group">
                     <input autocomplete="off" value="<%= name%>" name="name" id="name" type="text" align="center" placeholder="Username" >
                 </div>
@@ -30,11 +37,14 @@
                     <input name="rePassword" type="password" align="center" placeholder="Confirm Password" >
                 </div>
                
-                <% if(error.length > 0) {%>
-                    <div class="form-group error-text" role="alert">
-                        <%= error%>  
+                <div class="form-group">
+                    <% if(error.length > 0) {%>
+                    <div class="alert alert-danger alert-dismissible " >
+                      <button type="button" class="close" data-dismiss="alert"  aria-label="close">&times;</button>
+                      <%= error%>  
                     </div>
                     <%}%>
+                  </div> 
                 <div class="form-group" id="login1">
                     <button class="btn btn-login" type="submit">Sign up</button>
                 </div>

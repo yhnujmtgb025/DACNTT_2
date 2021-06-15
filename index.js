@@ -47,12 +47,7 @@ app.use(session({
 
 app.use(cookieParser('keyboard cat'));
 app.use(flash());
-app.use(function(req, res, next) {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
-  next();
-});
+
 app.use(function(req, res, next) {
   if (!req.user)
       res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
