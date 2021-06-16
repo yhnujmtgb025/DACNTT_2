@@ -73,7 +73,7 @@ const logout_get = (req, res) => {
 }
 
 
-
+// trang đăng kí
 const register_get = (req, res) => {
     const error = req.flash('error') || ''
     const name = req.flash('name') || ''
@@ -171,6 +171,7 @@ const register_post =  (req, res,next) => {
           
 }
 
+// hàm active
 const handle_activity = (req,res)=>{
     const token = req.params.token;
     if (token) {
@@ -213,6 +214,8 @@ const handle_activity = (req,res)=>{
         res.render('handleLogin/signup',{error:"Lỗi kích hoạt tài khoản",name:"",email:"",password:""})
     }
 }
+
+// trang forget
 
 const forgot_get = (req,res)=>{
     const email = req.flash('email') || ''
@@ -383,11 +386,83 @@ const reset_post=(req,res)=>{
 }
 
 
+// trang profile
 const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
     res.render('profile/myProfile')
+}
+
+// update profile
+const edit_profile_get = (req, res) => {
+
+    res.render('profile/editProfile')
+}
+
+// reset password
+const change_password_get = (req, res) => {
+    var email = req.session.user.email
+    const error = req.flash('error') || ''
+    const password = req.flash('password') || ''
+    const rePassword =   req.flash('rePassword') || ''
+    const oldPass =   req.flash('oldPass') || ''
+    const success = req.flash('success') || ''
+    res.render('profile/changePass',{error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email})
+}
+
+const change_password_post = (req,res)=>{
+    const {oldPass,password,rePassword,email} = req.body
+    const hash_password =  bcrypt.hashSync(password,10)
+    let result = validationResult(req);
+    if(result.errors.length === 0){
+        User.findOne({
+            email: email
+        }).then(user => {
+            if (!user) {
+                req.flash('error','Không tồn tại email này');
+                res.redirect('/login');
+            }
+            bcrypt.compare(oldPass,user.password)
+            .then((result)=>{
+                if(result){
+                    User.updateOne({email: email},{password:hash_password},function (err, result) {
+                        if (err) {
+                            req.flash('error','Lỗi khi thay đổi, vui lòng thử lại');
+                            req.flash('oldPass',oldPass);
+                            req.flash('password',password);
+                            req.flash('rePassword',rePassword);
+                            res.redirect('/myProfile/editProfile/changePassword');
+                        } else {
+                            req.flash('success','Password đã được thay đổi');
+                            res.redirect('/myProfile/editProfile/changePassword');
+                        }
+                    })
+                }
+                else{
+                    req.flash('error','Sai mật khẩu, vui lòng nhập lại');
+                    req.flash('oldPass',oldPass);
+                    req.flash('password',password);
+                    req.flash('rePassword',rePassword);
+                    res.redirect('/myProfile/editProfile/changePassword');
+                }
+            })
+        });
+    
+    }else{
+        result = result.mapped()
+    
+        let message;
+        for (fields in result ){
+            message = result[fields].msg
+            break;    
+        }
+        req.flash('error',message)
+        req.flash('oldPass',oldPass);
+        req.flash('password',password);
+        req.flash('rePassword',rePassword);
+        res.redirect('/myProfile/editProfile/changePassword');
+    }
 }
 
 const message_get = (req, res) => {
@@ -400,15 +475,21 @@ module.exports = {
     login_get,
     login_post,
     logout_get,
+
     register_get,
     register_post,
+
     forgot_get,
     forgot_post,
     forgot_activity,
     reset_get,
     reset_post,
     handle_activity,
+
     profile_get,
+    edit_profile_get,
+    change_password_get,
+    change_password_post,
     message_get
 }
 

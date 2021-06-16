@@ -1,32 +1,162 @@
 .container.formEdit{
-    width: 50%;
-    min-width: 610px;
+    width: 75%;
 
     background-color: #FFFFFF;
-
-    margin: 4.5rem auto;
+    border: 1px solid #DBDBDB;
+    border-radius: 4px;
+    margin-top:1rem;
 }
 
-.editImg{
-    text-align: center;
-    align-items: center;
-
-    padding-top: 1rem;
-    margin-bottom: 0.75rem;
-}
-
-.editImg a{
+.col-3 .list-group-item {
+    font-size: 18px;
     color: #262626;
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
+    border-radius: 0;
+    border-left:none ;
+    border-top:none ;
+    border-right: none;
 }
 
-.editImg a:hover{
-    text-decoration: none;
+.col-3 .list-group-item:focus{
+    font-weight: bold;
+    border-left:2px solid #333 ;
+}   
+
+.edit-list .list-group-item:not(:last-child){
+    border-bottom: 1px solid #DBDBDB !important;
+}
+.edit-list .list-group-item:last-child{
+    border-bottom: none;
 }
 
 .coForm{
-    padding: 0 1rem;
+    margin-top: 25px;
 }
 
+.coForm .form-infor{
+    position: relative;
+    top: 0;
+    left: 5rem;
+}
+
+.form-group{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.in-img{
+    margin-top: 25px
+}
+
+#img-option{
+    margin-left: -1.5rem;
+    margin-top:5px ;
+}
+
+#change-Profile{
+    font-size: 13px;
+    font-weight: bold;
+    color: #0095F6;
+}
+
+.form-infor .form-group:first-child{
+    margin-bottom: -5px;
+}
+
+.form-infor .form-group label{
+    font-size: 16px;
+    font-weight: 500;
+    text-align: right;
+}
+
+.form-infor .form-group input{
+    margin-left: 10px;
+    height: 35px;
+    font-size: 15px;
+    margin-top: 8px;
+    width: 60%;
+}
+
+.form-infor .form-group textarea{
+    margin-left: 10px;
+    font-size: 15px;
+    margin-top: 8px;
+    width: 60%;
+}
+
+
+
+#save{
+
+   margin-bottom: 1rem;
+   border-radius: 50px ;
+   height: 35px;
+}
+
+#save1{
+    position: relative;
+    top: -8px;
+}
+
+
+/* responsive */
+
+@media screen and (max-width: 375px)  {
+    .container.formEdit{
+        margin-left: 25px !important;
+    }
+}
+
+@media screen and (max-width: 576px)  {
+    .container.formEdit{
+        width: 100%;
+        margin-left: 5px;
+    }
+    .form-infor .form-group label{
+        text-align: left;
+    }
+    .col-3 .list-group-item{
+        font-size: 15px;
+        padding: 15px 5px;
+    }
+    .form-infor .form-group {
+        display: flex;
+        flex-wrap: nowrap;
+        margin: 0;
+    }
+    #img-option{
+        margin-left: -3rem !important;
+    }
+    .form-infor .form-group input{
+        margin-left: -25px !important;
+        min-width: 100%;
+    }
+    .form-infor .form-group textarea{
+        margin-left: -25px !important;
+        min-width: 100%;
+    }
+    
+    #save{
+        margin-top: 1rem;
+    }
+}
+
+
+@media screen and (max-width: 768px)  {
+    .coForm .form-infor{
+        position: relative;
+        top: 0;
+        left: 1rem;
+    }
+    .form-infor .form-group input{
+        margin-left: 25px;
+        width: 80%;
+    }
+    #img-option{
+        margin-left: -0.75rem;
+    }
+    .form-infor .form-group textarea{
+        margin-left: 25px;
+        width: 80%;
+    }
+}

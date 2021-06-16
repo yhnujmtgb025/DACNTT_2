@@ -27,8 +27,12 @@ function route(app) {
     app.post('/reset/:id',resetValidator,UserController.reset_post );
 
     app.get('/sendMessage',UserController.message_get  );
+
     app.get('/myProfile',UserController.profile_get  );
 
+    app.get('/myProfile/editProfile',UserController.edit_profile_get  );
+    app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );
+    app.post('/myProfile/editProfile/changePassword',resetValidator,UserController.change_password_post  );
 }
 
 
