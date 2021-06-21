@@ -2,6 +2,7 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
+const formidable = require("formidable");
 const path = require('path');
 const session = require('express-session');
 const  {validationResult} = require('express-validator')
@@ -9,7 +10,7 @@ const passport = require('passport');
 const nodemailer = require('nodemailer')
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-
+const form = formidable({ multiples: true });
 
 // trang home
 const index = (req, res) => {
@@ -45,6 +46,7 @@ const login_post = (req, res,next) => {
                 return res.render('handleLogin/login',{error:"Sai email hoặc password",email:email,password:password}); 
             }
             req.session.user = user
+            // console.log("req "+req.session.user )
             res.redirect('/')
         })(req, res, next)
     }else{
@@ -140,7 +142,8 @@ const register_post =  (req, res,next) => {
 
                 transporter.sendMail(mailOptions, (error, info) => {
                     if (error) {
-                        res.render('handleLogin/signup',{error:"Đã xảy ra lỗi khi đăng kí, vui lòng thử lại",name:name,email:email,password:password});
+                        console.log("  err  "+error)
+                        res.render('handleLogin/signup',{error:"Đã xảy ra lỗi khi đăng kí, vui lòng thử lại",name:name,email:email,password:password,success:""});
                     }
                     else {
                         console.log('Mail sent : %s', info.response);
@@ -193,14 +196,17 @@ const handle_activity = (req,res)=>{
                 .then(()=> bcrypt.hashSync(password,10))
                 .then(hashed =>{
                     let user = new User({
-                        username:name,
+                        fullname:name,
                         email: email,
                         password: hashed,
+                        profileImage:"/img/default.jpg",
+                        bio:"",
+                        name:"",
                         role:1,
                     })
                     return user.save()
                 })
-                .then( () => {
+                .then( () => {                  
                     return res.redirect('/')
                 })
                 .catch(error =>{
@@ -391,27 +397,86 @@ const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
-    res.render('profile/myProfile')
+    User.findOne({_id:req.session.user._id},function(err,user){
+        res.render('profile/myProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name})
+    })
 }
+
+// change photo
+const profile_post = (req, res) => {
+    var id= req.session.user._id;
+
+    form.parse(req);
+    form.on('file', function (name, file){
+        User.findByIdAndUpdate({ _id: id}, {profileImage:'/img/'+file.name },function (err, result) {
+            if (err) {
+                res.json({
+                    "status": "500",
+                    "message": "error",
+                    data:err
+                });
+            } else {
+                res.json({
+                    "status": "200",
+                    "message": "Profile image has been updated.",
+                    data: '/img/'+file.name
+                });
+            }
+        })
+    });
+   
+}
+
 
 // update profile
 const edit_profile_get = (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    User.findOne({_id:req.session.user._id},function(err,user){
+        res.render('profile/editProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name})
+    })
+}
 
-    res.render('profile/editProfile')
+const edit_profile_post = (req, res) => {
+    var id= req.session.user._id;
+    var {fullname,bio,name} = req.body
+    console.log("fi  "+fullname)
+    User.findByIdAndUpdate({ _id: id}, {fullname:fullname,bio:bio,name:name},function (err, result) {
+        if (err) {
+            res.end("Lỗi hệ thống!")
+        } else {
+            res.json({
+                data: {
+                    name:name,
+                    fullname:fullname,
+                    bio:bio
+                }
+            });
+        }
+    })
 }
 
 // reset password
 const change_password_get = (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
     var email = req.session.user.email
     const error = req.flash('error') || ''
     const password = req.flash('password') || ''
     const rePassword =   req.flash('rePassword') || ''
     const oldPass =   req.flash('oldPass') || ''
     const success = req.flash('success') || ''
-    res.render('profile/changePass',{error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email})
+    User.findOne({_id:req.session.user._id},function(err,user){
+        res.render('profile/changePass',{image:user.profileImage,error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email,fullname:user.fullname})
+    })
 }
 
 const change_password_post = (req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
     const {oldPass,password,rePassword,email} = req.body
     const hash_password =  bcrypt.hashSync(password,10)
     let result = validationResult(req);
@@ -487,7 +552,11 @@ module.exports = {
     handle_activity,
 
     profile_get,
+    profile_post,
+
     edit_profile_get,
+    edit_profile_post,
+
     change_password_get,
     change_password_post,
     message_get

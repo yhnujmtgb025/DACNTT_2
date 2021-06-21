@@ -16,53 +16,82 @@
       <div class="col-9" style="border-left:1px solid #DBDBDB; margin-left: -14.5px;">
 
         <div class="coForm">
-
-          <form class=" form-infor">
+         
+          <form class="form-infor"  id="uploadForm"  >
             <div class="form-group row in-img" >
-                  <label class="col-sm-2 col-form-label">
-                    <img class="img-edit" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                    style="border-radius: 50% 50%;">
-                  </label>
-                  
-                <div class="col-sm-10">
-                  <ul id="img-option">
-                    <li id="name-edit">Leejoon</li>
-                    <li id="change-Profile">Change Profile Photo</li>
-                  </ul>
-                </div>
-          
-            </div>
+              <label class="col-sm-2 col-form-label">
+                <img class="img-edit" width="50" height="50" src='<%=image%>' id="photo" alt="Card image cap"
+                style="border-radius: 50% 50%;">
+              </label>
+              <div class="col-sm-10">
+                <ul id="img-option">
+                  <li id="name-edit"><%=fullname%></li>
+                 
+                  <li id="change-Profile" > 
+                    <label  for="file" id="label-upload" style="cursor: pointer;"> Change Profile Photo</label>
+                    <input name="profileImage" type="file" class="upload-photo" id="file" accept="image/*"
+                    onchange="uploadImage();">
+                  </li>
+                </ul>
+              </div>
+            </div> 
 
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Name</label>
               <div class="col-sm-10">
-                <input autocomplete="off" type="text" class="form-control" id="" placeholder="Name" value="">
+                <input autocomplete="off" type="text" class="form-control " id="fname" name="name"  value="<%=name%>">
               </div>
             </div>
 
             <div class="form-group row">
-              <label class="col-sm-2 col-form-label">Username</label>
+              <label class="col-sm-2 col-form-label">Fullname</label>
               <div class="col-sm-10">
-                <input autocomplete="off" type="text" class="form-control" id="" placeholder="Username" value="">
+                <input autocomplete="off" type="text" class="form-control abc" id="fullname" name="fullname" placeholder="" value="<%=fullname%>">
               </div>
-            </div>
+            </div>  
 
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Bio</label>
               <div class="col-sm-10">
-                <textarea type="text" name="" id="" class="form-control"></textarea>
+                <textarea type="text"  id="bio" class="form-control abc" name="bio" ><%=bio%></textarea>
               </div>
             </div>
 
             <div class="form-group row">
               <div class="col-sm-10 text-center">
-                <button type="submit" class="btn btn-primary" id="save"><p id="save1"> Save</p> </button>
+                <button type="submit" class="btn btn-primary" id="save" onclick="updateProfile()"><p id="save1"> Save</p> </button>
               </div>
+            </div>
+
           </form>
+          
+    
+      </div>
+         
+
         </div>
       </div>
     </div>
   </div>
 
-
+<script>
+ function updateProfile() {
+// AJAX code to submit form.
+    $.ajax({
+    // instead of type use method
+    method: "POST",
+    url: "/myProfile/editProfile",
+    // instead  dataString i just serialize the form like below this serialize function bind all data into a string so no need to worry about url endcoding
+    data: $('#uploadForm').serialize(),
+    cache: false,
+    success: function(responseText) {
+        // you can see the result here
+       $("#fullname").attr("value", response.fullname);
+       $("#bio").attr("placeholder", response.bio);
+       $("#name").attr("value", response.name);
+    }
+    });
+}
+  
+</script>
   <%- include ("../shares/footer") %>

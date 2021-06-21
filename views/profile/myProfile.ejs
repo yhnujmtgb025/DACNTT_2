@@ -4,21 +4,26 @@
     <div class="container Pro">
 
         <div class="inforFile">
-
-            <div class="inforFile-image">
-
-                <img class="imaProfile" src="/img/hyun.jpg" alt="hyun">
-
+            <div class="testimonial">
+                <figure class="inforFile-image">
+                    <img class="imaProfile testimonial__img" id="photo" src='<%=image%>' alt="hyun">
+                        <label class="testimonial__caption" for="file" id="label-upload">
+                            Change photo
+                        </label>
+                        <input name="profileImage" type="file" class="upload-photo" id="file" accept="image/*"
+                            onchange="uploadImage();">
+                </figure>
             </div>
 
             <div class="inforFile-user-settings">
 
-                <h1 class="inforFile-user-name">leejoon</h1>
+                <h1 class="inforFile-user-name"><%=fullname%></h1>
 
                 <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
 
             </div>
 
+            <!-- infor follow -->
             <div class="inforFile-stats">
 
                 <ul>
@@ -29,19 +34,14 @@
 
             </div>
 
+            <!-- infor personal -->
             <div class="inforFile-bio">
-
                 <p>
-                    <span class="inforFile-real-name">Jane Doe</span>
-                    <br>Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️
+                    <span class="inforFile-real-name"><%=name%></span>
+                    <br><%=bio%>
                 </p>
 
             </div>
-
-
-
-
-
         </div>
         <!-- End of profile section -->
         <hr id="zop">
@@ -60,11 +60,11 @@
                         d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">
                     </path>
                 </svg>
-                <span  class="">Saved</span>
+                <span class="">Saved</span>
             </a>
         </div>
     </div>
-   
+
 
     <div class="container gallery">
         <div class="gallery-content">
@@ -73,58 +73,68 @@
                     <img src="/img/1.png" alt="">
                     <div class="gallery-item-info">
                         <ul>
-                            <li style="margin-left:-2rem" class="gallery-item-likes"><span class="visually-hidden">Likes:</span>
-                                <i class="fas fa-heart" aria-hidden="true"></i> 34</li>
-                            <li style="padding-left: 1em;" class="gallery-item-comments"><span class="visually-hidden">Comments:</span>
+                            <li style="margin-left:-2rem" class="gallery-item-likes"><span
+                                    class="visually-hidden">Likes:</span>
+                                <i class="fas fa-heart" aria-hidden="true"></i> 34
+                            </li>
+                            <li style="padding-left: 1em;" class="gallery-item-comments"><span
+                                    class="visually-hidden">Comments:</span>
                                 1 <i class="fas fa-comment" aria-hidden="true"></i> </li>
                         </ul>
-    
-                </div>
-                </a> 
-                
+
+                    </div>
+                </a>
+
             </div>
             <div class="gallery-img">
                 <a href="/img/5.png">
                     <img src="/img/5.png" alt="">
                     <div class="gallery-item-info">
                         <ul>
-                            <li style="margin-left:-2rem" class="gallery-item-likes"><span class="visually-hidden">Likes:</span>
-                                <i class="fas fa-heart" aria-hidden="true"></i> 34</li>
-                            <li style="padding-left: 1em;" class="gallery-item-comments"><span class="visually-hidden">Comments:</span>
+                            <li style="margin-left:-2rem" class="gallery-item-likes"><span
+                                    class="visually-hidden">Likes:</span>
+                                <i class="fas fa-heart" aria-hidden="true"></i> 34
+                            </li>
+                            <li style="padding-left: 1em;" class="gallery-item-comments"><span
+                                    class="visually-hidden">Comments:</span>
                                 1 <i class="fas fa-comment" aria-hidden="true"></i> </li>
                         </ul>
-    
-                </div>
-                </a> 
-               
-    
+
+                    </div>
+                </a>
+
+
             </div>
             <div class="gallery-img">
                 <a href="/img/6.png">
                     <img src="/img/6.png" alt="">
                     <div class="gallery-item-info">
                         <ul>
-                            <li style="margin-left:-2rem" class="gallery-item-likes"><span class="visually-hidden">Likes:</span>
-                                <i class="fas fa-heart" aria-hidden="true"></i> 34</li>
-                            <li style="padding-left: 1em;" class="gallery-item-comments"><span class="visually-hidden">Comments:</span>
+                            <li style="margin-left:-2rem" class="gallery-item-likes"><span
+                                    class="visually-hidden">Likes:</span>
+                                <i class="fas fa-heart" aria-hidden="true"></i> 34
+                            </li>
+                            <li style="padding-left: 1em;" class="gallery-item-comments"><span
+                                    class="visually-hidden">Comments:</span>
                                 1 <i class="fas fa-comment" aria-hidden="true"></i> </li>
                         </ul>
-    
-                </div>
-                </a> 
-               
-    
+
+                    </div>
+                </a>
+
+
             </div>
-        
+
         </div>
 
 
     </div>
     </div>
 
-    
+
 
     <div class="loader"></div>
+    
 
 
-<%- include ("../shares/footer") %>
+    <%- include ("../shares/footer") %>

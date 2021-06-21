@@ -10,18 +10,11 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
 /* Base Styles */
 
-
-img.imaProfile {
-    display: block;
-}
-
 .container.Pro {
     max-width: 50rem;
     margin: 1rem auto;
     padding: 0 0.25rem;
-   
 }
-
 
 .visually-hidden {
     position: absolute !important;
@@ -32,8 +25,6 @@ img.imaProfile {
 }
 
 /* inforFile Section */
-
-
 
 .inforFile::after {
     content: "";
@@ -48,18 +39,48 @@ img.imaProfile {
     justify-content: center;
     align-items: center;
     margin-right: 3rem;
-
+    position: relative;
+    top: 0;
+    left: 0;
 }
 
 .inforFile-image img {
     width: 152px;
     height: 152px;
     border-radius: 50%;
+    transition: all .3s;
 }
 
-.inforFile-user-settings,
-.inforFile-stats,
-.inforFile-bio {
+.testimonial__caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 20%);
+    color: #fff;
+    cursor: pointer ;
+    font-size: 25PX;
+    text-align: center;
+    opacity: 0;
+    transition: all .5s;
+}
+
+.testimonial:hover .testimonial__caption {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+
+.testimonial:hover .testimonial__img {
+    transform: scale(1.1);
+    filter: blur(0.2rem) brightness(80%);
+}
+
+.upload-photo {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.inforFile-user-settings, .inforFile-stats, .inforFile-bio {
     float: left;
     width: calc(66.666% - 2rem);
 }
@@ -67,7 +88,6 @@ img.imaProfile {
 .inforFile-user-settings {
     margin-top: 1rem !important;
     margin-left: -3rem !important;
-
 }
 
 .inforFile-user-name {
@@ -83,24 +103,20 @@ img.imaProfile {
     border: 1px solid #dbdbdb;
     border-radius: 4px;
     padding: 2px 10px;
-    margin:-0.75rem 0 0 0.5rem
-    
+    margin: -0.75rem 0 0 0.5rem
 }
 
-
-.inforFile-edit-btn:hover{
+.inforFile-edit-btn:hover {
     cursor: pointer;
 }
 
-
-.inforFile-edit-btn a{
+.inforFile-edit-btn a {
     text-decoration: none;
     color: inherit;
 }
 
 .inforFile-stats {
     margin-left: -3rem !important;
-
 }
 
 .inforFile-stats li {
@@ -110,14 +126,13 @@ img.imaProfile {
     cursor: pointer;
 }
 
-.inforFile-stats li{
+.inforFile-stats li {
     margin-left: -2rem;
 }
 
-.inforFile-stats li:not(:first-child){
-    padding-left:3rem;
+.inforFile-stats li:not(:first-child) {
+    padding-left: 3rem;
 }
-
 
 .inforFile-stats li:last-of-type {
     margin-right: 0;
@@ -130,51 +145,51 @@ img.imaProfile {
     margin-left: -3rem !important;
 }
 
-.inforFile-real-name,
-.inforFile-stat-count,
-.inforFile-edit-btn {
+.inforFile-real-name, .inforFile-stat-count, .inforFile-edit-btn {
     font-weight: 600;
 }
 
 /* test */
-.feature{
+
+.feature {
     margin-top: -10px;
     text-align: center;
 }
-.feature a+a{
+
+.feature a+a {
     padding-left: 3em;
 }
 
-.feature a span{
+.feature a span {
     font-size: 15px;
     color: #262626;
 }
 
-.feature a:hover{
+.feature a:hover {
     text-decoration: none;
 }
 
 /* Gallery Section */
 
-  .container.gallery{
-      width: 100%;
-      margin: 0 auto;
-  } 
-
-  .gallery-content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-  }
-
-.gallery-content img{
-    width: 300px;
-    height:300px;
+.container.gallery {
+    width: 100%;
+    margin: 0 auto;
 }
 
-.gallery-content video{
+.gallery-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gallery-content img {
     width: 300px;
-    height:300px;
+    height: 300px;
+}
+
+.gallery-content video {
+    width: 300px;
+    height: 300px;
 }
 
 .gallery-img {
@@ -183,18 +198,15 @@ img.imaProfile {
     left: 0;
     color: #fff;
     cursor: pointer;
-
     margin: 5px 15px;
 }
 
-.gallery-img:hover .gallery-item-info,
-.gallery-img:focus .gallery-item-info {
+.gallery-img:hover .gallery-item-info, .gallery-img:focus .gallery-item-info {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     top: 0;
-    
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3);
@@ -212,6 +224,7 @@ img.imaProfile {
 }
 
 /* Loader */
+
 /* 
 .loader {
     width: 5rem;
@@ -223,126 +236,97 @@ img.imaProfile {
     animation: loader 500ms linear infinite;
 } */
 
-
 /* Media Query */
 
-@media screen and (max-width:411px){
-    #navColor{
+@media screen and (max-width:411px) {
+    #navColor {
         min-width: 380px;
     }
-    .gallery-content img{
+    .gallery-content img {
         margin-left: 1.5rem !important;
     }
 }
 
 @media screen and (max-width: 640px) {
-    #zop{
+    #zop {
         display: none;
     }
-
     .inforFile {
         display: flex;
         flex-wrap: wrap;
     }
-
     .inforFile::after {
         display: none;
     }
-
-   
-
     .inforFile-image img {
         width: 100px;
         height: 100px;
     }
-
     .inforFile-user-settings {
         flex-basis: calc(100% - 10.7rem);
         display: flex;
         flex-wrap: wrap;
-        margin-top: 0.25rem !important; 
+        margin-top: 0.25rem !important;
         margin-left: -2rem !important;
     }
-
     .inforFile-user-name {
         font-size: 2rem;
-
     }
-
     .inforFile-edit-btn {
         order: 1;
         padding: 0;
         text-align: center;
         margin-top: 1rem;
     }
-
     .inforFile-edit-btn {
         margin-left: 0;
     }
-
     .inforFile-bio {
         font-size: 1.4rem;
         margin-top: 1.5rem;
         margin-left: 0.75rem !important;
-
         border-bottom: 0.1rem solid #dadada;
     }
-
-    .inforFile-edit-btn,
-    .inforFile-bio,
-    .inforFile-stats {
+    .inforFile-edit-btn, .inforFile-bio, .inforFile-stats {
         flex-basis: 100%;
     }
-
     .inforFile-stats {
         order: 1;
     }
-
     .inforFile-stats ul {
         display: flex;
         text-align: center;
-        padding:1rem;
+        padding: 1rem;
         margin: 0.5rem -1.5rem;
-       
     }
-
     .inforFile-stats li {
         font-size: 1.4rem;
         flex: 1;
-     
     }
-
     .inforFile-stats li {
         padding-left: 7rem;
     }
-
     .inforFile-stat-count {
         display: block;
     }
-/* option setting */
-
-
-    .feature{
+    /* option setting */
+    .feature {
         margin-top: -1rem;
         padding-bottom: 1rem;
         margin-left: 2rem;
-        
         border-top: 0.1rem solid #dadada;
     }
-
-    .feature a svg{
+    .feature a svg {
         margin-top: 1rem;
         width: 30px;
         height: 30px;
     }
-    .feature a span{
+    .feature a span {
         display: none;
     }
-    .feature a+a{
+    .feature a+a {
         padding-left: 6em;
     }
-
-    
 }
 
 /* Spinner Animation */
@@ -352,6 +336,3 @@ img.imaProfile {
         transform: rotate(360deg);
     }
 }
-
-
-

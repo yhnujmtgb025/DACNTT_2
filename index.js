@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+
+
 const session = require('express-session');
 const passport = require('passport');
 require('./auth/passport')(passport);
@@ -27,10 +29,12 @@ const app = express();
 
 
 app.set('view engine', 'ejs')
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({
   extended: true,
 }));
+
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
@@ -42,7 +46,7 @@ app.use(session({
   secret: 'SECRET' ,
   cookie: { 
     secure:false,
-    maxAge: 1000*60*1 }
+    maxAge: 1000000 }
 }));
 
 app.use(cookieParser('keyboard cat'));
@@ -124,6 +128,7 @@ app.get('/auth/google/callback',
 
 
 route(app)
+
 
 
 

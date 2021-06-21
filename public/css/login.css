@@ -189,6 +189,11 @@ input[type=text], select, textarea {
     padding-top: 15px;
 }
 
+.close:focus{
+  outline: none;
+  border: none;
+}
+
 @media screen and (max-width: 990px)  {
     .alert{
       margin-left: 2rem !important;

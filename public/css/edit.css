@@ -84,6 +84,10 @@
     width: 60%;
 }
 
+#file{
+    border: 1px solid red;
+}
+
 
 
 #save{
@@ -96,6 +100,27 @@
 #save1{
     position: relative;
     top: -8px;
+}
+
+
+.alert-pass .alert{
+    margin-left: 10px;
+    font-size: 15px;
+    margin-top: 8px;
+}
+
+.err{
+    position: relative;
+    top: 10px;
+}
+
+.btn-err{
+    margin-top: 5px;
+}
+
+.btn-err:focus{
+    outline: none;
+    border: none;
 }
 
 
@@ -139,6 +164,12 @@
     #save{
         margin-top: 1rem;
     }
+
+    .btn-err{
+        position: absolute;
+        top: -10px;
+        left: 2.75rem;
+    }
 }
 
 
@@ -159,4 +190,11 @@
         margin-left: 25px;
         width: 80%;
     }
+    
+    .btn-err{
+        margin-top: 5px;
+    }
 }
+
+
+

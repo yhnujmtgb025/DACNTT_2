@@ -29,8 +29,10 @@ function route(app) {
     app.get('/sendMessage',UserController.message_get  );
 
     app.get('/myProfile',UserController.profile_get  );
+    app.post('/myProfile/changePhoto',UserController.profile_post  );
 
     app.get('/myProfile/editProfile',UserController.edit_profile_get  );
+    app.post('/myProfile/editProfile',UserController.edit_profile_post  );
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );
     app.post('/myProfile/editProfile/changePassword',resetValidator,UserController.change_password_post  );
 }
