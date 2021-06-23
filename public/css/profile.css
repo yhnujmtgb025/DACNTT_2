@@ -237,13 +237,57 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 } */
 
 /* Media Query */
+@media screen and (max-width:280px) {
+    .inforFile {
+        position: relative;
+        top: 0;
+        left: 1rem !important; 
+    }
+    .feature {
+        position: relative;
+        top: 0;
+        left: 1rem !important;
+    }
+    .inforFile-stats ul {
+        margin: 0.5rem -2.5rem !important;
+    }
+}
 
-@media screen and (max-width:411px) {
-    #navColor {
-        min-width: 380px;
+@media screen and (max-width:375px) {
+    .inforFile {
+        position: relative;
+        top: 0;
+        left: 1.5rem !important; 
+    }
+    .feature {
+        position: relative;
+        top: 0;
+        left: 1.5rem !important;
+    }
+    .inforFile-stats ul {
+        margin: 0.5rem -2.5rem !important;
+    }
+}
+
+
+@media screen and (max-width: 574px) {
+    .inforFile {
+        position: relative;
+        top: 0;
+        left: 2.5rem; 
+    }
+    .feature {
+        position: relative;
+        top: 0;
+        left: 2rem;
+    }
+    .feature a+a {
+        padding-left: 6.5em !important;
     }
     .gallery-content img {
-        margin-left: 1.5rem !important;
+        position: relative;
+        top: 0;
+        left: 2rem;
     }
 }
 
@@ -253,7 +297,7 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     }
     .inforFile {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: wrap;    
     }
     .inforFile::after {
         display: none;
@@ -261,13 +305,17 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     .inforFile-image img {
         width: 100px;
         height: 100px;
+
+        position: absolute;
+        top: 0;
+        left: 1rem;
     }
     .inforFile-user-settings {
         flex-basis: calc(100% - 10.7rem);
         display: flex;
         flex-wrap: wrap;
         margin-top: 0.25rem !important;
-        margin-left: -2rem !important;
+        margin-left: 4rem !important;
     }
     .inforFile-user-name {
         font-size: 2rem;

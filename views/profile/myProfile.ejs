@@ -7,17 +7,19 @@
             <div class="testimonial">
                 <figure class="inforFile-image">
                     <img class="imaProfile testimonial__img" id="photo" src='<%=image%>' alt="hyun">
-                        <label class="testimonial__caption" for="file" id="label-upload">
-                            Change photo
-                        </label>
-                        <input name="profileImage" type="file" class="upload-photo" id="file" accept="image/*"
-                            onchange="uploadImage();">
+                    <label class="testimonial__caption" for="file" id="label-upload">
+                        Change photo
+                    </label>
+                    <input  name="profileImage" type="file" class=" upload-photo" id="file" accept="image/*"
+                        onchange="uploadImage();">
                 </figure>
             </div>
 
             <div class="inforFile-user-settings">
 
-                <h1 class="inforFile-user-name"><%=fullname%></h1>
+                <h1 class="inforFile-user-name">
+                    <%=fullname%>
+                </h1>
 
                 <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
 
@@ -37,8 +39,11 @@
             <!-- infor personal -->
             <div class="inforFile-bio">
                 <p>
-                    <span class="inforFile-real-name"><%=name%></span>
-                    <br><%=bio%>
+                    <span class="inforFile-real-name">
+                        <%=name%>
+                    </span>
+                    <br>
+                    <%=bio%>
                 </p>
 
             </div>
@@ -134,7 +139,6 @@
 
 
     <div class="loader"></div>
-    
 
 
     <%- include ("../shares/footer") %>

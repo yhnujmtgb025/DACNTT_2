@@ -2,15 +2,16 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
-const formidable = require("formidable");
+
 const path = require('path');
 const session = require('express-session');
 const  {validationResult} = require('express-validator')
 const passport = require('passport');
 const nodemailer = require('nodemailer')
 const { google } = require("googleapis");
+const { rejects } = require('assert');
 const OAuth2 = google.auth.OAuth2;
-const form = formidable({ multiples: true });
+
 
 // trang home
 const index = (req, res) => {
@@ -128,7 +129,7 @@ const register_post =  (req, res,next) => {
                         clientSecret:process.env.GMAIL_CLIENT_SECRET,
                         refreshToken: process.env.REFRESH_TOKEN,
                         accessToken: accessToken
-                    },
+                    }
                 });
 
                 // send mail with defined transport object
@@ -397,34 +398,25 @@ const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
+  
     User.findOne({_id:req.session.user._id},function(err,user){
+        console.log("mua he")
         res.render('profile/myProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name})
     })
+
 }
 
 // change photo
 const profile_post = (req, res) => {
     var id= req.session.user._id;
-
-    form.parse(req);
-    form.on('file', function (name, file){
-        User.findByIdAndUpdate({ _id: id}, {profileImage:'/img/'+file.name },function (err, result) {
-            if (err) {
-                res.json({
-                    "status": "500",
-                    "message": "error",
-                    data:err
-                });
-            } else {
-                res.json({
-                    "status": "200",
-                    "message": "Profile image has been updated.",
-                    data: '/img/'+file.name
-                });
-            }
-        })
-    });
-   
+    User.findByIdAndUpdate({ _id: id}, {profileImage:'/img/uploads/'+req.file.filename },function (err, result) {
+        if (err) {
+            return res.send("Loi");
+        }
+        else{
+            return res.json({data: '/img/uploads/'+req.file.filename})
+        }
+    })
 }
 
 
@@ -441,7 +433,6 @@ const edit_profile_get = (req, res) => {
 const edit_profile_post = (req, res) => {
     var id= req.session.user._id;
     var {fullname,bio,name} = req.body
-    console.log("fi  "+fullname)
     User.findByIdAndUpdate({ _id: id}, {fullname:fullname,bio:bio,name:name},function (err, result) {
         if (err) {
             res.end("Lỗi hệ thống!")

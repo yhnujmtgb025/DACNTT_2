@@ -3,9 +3,9 @@
      background-color: #FFFFFF !important; 
      border-bottom: 1.5px solid #DBDBDB;
      width: 100%;
-     max-width: 100%;
-     height: 60px;
-
+     min-width: 100%; 
+    height: 60px;
+     
 }
 
 .img-brand{
@@ -74,6 +74,13 @@ path {
 
 
 /* responsive */
+@media screen and (max-width: 1200px) {
+
+    .topnav-right {
+        margin-right: 3rem;
+    }
+}
+
 @media screen and (max-width: 992px)  {
     .topnav-right {
         margin-right: 2rem;
@@ -83,6 +90,7 @@ path {
     }
 }
 @media screen and (max-width: 768px)  {
+
     .topnav-right {
         margin-right: 1rem;
     }
@@ -108,6 +116,11 @@ path {
     }
 }
 @media screen and (max-width: 574px)  {
+    #navColor{
+        width: 120%;
+        max-width: 120%;
+    }
+
     .topnav-right {
         margin-right: 0.5rem;
     }
@@ -131,11 +144,23 @@ path {
     }
 }
 @media screen and (max-width: 500px)  {
+    #navColor{
+        width: 120%;
+        min-width: 120% !important;
+    }
     #searchNav{
         visibility: hidden;
     }
 }
-@media screen and (max-width: 311px)  {
+
+@media screen and (max-width: 540px)  {
+    #navColor{
+        width: 120%;
+        max-width: 120%;
+    }
+}
+
+@media screen and (max-width: 320px)  {
     html, body {
         min-width: 350px;
     }

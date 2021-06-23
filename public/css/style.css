@@ -479,36 +479,48 @@ ul li {
         width: 80% !important;
     }
    .bodyNewfeed .viewport .coverList{
-
-        min-width: 90px;
-
-    }
-    
+    width: 100% !important;
+    min-width: 100%;
+   }
  }
 
 @media screen and (max-width: 375px) {
    .sugCard{
-       margin-left: 1rem;
+       margin-left: 2.05rem;
+   }
+   .seeCard{
+        margin-right: -3rem;
    }
    #list{
        width: 86%;
        height: auto;
    }
     .coverList{
-        width: 86% !important;
-        margin-left: 2rem;
+        width: 100% !important;
+        min-width: 100%;
+        margin-left: 3.25rem !important;
     }
    
 }
 
-@media screen and (max-width: 1024px) {
-   #idContain{
-       margin-left: -1rem;
-   }
+@media screen and (max-width: 574px) {
+    .sugCard{
+        margin-left: 2.05rem;
+    }
+    .cardNew{
+        width: 100%;
+        margin-left: 3.5rem;
+    }
+     .coverList{
+         width: 100% ;
+         margin-left: 1.25rem;
+     }
 }
 
 @media screen and (max-width: 1024px) {
-   
+    #idContain{
+        margin-left: -1rem;
+    }
     .rightCard {
         position: relative;
         margin: 5px 40px;

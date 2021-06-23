@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
-
 const session = require('express-session');
 const passport = require('passport');
 require('./auth/passport')(passport);
@@ -17,11 +16,11 @@ const methodOveride = require('method-override')
 
 
 
-
 const db = require('./config/database/connect');
 const User = require('./models/UserModel');
 
-const route = require('./routes/mainRoute')
+const route = require('./routes/mainRoute');
+const { ConnectionStates } = require('mongoose');
 
 db.connect();
 

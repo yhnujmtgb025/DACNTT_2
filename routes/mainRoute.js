@@ -1,8 +1,20 @@
 const checkAdmin = require('../auth/CheckAdmin')
 const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
 
-const UserController = require('../controllers/UserController')
 
+const multer  = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/img/uploads')
+    },
+    filename: function (req, file, cb) {
+      // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
+       cb(null,file.originalname)
+    }
+  })
+const upload = multer({storage: storage})
+
+const UserController = require('../controllers/UserController')
 
 const loginValidator = require('../validators/loginValidator')
 const registerValidator = require('../validators/registerValidator')
@@ -29,7 +41,7 @@ function route(app) {
     app.get('/sendMessage',UserController.message_get  );
 
     app.get('/myProfile',UserController.profile_get  );
-    app.post('/myProfile/changePhoto',UserController.profile_post  );
+    app.post('/myProfile/changePhoto',upload.single('file-'),UserController.profile_post  );
 
     app.get('/myProfile/editProfile',UserController.edit_profile_get  );
     app.post('/myProfile/editProfile',UserController.edit_profile_post  );

@@ -128,15 +128,17 @@
 
 @media screen and (max-width: 375px)  {
     .container.formEdit{
-        margin-left: 25px !important;
+        margin-left: 10px !important;
+
     }
 }
 
 @media screen and (max-width: 576px)  {
     .container.formEdit{
         width: 100%;
-        margin-left: 5px;
+        margin-left: 25px !important;
     }
+
     .form-infor .form-group label{
         text-align: left;
     }
@@ -147,16 +149,16 @@
     .form-infor .form-group {
         display: flex;
         flex-wrap: nowrap;
-        margin: 0;
+  
     }
     #img-option{
         margin-left: -3rem !important;
     }
-    .form-infor .form-group input{
+    .form-infor .form-group .col-sm-10 input.form-control{
         margin-left: -25px !important;
         min-width: 100%;
     }
-    .form-infor .form-group textarea{
+    .form-infor .form-group .col-sm-10 textarea.form-control {
         margin-left: -25px !important;
         min-width: 100%;
     }
@@ -179,14 +181,14 @@
         top: 0;
         left: 1rem;
     }
-    .form-infor .form-group input{
+    .form-infor .form-group .col-sm-10 input.form-control {
         margin-left: 25px;
         width: 80%;
     }
     #img-option{
         margin-left: -0.75rem;
     }
-    .form-infor .form-group textarea{
+    .form-infor .form-group .col-sm-10 textarea.form-control{
         margin-left: 25px;
         width: 80%;
     }
