@@ -21,12 +21,16 @@ $(".gallery-img").magnificPopup({
                 if (this.readyState == 4 && this.status == 200) {
                 
                   var response = JSON.parse(this.responseText);
-                  console.log(response.data)
-                    $("#photo").attr("src", response.data);
+      
+                  $("#photo").attr("src", response.data);
+
+                
                 }
             };
             
             ajax.send(data);
+
+            return false;
         }                                                                                               
  
     

@@ -19,7 +19,8 @@ const index = (req, res) => {
         req.flash('')
         return res.redirect('/login')
     }
-    res.render('homePage/home')
+    var user = req.session.user
+    res.render('homePage/home',{image:user.profileImage})
 }
   
 // display form login
@@ -409,12 +410,13 @@ const profile_get = (req, res) => {
 // change photo
 const profile_post = (req, res) => {
     var id= req.session.user._id;
-    User.findByIdAndUpdate({ _id: id}, {profileImage:'/img/uploads/'+req.file.filename },function (err, result) {
+    req.session.user.profileImage = '/img/'+req.file.filename
+    User.updateOne({ _id: id}, {profileImage:'/img/'+req.file.filename },function (err, result) {
         if (err) {
             return res.send("Loi");
         }
         else{
-            return res.json({data: '/img/uploads/'+req.file.filename})
+            return res.json({data: '/img/'+req.file.filename})
         }
     })
 }

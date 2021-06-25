@@ -5,7 +5,17 @@ const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
 const multer  = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './public/img/uploads')
+      cb(null, './public/demo')
+    },
+    fileFilter:function (req, file, cb) {
+      if(file.mimetype.startsWith('image/')){
+        cb(null, true)
+      }
+      else{
+        cb(null,false)
+      }
+    },limits:{
+      fileSize:5000,
     },
     filename: function (req, file, cb) {
       // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
@@ -15,6 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage})
 
 const UserController = require('../controllers/UserController')
+const PostController = require('../controllers/PostController')
 
 const loginValidator = require('../validators/loginValidator')
 const registerValidator = require('../validators/registerValidator')
@@ -24,14 +35,21 @@ const resetValidator = require('../validators/resetValidator')
 function route(app) {
     app.get('/',UserController.index );
 
+    // handle newfeed
+    app.post('/addPost',upload.single('image'),PostController.post_Newfeed );
+    app.post("/getNewsfeed", PostController.get_Newfeed);
+
+    // handle login
     app.get('/login', UserController.login_get );
     app.post('/login',loginValidator,UserController.login_post );
     app.get('/logout',UserController.logout_get)
 
+    // handle register
     app.get('/register', UserController.register_get );
     app.post('/register', registerValidator,UserController.register_post );
     app.get('/activate/:token',UserController.handle_activity );
 
+    // handle forget
     app.get('/forget',UserController.forgot_get );
     app.post('/forget',forgotValidator,UserController.forgot_post );
     app.get('/forget/:token',UserController.forgot_activity );
@@ -40,11 +58,14 @@ function route(app) {
 
     app.get('/sendMessage',UserController.message_get  );
 
+    // handle profile
     app.get('/myProfile',UserController.profile_get  );
     app.post('/myProfile/changePhoto',upload.single('file-'),UserController.profile_post  );
 
     app.get('/myProfile/editProfile',UserController.edit_profile_get  );
     app.post('/myProfile/editProfile',UserController.edit_profile_post  );
+
+    // handle password 
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );
     app.post('/myProfile/editProfile/changePassword',resetValidator,UserController.change_password_post  );
 }

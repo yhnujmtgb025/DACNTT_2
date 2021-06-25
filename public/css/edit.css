@@ -14,12 +14,17 @@
     border-left:none ;
     border-top:none ;
     border-right: none;
-}
+} 
 
-.col-3 .list-group-item:focus{
+#pgEdit{
     font-weight: bold;
     border-left:2px solid #333 ;
-}   
+}
+
+#pgPass{
+    font-weight: bold;
+    border-left:2px solid #333 ;
+}
 
 .edit-list .list-group-item:not(:last-child){
     border-bottom: 1px solid #DBDBDB !important;
