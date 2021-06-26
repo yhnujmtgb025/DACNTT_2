@@ -1,4 +1,7 @@
 const User = require('../models/UserModel');
+const Post = require('../models/PostModel');
+const mongodb = require("mongodb");
+const ObjectId = mongodb.ObjectId;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
@@ -401,7 +404,6 @@ const profile_get = (req, res) => {
     }
   
     User.findOne({_id:req.session.user._id},function(err,user){
-        console.log("mua he")
         res.render('profile/myProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name})
     })
 
@@ -410,14 +412,15 @@ const profile_get = (req, res) => {
 // change photo
 const profile_post = (req, res) => {
     var id= req.session.user._id;
+    console.log("id  "+id)
     req.session.user.profileImage = '/img/'+req.file.filename
-    User.updateOne({ _id: id}, {profileImage:'/img/'+req.file.filename },function (err, result) {
+    User.updateOne({ _id: id}, {$set:{'profileImage':'/img/'+req.file.filename}},function (err, result) {
         if (err) {
             return res.send("Loi");
         }
-        else{
-            return res.json({data: '/img/'+req.file.filename})
-        }
+        Post.collection.updateMany({'user._id':ObjectId(id)}, {$set: { "user.profileImage" :'/img/'+req.file.filename }})
+        return res.json({data: '/img/'+req.file.filename})
+        
     })
 }
 
@@ -439,6 +442,13 @@ const edit_profile_post = (req, res) => {
         if (err) {
             res.end("Lỗi hệ thống!")
         } else {
+            Post.collection.updateMany({'user._id':ObjectId(id)}, {
+                $set: 
+                { 
+                    "user.name" :name,
+                    "user.fullname": fullname
+                }
+             })
             res.json({
                 data: {
                     name:name,

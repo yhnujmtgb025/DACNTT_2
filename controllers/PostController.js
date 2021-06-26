@@ -5,30 +5,11 @@ const bcrypt = require('bcrypt');
 var path = require('path')
 const multer = require('multer');
 const { collection } = require('../models/UserModel');
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/demo')
-  },
-  fileFilter: function (req, file, cb) {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true)
-    }
-    else {
-      cb(null, false)
-    }
-  }, limits: {
-    fileSize: 5000,
-  },
-  filename: function (req, file, cb) {
-    // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
-    cb(null, file.originalname)
-  }
-})
-const upload = multer({ storage: storage })
+
 // trang home
 const post_Newfeed = (req, res) => {
   var user = req.session.user;
-  var { caption } = req.body
+  var { caption } = req.body;
   var image = ''
   var type = ''
   if(req.file){
@@ -91,6 +72,8 @@ const post_Newfeed = (req, res) => {
 
 const get_Newfeed = (req,res) =>{
     var id = req.session.user;
+    var img = req.session.user.profileImage;
+ 
     User.findOne({
       "_id": id
     }, function (error, user) {
@@ -107,16 +90,17 @@ const get_Newfeed = (req,res) =>{
         .sort({
           "createdAt": -1
         })
-        .toArray(function (error, data) {
-          for(var i = 0;i<3;i++){
-            console.log(data[i])
-          }
+        .toArray()
+        .then(data=>{
           return res.json({
             "status": "success",
             "message": "Record has been fetched",
             "data": data
           });
-        });
+        })
+        .catch(err=>{
+            return res.end("Loi")
+        })
       }
     });
   
