@@ -6,11 +6,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs')
 const bcrypt = require('bcrypt');
 var path = require('path')
-
-const { io, Socket } = require("../utils/socket");
-
-
-
+const { collection } = require('../models/UserModel');
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -26,19 +22,17 @@ const upload = multer({ storage: storage })
 const post_Newfeed = function (req, res) {
   var user = req.session.user;
   var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
-
   uploader(req, res, next => {
     var { caption } = req.body
-
     var img = []
     var video = []
     var type = []
     var createdAt = new Date().getTime();
-    let error = undefined
 
-    // console.log("helo   ",req.files)
+    console.log("\nhelo   ",req.files)
     var files = []
     files = [].concat(req.files);
+    // console.log(files)
     if (files[0].image != null && files[0].video != null) {
       console.log("1")
       for (var x = 0; x < files[0].image.length; x++) {
@@ -55,15 +49,13 @@ const post_Newfeed = function (req, res) {
       }
 
     } else if (files[0].image != null && files[0].video == null) {
+      console.log("2")
       for (var x = 0; x < files[0].image.length; x++) {
         if (files[0].image[x].fieldname == 'image') {
           img.push(files[0].image[x])
           type.push(path.extname(img[x].filename))
-
         }
-
       }
-
     } else if (files[0].image == null && files[0].video != null) {
       console.log("3")
       for (var x = 0; x < files[0].video.length; x++) {
@@ -77,14 +69,12 @@ const post_Newfeed = function (req, res) {
         error: "Vui lòng nhập caption "
       })
     }
-
-    User.findOne({
-      "_id": user._id
-    }, function (error, user) {
-      if (user == null) {
+    var idUser = user._id
+    User.collection.findOne({ _id: ObjectId(idUser) })
+    .then(user => {
+      if (!user) {
         res.redirect('/login');
       } else {
-
         Post.collection.insertOne({
           "caption": caption,
           "image": img,
@@ -125,11 +115,9 @@ const post_Newfeed = function (req, res) {
           });
         });
       }
-    });
-
-  })
-
-}
+  });
+})}
+// trang home
 
 const get_Newfeed = function (req, res) {
   var id = req.session.user._id;
@@ -195,6 +183,7 @@ const get_Notice = function (req, res) {
     });
 
 }
+
 
 const post_Notice = function (req, res) {
   var id = req.session.user._id;
@@ -262,7 +251,6 @@ const post_ToggleLike = function (req, res) {
             "message": "Post does not exist."
           });
         } else {
-
           var isLiked = false;
           for (var a = 0; a < post.likers.length; a++) {
             var liker = post.likers[a];
@@ -282,7 +270,6 @@ const post_ToggleLike = function (req, res) {
                 }
               }
             }, function (error, data) {
-
               User.collection.updateOne({
                 $and: [{
                   "_id": post.user._id
@@ -299,15 +286,15 @@ const post_ToggleLike = function (req, res) {
                   }
                 }
               });
-
+            
               res.json({
                 "status": "unliked",
                 "message": "Post has been unliked.",
                 "isLiked": isLiked
               });
-            });
-          } else {
-
+        
+            })
+          }else{
             User.collection.updateOne({
               "_id": post.user._id
             }, {
@@ -326,7 +313,7 @@ const post_ToggleLike = function (req, res) {
                 }
               }
             });
-
+            
             Post.collection.updateOne({
               "_id": ObjectId(_id)
             }, {
@@ -360,23 +347,19 @@ const post_ToggleLike = function (req, res) {
                         "isLiked": isLiked
                       });
                      }
-                 });
-              
-  
-            });
-      
-            
-
-       
-            
+                })
+            })
           }
+      
+      
         }
-      });
-
-    }
-  });
-
+      })
+  
+  }
+  })
 }
+
+
 module.exports = {
   post_Newfeed, get_Newfeed, post_ToggleLike, get_Notice, post_Notice
 };

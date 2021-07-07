@@ -20,16 +20,6 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './public/demo')
     },
-    fileFilter:function (req, file, cb) {
-      if(file.mimetype.startsWith('image/')){
-        cb(null, true)
-      }
-      else{
-        cb(null,false)
-      }
-    },limits:{
-      fileSize:5000,
-    },
     filename: function (req, file, cb) {
       // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
        cb(null,file.originalname)
@@ -431,8 +421,7 @@ const profile_get = (req, res) => {
     .toArray( function(err,user){
         var lengthPost = 0;
         var like=""
-        var imgPost = []
-        var vidPost = []
+        var post =[]
         for(var i = 0;i<user.length;i++){
             image=user[i].profileImage
             fullname=user[i].fullname
@@ -441,9 +430,7 @@ const profile_get = (req, res) => {
             lengthPost = user[i].posts.length
             for(var j =0;j<user[i].posts.length;j++){
                 post = user[i].posts
-                like = user[i].posts[j].likers.length
-                imgPost=user[i].posts[j].image
-                vidPost=user[i].posts[j].video      
+                like = user[i].posts[j].likers.length    
             }
         }        
         if(like == ""){
