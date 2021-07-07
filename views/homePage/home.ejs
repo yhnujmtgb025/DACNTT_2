@@ -4,8 +4,8 @@
         <div class="row">
             <div class=" col-lg-7 " id="idContain">
                 <!-- Frame card post -->
-                <div class="cardNew" >
-                    <form id="post-new-feed">
+                <div class="cardNew">
+                    <form id="post-new-feed" enctype="multipart/form-data" onsubmit="return doPost(this);">
 
                         <div class="card nameCard" id="Newfeed">
 
@@ -21,7 +21,9 @@
                                     <div class="coverPost">
 
                                         <div class="comment-text-area" id="textPost">
-                                            <textarea id="cmText" cols="60" rows="4" type="text" name="caption"  placeholder="Add comment ..."></textarea>
+                                            <textarea id="cmText" cols="60" rows="4" type="text" name="caption"
+                                                placeholder="Add comment ..."></textarea>
+                                            
                                         </div>
 
                                     </div>
@@ -35,12 +37,29 @@
                                 <div class="imagePost">
                                     <div class="gallery-section">
                                         <div class="inner-width">
-                                            <div class="gallery">
-                                                <div class="image">
-                                                    <img id="post-img-preview" name="imagePost" style="display: none;"
-                                                        alt="">
-                                                </div>
-
+                                            <div class="gallery" id="gal">
+                                                <!-- <div class="image">
+                                                    <div class="cover-remove">
+                                                        <span class="remove-image">&#x2715</span>
+                                                    </div>
+                                                    
+                                                    <img class="post-img-preview" name="imagePost"  src="/img/1.png" alt="">
+                                                </div> -->
+                                                <!-- <div class="image">
+                                                    <video id="post-video-preview" controls style="display: none;"></video>
+                                                </div> -->
+                                            </div>
+                                            <div class="gallery" id="vid">
+                                                <!-- <div class="image">
+                                                    <div class="cover-remove">
+                                                        <span class="remove-image">&#x2715</span>
+                                                    </div>
+                                                    
+                                                    <img class="post-img-preview" name="imagePost"  src="/img/1.png" alt="">
+                                                </div> -->
+                                                <!-- <div class="image">
+                                                    <video id="post-video-preview" controls style="display: none;"></video>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -51,7 +70,7 @@
                                 <div class="row iconCard " id="iconPost">
 
 
-                                    <label class="fileContainer" for="file">
+                                    <label class="fileContainer">
                                         <svg id="_x31_" enable-background="new 0 0 24 24" height="24"
                                             viewBox="0 0 24 24" width="24">
                                             <g>
@@ -72,23 +91,22 @@
                                             </g>
                                         </svg>
                                         <input type="file" name="image" accept="image/*" class=" upload-photo" id="file"
-                                            onchange="previewPostImage()">
+                                            multiple onchange="previewPostImage()">
                                     </label>
 
 
 
-                                    <label class="fileContainer" for="file">
+                                    <label class="fileVideo">
                                         <svg height="24" viewBox="0 -87 472 472" width="24">
                                             <path
                                                 d="m467.101562 26.527344c-3.039062-1.800782-6.796874-1.871094-9.898437-.179688l-108.296875 59.132813v-35.480469c-.03125-27.601562-22.398438-49.96875-50-50h-248.90625c-27.601562.03125-49.96875 22.398438-50 50v197.421875c.03125 27.601563 22.398438 49.96875 50 50h248.90625c27.601562-.03125 49.96875-22.398437 50-50v-34.835937l108.300781 59.132812c3.097657 1.691406 6.859375 1.625 9.894531-.175781 3.039063-1.804688 4.898438-5.074219 4.898438-8.601563v-227.816406c0-3.53125-1.863281-6.796875-4.898438-8.597656zm-138.203124 220.898437c-.015626 16.5625-13.4375 29.980469-30 30h-248.898438c-16.5625-.019531-29.980469-13.4375-30-30v-197.425781c.019531-16.558594 13.4375-29.980469 30-30h248.90625c16.558594.019531 29.980469 13.441406 30 30zm123.101562-1.335937-103.09375-56.289063v-81.535156l103.09375-56.285156zm0 0" />
                                         </svg>
-                                        <!-- <input type="file" name="image" accept="image/*" class=" upload-photo" id="file" onchange=""> -->
+                                        <input type="file" name="video" accept="video/*" class="upload-photo"
+                                            id="fileVideo" multiple onchange="previewPostVideo()">
                                     </label>
 
-
-
-                                    <button class="btn  btnComment btnOpacity post-opa" id="ptNew" type="submit"
-                                        onclick="return doPost()">Post</button>
+                                    <button class="btn  btnComment btnOpacity post-opa" id="ptNew"
+                                        type="submit">Post</button>
 
                                 </div>
 
@@ -100,17 +118,46 @@
                 </div>
 
                 <!-- Card each user -->
-               <div class="cardNew" id="cardShow" > 
-                    <!-- <div class="card nameCard" id="Newfeed"> 
+                <div class="cardNew" id="cardShow">
+                    <!-- <div class="card nameCard" id="Newfeed">  
                             <div class="row nameInfor">
-                                <img class="iconUser" width="45" height="45" alt="Card image cap"
-                                    style="border-radius: 50% 50%;display: none;">
-                                <span class="card-title "><a href="#" class="nameOf"></a></span>
+                                <img class="iconUser" src="/img/2.png" width="45" height="45" alt="Card image cap"
+                                    style="border-radius: 50% 50%;">
+                                <span class="card-title "><a href="#" class="nameOf">adad</a></span>
                                 <i class="fas fa-ellipsis-h action-icon" class="threeDot"></i>
                             </div>
 
-                            <img class="card-img-top" alt="Card image cap" style="border-radius: 0%; display: none;">
-
+                            <img class="card-img-top" src="/img/1.png" alt="Card image cap" style="border-radius: 0%; ">
+                            <div class="viewport" id="scrollBar">
+                                <div class="cover-next-prev">
+                   
+                                <i class="fas fa-chevron-circle-right next" id="next" onclick="slideImage()">
+                                </i>
+                                <i class="fas fa-chevron-circle-left prev"  id="prev" onclick="slideImage()">
+                                </i>
+                               
+                               </div>
+                   
+                                <div class="cover-list-image" id="co">
+                                <div class="list-image-newfeed" id="list-image-newfeed">
+                                <ul id="scroll-image-newfeed">
+                       
+                                    <li class="item-image" id="1">
+                                   <img class="card-img-top" src="/img/1.png" alt="Card image cap" style="border-radius: 0%;" > 
+                                    </li>
+                                    <li class="item-image" id="1">
+                                        <img class="card-img-top" src="/img/2.png" alt="Card image cap" style="border-radius: 0%;" > 
+                                         </li>
+                                         <li class="item-image" id="1">
+                                            <img class="card-img-top" src="/img/3.png" alt="Card image cap" style="border-radius: 0%;" > 
+                                             </li>
+                   
+                              
+                                </ul>
+                                </div>
+                                </div>
+                   
+                               </div>
                             <div class="card-body">
                                 <p class="card-text caption-text0"></p>
                                 <div class="row iconCard">
@@ -166,8 +213,9 @@
 
                             </div>
 
-                    </div>  -->
-                </div> 
+                    </div>   -->
+                
+                </div>
 
                 <!-- List card horizontal scroll -->
                 <div class="viewport" id="scrollBar">
@@ -333,11 +381,15 @@
                 <div class="rightCard" id="rightCard">
                     <!-- infor left of current user -->
                     <div class="row rightInfor">
-                        <img class="imgUser" width="70" height="70" src="/img/kim.png" alt="Card image cap"
+                        <img class="imgUser" width="70" height="70" src="<%=image%>" alt="Card image cap"
                             style="border-radius: 50% 50%;">
-                        <span class="card-title "><a href="#" class="nameImg">leejoon</a></span>
-                        <small id="midName">leejoon</small>
-                        <a class="wordImg" style="margin-top:1rem">Display</a>
+                        <span class="card-title "><a href="#" class="nameImg">
+                                <%=fullname%>
+                            </a></span>
+                        <small id="midName">
+                            <%=name%>
+                        </small>
+                        <a href="/myProfile" class="wordImg" style="margin-top:1rem;text-decoration: none;">Profile</a>
                     </div>
 
                     <!-- suggest for you -->
@@ -406,291 +458,583 @@
 
     </div>
     <script src="/js/deleteCard.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        var socket = io();
 
         $(document).ready(function () {
-            showNewsfeed();
-        })
-        function previewPostImage() {
-            var file = $('#file')[0].files;
-            console.log(file)
-            if (file.length > 0) {
-                var fileReader = new FileReader();
-                fileReader.onload = function (event) {
-                    $("#post-img-preview").css('display', '')
-                    $("#post-img-preview").attr("src", event.target.result)
-                };
-
-                fileReader.readAsDataURL(file[0]);
-                $("#ptNew").css('opacity',"1");
-            }
+             showNewsfeed();
            
-        }
+        })
+       
+        // preview image before post
+    
+        function previewPostImage() {
+            var input = document.getElementById('file');
+            var output = document.getElementById('gal');
+            var html = "";
+            for (var i = 0; i < input.files.length; ++i) {
+                (function (index) {
 
-        function doPost() {
-            $("form#post-new-feed").submit(function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
+                    if (input.files.length > 0) {
 
-                var ajax = new XMLHttpRequest();
-                ajax.open("POST", "/addPost", true);
+                        var fileReader = new FileReader();
+                        fileReader.readAsDataURL(input.files.item(i));
+                        fileReader.onload = function (event) {
 
-                ajax.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var response = JSON.parse(this.responseText);
-                        $("#post-img-preview").css('display', 'none')
-                        showNewsfeed();
+                            html += '<div class="image" id="i-' + index + '">'
+                            html += '<div class="cover-remove">'
+                            html += '<span class="remove-image" id="span' + index + '" onclick="removeImage(' + index + ')">'
+                            html += `&#x2715`
+                            html += '</span>'
+                            html += '</div>'
+
+                            html += '<img src="' + event.target.result + '" id="img-' + index + '"  class="post-img-preview" name="imagePost" " alt="">'
+
+                            html += ' </div>'
+
+                            output.innerHTML = html;
+
+                        };
+
+
+
+                        $("#ptNew").css('opacity', "1");
                     }
+                })(i);
 
-                };
+                // html += '<li>' + input.files.item(i).name + '</li>';
+            }
 
-                ajax.send(formData);
-                return false;
-            });
         }
 
+        function removeImage(n) {
+        
+            document.getElementById("img-" + n).remove();
+            document.getElementById("i-" + n).value = "";
+            document.getElementById("i-" + n).remove();
+        }
+        // preview video before post
+        function previewPostVideo() {
+            var input = document.getElementById('fileVideo');
+            var output = document.getElementById('vid');
+            var html = "";
+            for (var i = 0; i < input.files.length; ++i) {
+                (function (index) {
+                    if (input.files.length > 0) {
+                        var fileReader = new FileReader();
+                        fileReader.onload = function (event) {
+                            html += '<div class="image">'
+                            html += '<div class="cover-remove">'
+                            html += '<span class="remove-image" id="spa' + index + '" onclick="removeVideo(' + index + ')" >'
+                            html += `&#x2715`
+                            html += '</span>'
+                            html += '</div>'
+                            html += '<video  controls>'
+                            html += '<source src="' + event.target.result + '"  id="video-' + index + '" class="post-video-preview" name="videoPost"  alt="" type="video/mp4">'
+                            html += '</video>'
+                            html += ' </div>'
 
-        function showNewsfeed() {
+                            output.innerHTML = html;
+                        };
+
+                        fileReader.readAsDataURL(input.files.item(i));
+                        $("#ptNew").css('opacity', "1");
+
+                    }
+                })(i);
+            }
+
+        }
+
+        function removeVideo(index){
+         
+        }
+
+        // post newfeed
+        function doPost(form) {
             var ajax = new XMLHttpRequest();
-            ajax.open("POST", "/getNewsfeed", true);
+            ajax.open("POST", "/addPost", true);
 
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
+                    if (response.status == "success") {
+                        $(".image").css('display', 'none')
+                        document.getElementById("post-new-feed").querySelector("textarea[name='caption']").value = "";
+                        showNewsfeed();
+                    }
+                    else {
+                        alert(response.error)
+                    }
+
+                }
+
+            };
+
+            var formData = new FormData(form);
+            ajax.send(formData);
+            return false;
+
+        }
+
+        // show new feed 
+         function showNewsfeed() {
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/getNewsfeed", true);
+
+              ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
                     var html = ""
+          
                     for (var a = 0; a < response.data.length; a++) {
-                        var data = response.data[a];
-                        html += '<div class="card nameCard" id="Newfeed">';
+                      var data = response.data[a];
+                        var id = response.id
+                        html += '<div class="card nameCard" id="Newfeed-'+data._id+'">';
 
-                            html += '<div class="row nameInfor">';
+                        html += '<div class="row nameInfor">';
 
-                                html += ' <img class="iconUser" src=" '  + data.user.profileImage + ' " width="45" height="45" alt="Card image cap" style="border-radius: 50% 50%; ">';
+                        html += ' <img class="iconUser" src=" ' + data.user.profileImage + ' " width="45" height="45" alt="Card image cap" style="border-radius: 50% 50%; ">';
 
-                                html += ' <span class="card-title ">';
-                                    html += '<a href="'+'/user/'+data.user.fullname+'" class="nameOf">';
-                                        html += data.user.fullname;
-                                    html += '</a>';
-                                html += '</span>';
-                    
-                                html += '<i class="fas fa-ellipsis-h action-icon" class="threeDot">';
-                                html += '</i>';
-                    
-                            html += '</div>';
+                        html += ' <span class="card-title ">';
+                        html += '<a href="' + '/user/' + data.user.fullname + '" class="nameOf">';
+                        html += data.user.fullname;
+                        html += '</a>';
+                        html += '</span>';
 
-                            if(data.caption != "" && data.image != ""){
-                                html += '<img class="card-img-top" src=" '+data.image+' " alt="Card image cap" style="border-radius: 0%;" >';                    
-                            }
-                            else if(data.caption == "" && data.image != ""){
-                                html += '<img class="card-img-top" src=" '+data.image+' " alt="Card image cap" style="border-radius: 0%; display: none;" >';
-                            }
-
-                            html += '<div class="card-body">';
-                                if(data.caption != "" && data.image == ""){
-                                    html += '<p class="card-text caption-text0" >';
-                                        html += data.caption;
-                                    html += '</p>';
-                                }
-                                html += '<div class="row iconCard">';
-
-                                    html += '<button class="btnHeart">';
-                                        html += '<svg aria-label="Like" fill="#262626" height="25" viewBox="0 0 48 48" width="25">';
-                                            html += '<path class="iconHeart" d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">';
-                                            html += '</path>';
-                                        html += '</svg>';
-                                    html += '</button>';
-
-                                    html += '<button >'
-                                        html += ' <svg aria-label="Comment" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
-                                            html += '<path clip-rule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fill-rule="evenodd">';
-                                            html += '</path>';
-                                        html += '</svg>';
-                                    html += '</button>';
-
-                                    html += '<button >';
-                                        html += '  <svg aria-label="Share Post" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
-                                            html += '<path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">';
-                                            html += '</path>';
-                                        html += '</svg>';
-                                    html += '</button>';
-
-                                    html += '<button class="savePost">';
-                                        html += '  <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
-                                            html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
-                                            html += '</path>';
-                                        html += '</svg>';
-                                    html += '</button>';
-
-                                html += '</div>';
-
-                                
-                                html += '<p style="font-size: 15px; font-weight: 500; padding-left: 15px;" class="likePost">';
-                                    if(data.caption != "" && data.image != ""){
-                                        html += ' <p class="card-text caption-text1">';
-                                            html += data.caption;
-                                        html += '</p>';
-                                    }
-                                html += '</p>';
-
-                                html += '<hr width="100%" style="margin-bottom: 0rem">';
-
-                                html += ' <div class="container textChat">';
-                                    html += '<div class="comment">';
-                                        html += ' <div class="commenter">';
-                                            html += '<img src="' + "/" + "img/kim.png" + '" class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
-                                        html += '</div>';
-
-                                        html += ' <div class="comment-text-area">';
-                                            html += '<textarea class="textinput  textComment " placeholder="Add comment ...">';
-                                            html += '</textarea>';
-
-                                            html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
-                                              
-                                            html += '</button>';
-                                        html += '</div>';
-                                    html += '</div>';
-                                html += '</div>';
-
-                            html += '</div>';
+                        html += '<i class="fas fa-ellipsis-h action-icon" id="mod-'+data._id+'" data-id="'+data._id+'" class="threeDot" onclick="modelCard(this)">';
+                        html += '</i>';
 
                         html += '</div>';
 
-                        // if (data.video != "") {
-                        //     html += '<video style="height: 359px; width: 100%;" controls src="' + mainURL + "/" + data.video + '"></video>';
-                        // }
+                        if (data.image.length !== 0 && data.video.length !==0) {
+                           
+                            var sumLength = data.video.length + data.image.length
+                           
+                                html += '<div class="viewport" id="scrollBar-'+data._id+'">'
+                                html += ' <div class="cover-next-prev">'
 
+                                html += ' <i class="fas fa-chevron-circle-right next-img" id="next-img-'+data._id+'" onclick="slideImage(' + "'" + "right" + "'" + "," + "'" + sumLength + "'" + ","+ "'" + data._id + "'" + ')" >'
+                                html += ' </i>'
+                                html += ' <i class="fas fa-chevron-circle-left prev-img"  id="prev-img-'+data._id+'" onclick="slideImage(' + "'" + "left" + "'" + "," + "'" + sumLength + "'" + ","+ "'" + data._id + "'" + ')">'
+                                html += ' </i>'
+                                
+                                html += '</div>'
 
+                                html += ' <div class="cover-list-image" id="co">'
+                                html += ' <div class="list-image-newfeed" id="list-image-newfeed-'+data._id+'">'
+
+                                html += ' <ul id="scroll-image-newfeed">'
+                                for (var j = 0; j < data.image.length; j++) {
+                                    html += ' <li class="item-image" id="1">'
+                                    html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                    html += ' </li>'
+                                }
+                                for (var j = 0; j < data.video.length; j++) {
+                                    html += ' <li class="item-image" id="1">'
+                                    html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen>'
+                                    html += '</iframe>'
+                                    html += ' </li>'
+                                }
+
+                               
+                                html += ' </ul>'
+
+                                html += ' </div>'
+                                html += ' </div>'
+
+                                html += '</div>'
+
+                        }
+
+                        if (data.image.length !== 0 && data.video.length == 0) {
+                            
+
+                                html += '<div class="viewport" id="scrollBar-'+data._id+'">'
+                                html += ' <div class="cover-next-prev">'
+
+                                if(data.image.length > 1){
+                                    html += ' <i class="fas fa-chevron-circle-right next-img" id="next-img-'+data._id+'" onclick="slideImage(' + "'" + "right" + "'" + "," + "'" + data.image.length + "'" + ","+ "'" + data._id + "'" +')" >'
+                                    html += ' </i>'
+                                    html += ' <i class="fas fa-chevron-circle-left prev-img"  id="prev-img-'+data._id+'" onclick="slideImage(' + "'" + "left" + "'" + "," + "'" + data.image.length + "'" + ","+ "'" + data._id + "'" + ')">'
+                                    html += ' </i>'
+                                }
+                             
+                                
+                                html += '</div>'
+
+                                html += ' <div class="cover-list-image" id="co">'
+                                html += ' <div class="list-image-newfeed" id="list-image-newfeed-'+data._id+'">'
+
+                                html += ' <ul id="scroll-image-newfeed">'
+                               
+                                for (var j = 0; j < data.image.length; j++) {
+                                    html += ' <li class="item-image" id="1">'
+                                    html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                    html += ' </li>'
+                                }
+                                html += ' </ul>'
+
+                                html += ' </div>'
+                                html += ' </div>'
+
+                                html += '</div>'
+
+                        }
+
+                        if (data.image.length == 0 && data.video.length !== 0)  {
+                           
+
+                          html += '<div class="viewport" id="scrollBar-'+data._id+'">'
+                          html += ' <div class="cover-next-prev">'
+                            if(data.video.length > 1){
+                                html += ' <i class="fas fa-chevron-circle-right next-img" id="next-img-'+data._id+'" onclick="slideImage(' + "'" + "right" + "'" + "," + "'" + data.video.length + "'" + ","+ "'" + data._id + "'" + ')" >'
+                                html += ' </i>'
+                                html += ' <i class="fas fa-chevron-circle-left prev-img"  id="prev-img-'+data._id+'" onclick="slideImage(' + "'" + "left" + "'" + "," + "'" + data.video.length + "'" + ","+ "'" + data._id + "'" + ')">'
+                                html += ' </i>'
+                            }
+                      
+                          
+                          html += '</div>'
+
+                          html += ' <div class="cover-list-image" id="co">'
+                          html += ' <div class="list-image-newfeed" id="list-image-newfeed-'+data._id+'">'
+
+                          html += ' <ul id="scroll-image-newfeed">'
+                         
+                            for (var j = 0; j < data.video.length; j++) {
+                                html += ' <li class="item-image" id="1">'
+                                html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen>'
+                                html += '</iframe>'
+                                html += ' </li>'
+                            }
+                          html += ' </ul>'
+
+                          html += ' </div>'
+                          html += ' </div>'
+
+                          html += '</div>'
+
+                  }
+
+                        html += '<div class="card-body">';
+                        if (data.caption != "" && data.image == "") {
+                            html += '<p class="card-text caption-text0">';
+                            html += data.caption;
+                            html += '</p>';
+                        }
+
+                            var isLiked = false;
+                            var check = false;
+                            for (var b = 0; b < data.likers.length; b++) {
+                                var liker = data.likers[b];
+                                if (liker._id == id) {
+                                    console.log("first")
+                                    isLiked = true;
+                                    break;
+                                }
+                            }
+                            html += '<div class="row iconCard">';
+        
+                            html += '<button class="btnHeart ani" data-id="' + data._id + '" onclick="toggleLike(this,'+a+');" >';
+                            html += '<svg  aria-label="Like" fill="#262626" height="25" viewBox="0 0 48 48" width="25">';
+                            if (isLiked ) {
+                                console.log("1 above")
+                                html += '<path id="heart-'+a+'" fill="#ed4956"  d="M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z">';
+                                html += '</path>';
+                                
+							} 
+                          
+                            else{
+                                console.log("3 ")
+                                html += '<path id="heart-'+a+'" fill="#262626"  d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">';
+                                html += '</path>';
+                                
+                            }
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '<button >'
+                            html += ' <svg aria-label="Comment" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            html += '<path clip-rule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fill-rule="evenodd">';
+                            html += '</path>';
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '<button >';
+                            html += '  <svg aria-label="Share Post" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            html += '<path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">';
+                            html += '</path>';
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '<button class="savePost">';
+                            html += '  <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
+                            html += '</path>';
+                            html += '</svg>';
+                            html += '</button>';
+
+                        html += '</div>';
+
+                        html += '<div class="view-like" style="margin-left:0.75rem">'
+                            html += '<small id="like-'+data._id+'" data-id="'+data.likers.length+'" style="font-weight:600">'
+                               
+                                if(data.likers.length == "" || data.likers.length == 0 ){
+                                    html += '0 like</small>'
+                                }else if(data.likers.length == 1){ 
+                                    html += data.likers.length
+                                    html += ' like</small>'
+                                }
+                                else{
+                                    html += data.likers.length
+                                    html += ' likes</small>'
+                                }
+                        html += '</div>'
+
+                        html += '<p style="font-size: 15px; font-weight: 500; padding-left: 15px;" class="likePost">';
+                        if (data.caption != "" && data.image != "") {
+                            html += ' <p class="card-text caption-text1">';
+                            html += data.caption;
+                            html += '</p>';
+                        }
+                        html += '</p>';
+
+                        html += '<hr width="100%" style="margin-bottom: 0rem">';
+
+                        html += ' <div class="container textChat">';
+                        html += '<div class="comment">';
+                        html += ' <div class="commenter">';
+                        html += '<img src=" ' + data.user.profileImage + ' " class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
+                        html += '</div>';
+
+                        html += ' <div class="comment-text-area">';
+                        html += '<textarea class="textinput  textComment " placeholder="Add comment ...">';
+                        html += '</textarea>';
+
+                        html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
+
+                        html += '</button>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        html += '</div>';
+
+                        html += '</div>';
                     }
                     document.getElementById("cardShow").innerHTML = html;
                     inputPost();
                     inputComment();
+                    toggleLike();
+                    dropSave(); 
                     modelCard();
+                    slideImage();
                 }
             };
             var formData = new FormData();
             ajax.send(formData);
-            
+
         }
 
-
-        function modelCard(){
+        // display modal of cards
+        function modelCard(self) {
             // handle modal card
-            var modal = document.getElementById("myModal"); // Get the modal card
-            var modCon = document.getElementById("modCon"); // Get the id modal content 
-            var btn = document.getElementsByClassName("action-icon"); // Get the button that opens the modal
+            var modal = document.getElementById("myModal"); 
+            var modCon = document.getElementById("modCon"); 
+            var nav = document.getElementById("navColor")
+            var id=$(self).attr("data-id")
+            // var idMod = "mod-"+id
+            // var btn = document.getElementsById(idMod); // Get the button that opens the modal
             var span = document.getElementsByClassName("cancelList")[0]; // Get the <span> element that closes the modal
+            
+            if(id){
+                // When the user clicks the button, open the modal card
+                modal.style.display = "block";
+                modCon.style.display = "block";
+                modal.style.opacity = "1";
+            }
+          
+                    
+            // When the user clicks on button cancle the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal or body, close it
+            window.onclick = function (event) {
+                if (event.target == modal || event.target == nav) {
+                    modal.style.display = "none";
+                    modCon.style.display = "none"
+                }
+            }
+        }
 
-            // When the user clicks the button, open the modal card
-            for(var i = 0; i < btn.length; i++) {
-                (function(index) {
-                    btn[index].addEventListener("click", function(e) {
-                    modal.style.display = "block";
-                    modCon.style.display = "block";
-                    modal.style.opacity = "1";
+        // toggle opacity button post
+        function inputComment() {
+            // handle textarea card
+            const messageEle = document.getElementsByClassName('textComment');
+            const btnOpa = document.getElementsByClassName("btn-opa")
+
+
+            for (var i = 0; i < messageEle.length; i++) {
+                (function (index) {
+
+                    messageEle[index].addEventListener("input", function (e) {
+                        const target = e.target;
+
+                        // Count the current number of characters
+                        const currentLength = target.value.length;
+
+                        for (var j = 0; j < btnOpa.length; ++j) {
+                            if (currentLength > 0) {
+                                btnOpa[index].style.opacity = "1";
+                            } else {
+                                btnOpa[index].style.opacity = "0.3";
+                            }
+
+                        }
+
+
+                    })
+
+                })(i);
+
+
+
+            }
+
+        }
+
+        // toggle opacity button post
+        function inputPost() {
+            cmText = document.getElementById("cmText")
+            ptNew = document.getElementById("ptNew")
+
+            cmText.addEventListener("input", function (e) {
+                const target = e.target;
+
+                // Count the current number of characters
+                const currentLength = target.value.length;
+
+
+                if (currentLength > 0) {
+                    ptNew.style.opacity = "1";
+                } else {
+                    ptNew.style.opacity = "0.3";
+                }
+            })
+        }
+
+        // fill color icon heart card and icon save
+       
+      
+        function toggleLike(self,index) {
+            var _id = $(self).attr("data-id")  
+            var heartID="#heart-"+index
+            var color = $(heartID)
+            var c = color.attr("fill")
+            
+            $.ajax({
+                    method: "POST",
+                    url: "/toggleLike",
+                    data: {
+                        _id:_id 
+                    },
+                    cache: false,
+                    success: function(responseText) {
+                        countHeart=responseText.count
+                        if (responseText.status == "success") {
+                                if ( c == "#262626") {
+                                    $(self).toggleClass("anime")
+                                    $(self).toggleClass("ani")
+                                    showNewsfeed()
+                                }
+                           
+						}
+						if (responseText.status == "unliked") {
+							if (c == "#ed4956") {
+                                $(self).toggleClass("ani")
+                                if ( $(self).hasClass("anime")) {
+                                    $(self).toggleClass("anime")
+                                }else{
+                                    $(self).toggleClass("anime")
+                                }
+                                showNewsfeed()
+                            } 
+						}
+                    },
+                    error:function(responseText) {
+                        alert(responseText)
+                    }
+                    });
+                            
+                            
+            
+          
+        }
+
+        // Save post
+        function dropSave(){
+                  // fill color icon save card
+                  var savePost = document.getElementsByClassName("savePost");
+            var savePo = document.getElementsByClassName("savePo");
+            for (var i = 0; i < savePost.length; i++) {
+                (function (index) {
+                    savePost[index].addEventListener("click", function (e) {
+                        var color = savePo[index].getAttribute("d")
+                        var check = "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z"
+                        if (color == check) {
+                            savePo[index].setAttribute("d", "M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z")
+                        } else {
+                            savePo[index].setAttribute("d", "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z")
+                        }
+
                     })
                 })(i);
             }
-            // When the user clicks on button cancle the modal
-            span.onclick = function() {
-            modal.style.display = "none";
-            }
-             // When the user clicks anywhere outside of the modal or body, close it
-            window.onclick = function(event) {
-            if (event.target == modal || event.target == nav ) {
-                modal.style.display = "none";
-                modCon.style.display = "none"
-            }
-            }
-            // fill color icon heart card
-            $(".btnHeart").click(function(){
-                var color = $(".iconHeart").attr("fill")
-                if(color == "#ed4956"){
-                $(this).toggleClass("ani")
-                if($(this).hasClass("anime")){
-                    $(this).toggleClass("anime")
-                    $(this).toggleClass("anime")
-                }else{
-                    $(this).toggleClass("anime")
-                }
-                
-                $(".iconHeart").attr("d","M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
-                $(".iconHeart").attr("fill","#262626")
-                }else{
-                $(this).toggleClass("anime")
-                $(this).toggleClass("ani")
-                $(".iconHeart").attr("d","M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z")
-                $(".iconHeart").attr("fill","#ed4956")
-                }
-
-            })
-
-            // fill color icon save card
-            $(".savePost").click(function(){
-            var color = $(".savePo").attr("d")
-            var check = "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z"
-                if(color==check){  
-                $(".savePo").attr("d","M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z")
-                }else{
-                $(".savePo").attr("d","M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z")
-                }
-            })
-
-
-            }
-    
-        function inputComment(){
-            // handle textarea card
-            const messageEle =  document.getElementsByClassName('textComment');
-            const btnOpa = document.getElementsByClassName("btn-opa")
-          
-
-            for(var i = 0; i < messageEle.length; i++) {
-            (function(index) {
-  
-                messageEle[index].addEventListener("input", function(e) {
-                    const target = e.target;
-                    
-                    // Count the current number of characters
-                    const currentLength = target.value.length;
-
-                    for (var j= 0; j < btnOpa.length; ++j) {
-                    if(currentLength > 0){
-                        btnOpa[index].style.opacity = "1";
-                    }else{
-                        btnOpa[index].style.opacity = "0.3";
-                    }
-                    
-                    }
-
-                
-                })
-
-            })(i);
-
-         
-
         }
 
-    }
 
-        function inputPost(){
-            cmText = document.getElementById("cmText")
-            ptNew = document.getElementById("ptNew")
-            
-            cmText.addEventListener("input", function(e) {
-                    const target = e.target;
-                    
-                    // Count the current number of characters
-                    const currentLength = target.value.length;
-
-                
-                    if(currentLength > 0){
-                        ptNew.style.opacity = "1";
-                    }else{
-                        ptNew.style.opacity = "0.3";
+        function slideImage(direction, size,id) {
+            var container = document.getElementById('list-image-newfeed-'+id);
+            var x;
+            var x1;
+            var temp;
+            scrollCompleted = 0;
+            var slideVar = setInterval(function () {
+                if (size > 1) {
+                    if (direction == "right") {
+                        container.scrollLeft += 59;
+                        x = container.scrollLeft
+                        if (x == (size * 590) - 590) {
+                            $('#next-img-' + id).css("opacity","0")   
+                        } else {
+                            $('#prev-img-' + id).css("opacity","0.8") 
+                            $('#next-img-' + id).css("opacity","0.8")  
+                        }
                     }
-                })
+                    if (direction == "left") {
+                        container.scrollLeft -= 59;
+                        x1 = container.scrollLeft
+                        if (x1 == 0) {
+                            $('#prev-img-' + id).css("opacity","0") 
+                        } else {
+                            $('#prev-img-' + id).css("opacity","0.8") 
+                            $('#next-img-' + id).css("opacity","0.8")  
+                        }
+
+                    }
+                    scrollCompleted += 10;
+                    if (scrollCompleted >= 100) {
+                        window.clearInterval(slideVar);
+                    }
+                }
+
+            }, 45);
         }
+
     </script>
- 
+
 
     <%- include ("../shares/footer") %>

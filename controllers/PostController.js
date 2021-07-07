@@ -1,23 +1,20 @@
 const User = require('../models/UserModel');
 const Post = require('../models/PostModel');
+const mongodb = require("mongodb");
+const ObjectId = mongodb.ObjectId;
 const jwt = require('jsonwebtoken');
+const fs = require('fs')
 const bcrypt = require('bcrypt');
 var path = require('path')
-const multer = require('multer');
-const { collection } = require('../models/UserModel');
+
+const { io, Socket } = require("../utils/socket");
+
+
+
+const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './public/demo')
-  },
-  fileFilter: function (req, file, cb) {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true)
-    }
-    else {
-      cb(null, false)
-    }
-  }, limits: {
-    fileSize: 5000,
   },
   filename: function (req, file, cb) {
     // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
@@ -25,38 +22,85 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage })
-// trang home
-const post_Newfeed = (req, res) => {
+
+const post_Newfeed = function (req, res) {
   var user = req.session.user;
-  var { caption } = req.body
-  var image = ''
-  var type = ''
-  if(req.file){
-     image ="/img/" + req.file.filename
-     type = path.extname(image)
-  }
-  var createdAt = new Date().getTime();
-  User.findOne({ _id: user._id })
-    .then(user => {
-      if (!user) {
+  var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
+
+  uploader(req, res, next => {
+    var { caption } = req.body
+
+    var img = []
+    var video = []
+    var type = []
+    var createdAt = new Date().getTime();
+    let error = undefined
+
+    // console.log("helo   ",req.files)
+    var files = []
+    files = [].concat(req.files);
+    if (files[0].image != null && files[0].video != null) {
+      console.log("1")
+      for (var x = 0; x < files[0].image.length; x++) {
+        if (files[0].image[x].fieldname == 'image') {
+          img.push(files[0].image[x])
+          type.push(path.extname(img[x].filename))
+        }
+      }
+      for (var x = 0; x < files[0].video.length; x++) {
+        if (files[0].video[x].fieldname == 'video') {
+          video.push(files[0].video[x])
+          type.push(path.extname(video[x].filename))
+        }
+      }
+
+    } else if (files[0].image != null && files[0].video == null) {
+      for (var x = 0; x < files[0].image.length; x++) {
+        if (files[0].image[x].fieldname == 'image') {
+          img.push(files[0].image[x])
+          type.push(path.extname(img[x].filename))
+
+        }
+
+      }
+
+    } else if (files[0].image == null && files[0].video != null) {
+      console.log("3")
+      for (var x = 0; x < files[0].video.length; x++) {
+        if (files[0].video[x].fieldname == 'video') {
+          video.push(files[0].video[x])
+          type.push(path.extname(video[x].filename))
+        }
+      }
+    } else if (caption == "") {
+      return res.json({
+        error: "Vui lòng nhập caption "
+      })
+    }
+
+    User.findOne({
+      "_id": user._id
+    }, function (error, user) {
+      if (user == null) {
         res.redirect('/login');
-      }else{
+      } else {
+
         Post.collection.insertOne({
-            "caption": caption,
-						"image": image,
-						"video": "",
-						"type": type,
-						"createdAt": createdAt,
-						"likers": [],
-						"comments": [],
-						"shares": [],
-						"user": {
-							"_id": user._id,
-							"name": user.name,
-							"fullname": user.fullname,
-							"profileImage": user.profileImage
-						}
-        },function (error, data) {
+          "caption": caption,
+          "image": img,
+          "video": video,
+          "type": type,
+          "createdAt": createdAt,
+          "likers": [],
+          "comments": [],
+          "shares": [],
+          "user": {
+            "_id": user._id,
+            "name": user.name,
+            "fullname": user.fullname,
+            "profileImage": user.profileImage
+          }
+        }, function (error, data) {
           User.collection.updateOne({
             "_id": user._id
           }, {
@@ -64,8 +108,8 @@ const post_Newfeed = (req, res) => {
               "posts": {
                 "_id": data.insertedId,
                 "caption": caption,
-                "image":image,
-                "video": "",
+                "image": img,
+                "video": video,
                 "type": type,
                 "createdAt": createdAt,
                 "likers": [],
@@ -74,56 +118,266 @@ const post_Newfeed = (req, res) => {
               }
             }
           }, function (error, data) {
-                res.json({
-                "status": "success",
-                "message": "Post has been uploaded.",
-                data:data
-              });
-          });
-        })
-      }
-    })
-    .catch(error => {
-      res.redirect('/login')
-    })
-
-}
-
-const get_Newfeed = (req,res) =>{
-    var id = req.session.user;
-    User.findOne({
-      "_id": id
-    }, function (error, user) {
-      if (user == null) {
-        res.redirect('/login')
-      } else {
-        var ids = [];
-        ids.push(user._id);
-        Post.collection.find({
-          "user._id": {
-            $in: ids
-          }
-        })
-        .sort({
-          "createdAt": -1
-        })
-        .toArray(function (error, data) {
-          for(var i = 0;i<3;i++){
-            console.log(data[i])
-          }
-          return res.json({
-            "status": "success",
-            "message": "Record has been fetched",
-            "data": data
+            res.json({
+              "status": "success",
+              "message": "Post has been uploaded."
+            });
           });
         });
       }
     });
+
+  })
+
+}
+
+const get_Newfeed = function (req, res) {
+  var id = req.session.user._id;
+  // console.log("\nreq   : ",req.session.user)
+  Post.collection.find({
+  })
+    .sort({
+      "createdAt": -1
+    })
+    .toArray(function (error, data) {
+      res.json({
+        "status": "success",
+        "message": "Record has been fetched",
+        "data": data,
+        "id": id
+      });
+    });
+  // User.findOne({
+  //   "_id": id
+  // }, function (error, user) {
+  //   if (user == null) {
+  //     res.redirect('/login')
+  //   } else {
+  //     var ids = [];
+  //     ids.push(user._id);
+  //     Post.collection.find({
+  //       "user._id": {
+  //         $in: ids
+  //       }
+  //     })
+  //       .sort({
+  //         "createdAt": -1
+  //       })
+  //       .toArray(function (error, data) {
+  //         res.json({
+  //           "status": "success",
+  //           "message": "Record has been fetched",
+  //           "data": data
+  //         });
+  //       });
+  //   }
+  // });
+
+
+}
+
+const get_Notice = function (req, res) {
+  var id = req.session.user._id;
+  // console.log("\nreq   : ",req.session.user)
+  User.collection.find({
+  })
+    .sort({
+      "createdAt": -1
+    })
+    .toArray(function (error, data) {
+      // console.log("data  ",data[1])
+      res.json({
+        "status": "success",
+        "message": "Record has been fetched",
+        "data": data,
+        "id": id
+      });
+    });
+
+}
+
+const post_Notice = function (req, res) {
+  var id = req.session.user._id;
+  var idPost = req.body.idPost
+  var idNotice = req.body.idNotice
+  User.collection.findOne({
+    "notifications._id": ObjectId(idNotice)
+  }, function (error, user) {
+    if (user == null) {
+      res.redirect('/login')
+    } else {
+      var isRead = false
+      var idNoti = ''
+      for (var i = 0; i < user.notifications.length; i++) {
+        var isR = user.notifications[i]
+        if (idNotice == isR._id && isR.isRead === false) {
+          isRead = true
+          idNoti = isR._id
+          break;
+        }
+      }
+      User.collection.updateOne(
+        { "_id": user._id },
+        {
+          $pull: {
+            "notifications": {
+              "_id": idNoti,
+            }
+          }
+        }
+
+      );
+    }
+    res.json({
+      "status": "success",
+      "data": "123"
+    })
+  }
+  )
+
+
+}
+
+const post_ToggleLike = function (req, res) {
+  var idUser = req.session.user._id;
+  var _id = req.body._id
+  User.collection.findOne({
+    "_id": ObjectId(idUser)
+  }, function (error, user) {
+    if (error) {
+      return res.json({
+        "status": "error",
+        "message": "Post does not exist."
+      });
+    }
+    if (user == null) {
+      return res.json({ "error": "error" })
+    } else {
+      Post.collection.findOne({
+        "_id": ObjectId(_id)
+      }, function (error, post) {
+        if (post == null) {
+          res.json({
+            "status": "error",
+            "message": "Post does not exist."
+          });
+        } else {
+
+          var isLiked = false;
+          for (var a = 0; a < post.likers.length; a++) {
+            var liker = post.likers[a];
+            if (liker._id.toString() == user._id.toString()) {
+              isLiked = true;
+              break;
+            }
+          }
+
+          if (isLiked) {
+            Post.collection.updateOne({
+              "_id": ObjectId(_id)
+            }, {
+              $pull: {
+                "likers": {
+                  "_id": user._id,
+                }
+              }
+            }, function (error, data) {
+
+              User.collection.updateOne({
+                $and: [{
+                  "_id": post.user._id
+                }, {
+                  "posts._id": post._id
+                }]
+              }, {
+                $pull: {
+                  "posts.$[].likers": {
+                    "_id": user._id,
+                  },
+                  "notifications": {
+                    "idLiked": user._id,
+                  }
+                }
+              });
+
+              res.json({
+                "status": "unliked",
+                "message": "Post has been unliked.",
+                "isLiked": isLiked
+              });
+            });
+          } else {
+
+            User.collection.updateOne({
+              "_id": post.user._id
+            }, {
+              $push: {
+                "notifications": {
+                  "_id": ObjectId(),
+                  "type": "photo_liked",
+                  "content": user.fullname + " has liked your post.",
+                  "profileImage": user.profileImage,
+                  "isRead": false,
+                  "post": {
+                    "_id": post._id
+                  },
+                  "idLiked": user._id,
+                  "createdAt": new Date().getTime()
+                }
+              }
+            });
+
+            Post.collection.updateOne({
+              "_id": ObjectId(_id)
+            }, {
+              $push: {
+                "likers": {
+                  "_id": user._id,
+                  "fullname": user.fullname,
+                  "profileImage": user.profileImage
+                }
+              }
+            }, function (error, data) {
+              User.collection.findOneAndUpdate(
+                { 
+                  "posts._id": post._id
+                }, { 
+                    $push: 
+                      { 
+                        "posts.$.likers": {
+                          "_id": user._id,
+                          "fullname": user.fullname,
+                          "profileImage": user.profileImage
+                        }
+                      } 
+                },function (error, success) {
+                     if (error) {
+                         console.log(error);
+                     } else {
+                      res.json({
+                        "status": "success",
+                        "message": "Post has been liked.",
+                        "isLiked": isLiked
+                      });
+                     }
+                 });
+              
   
+            });
+      
+            
+
+       
+            
+          }
+        }
+      });
+
+    }
+  });
+
 }
-
-
 module.exports = {
-  post_Newfeed,
-  get_Newfeed
-}
+  post_Newfeed, get_Newfeed, post_ToggleLike, get_Notice, post_Notice
+};
+

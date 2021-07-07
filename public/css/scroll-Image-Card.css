@@ -1,0 +1,82 @@
+/* suggest Friend New Card*/
+
+
+  /* handle scroll horizonal */
+  .cover-list-image{
+    position: relative;
+    top: 0;
+    left: 0rem;
+  }
+  
+  .list-image-newfeed{
+    overflow-x: scroll;
+  }
+  
+  #scroll-image-newfeed {
+    display:flex;
+    z-index: -1;
+    list-style: none;
+    padding: 2px 0;
+    /* prevent accidentally going back or triggering other swipe events */
+    overscroll-behavior: contain;
+    /* hide scroll bar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* momentum scroll on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* disbable vertical scroll for touch */
+    touch-action: pan-x;
+    /* scroll snapping */
+    scroll-snap-type: x mandatory;
+    /* stop scrolling before reaching edge */
+    
+    border: none;
+  }
+  
+
+
+  /* hide scroll bar */
+  .list-image-newfeed::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .item-image {
+    height: auto;
+    width: 100%;
+    flex-shrink: 0;
+    margin-right: 2px;
+  }
+  
+  /* button next and prev */
+  .cover-next-prev{
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+
+
+  .next-img{
+    position: absolute;
+    top: 13rem;
+    right: 0.25rem;
+    z-index: 1;
+  
+    font-size:25px;
+    opacity: 0.5;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .prev-img{
+    position: absolute;
+    top: 13rem;
+    left: 0.25rem;
+  
+    z-index: 1;
+    font-size:25px;
+    opacity: 0;
+    color: #fff;
+    cursor: pointer;
+  
+  }
+

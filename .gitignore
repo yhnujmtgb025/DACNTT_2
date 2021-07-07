@@ -1,3 +1,4 @@
 node_modules
 .env
 public/video/a.mp4
+public/demo

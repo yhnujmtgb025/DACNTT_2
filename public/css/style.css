@@ -108,11 +108,35 @@ body {
     overflow: hidden;
     cursor: pointer;
   
-  
+    position: relative;
+    top: 0;
+    left: 0;
   }
+
+  .cover-remove{
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color:#333;
+    opacity: 0.7;
+    height: 25px;
+    border-radius: 50% 50%;
+   
+    }
+
+  .remove-image{
+        position: relative;
+        top: -5px;
+        right: -0.5px;
+        
+        font-size: 18px;
+        padding: 0 5px;
+        color: white;
+        font-weight: bold;
+   }
   
   .gallery-section .image img{
-   
+ 
 
     width: 100%;
     height: 100%;
@@ -437,11 +461,71 @@ ul.listHelp li {
 #rhombus {
     position: absolute;
     top: -0.85rem;
-    right: 1.25rem;
+    right: 1.75rem;
 }
 
 .conProfile ul li:hover {
     background-color: #FAFAFA;
+    border-radius:0 0 6px 6px ;
+}
+
+
+/* modal Heart */
+
+/* The Modal (background) */
+
+.molHeart {
+    position: relative;
+    top: 0;
+    right: 0;
+
+}
+
+.coverHeart {
+    position: absolute;
+    top: 2.25rem;
+    right: -1.25rem;
+    visibility: hidden;
+    z-index: 1;
+    width: 300px;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 1px rgb(0 0 0 / 10%);
+    background-color: #FFFFFF;
+    
+}
+
+.showHeart{
+    visibility: visible;
+}
+
+.conHeart ul li {
+    padding: 10px 0 15px 10px;
+}
+
+.conHeart ul li:hover {
+    cursor: pointer;
+}
+
+.conHeart .listPro1 li a {
+    color: #333;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+.conHeart .listPro1 li a {
+    text-decoration: none;
+    color: #333;
+}
+
+#rhombus-heart {
+    position: absolute;
+    top: -0.85rem;
+    right: 1.20rem;
+}
+
+.conHeart ul li:hover {
+    background-color: #FAFAFA;
+    border-radius:0 0 6px 6px ;
 }
 
 /* card body */
@@ -459,7 +543,7 @@ ul li {
 }
 
 .iconCard button {
-    margin-top: -0.75rem;
+    margin-top: -1.75rem;
     margin-left: 0.4rem;
     border: none;
     background-color: #FFFFFF;
@@ -496,14 +580,18 @@ ul li {
     display: block;
 }
 
+
+
+
+
 /* animation icon heart card */
 
 .anime {
-    animation: scallin .5s;
+    animation: scallin .3s;
 }
 
 .ani {
-    animation: scaling .5s;
+    animation: scaling .3s;
 }
 
 @keyframes scaling {

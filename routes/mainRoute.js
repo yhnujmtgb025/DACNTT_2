@@ -2,27 +2,7 @@ const checkAdmin = require('../auth/CheckAdmin')
 const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
 
 
-const multer  = require('multer')
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './public/demo')
-    },
-    fileFilter:function (req, file, cb) {
-      if(file.mimetype.startsWith('image/')){
-        cb(null, true)
-      }
-      else{
-        cb(null,false)
-      }
-    },limits:{
-      fileSize:5000,
-    },
-    filename: function (req, file, cb) {
-      // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
-       cb(null,file.originalname)
-    }
-  })
-const upload = multer({storage: storage})
+
 
 const UserController = require('../controllers/UserController')
 const PostController = require('../controllers/PostController')
@@ -36,8 +16,14 @@ function route(app) {
     app.get('/',UserController.index );
 
     // handle newfeed
-    app.post('/addPost',upload.single('image'),PostController.post_Newfeed );
+    app.post('/addPost',PostController.post_Newfeed );
     app.post("/getNewsfeed", PostController.get_Newfeed);
+
+    app.post("/toggleLike",PostController.post_ToggleLike);
+    
+    // notification
+    app.post("/getNotice", PostController.get_Notice);
+    app.post("/postNotice", PostController.post_Notice);
 
     // handle login
     app.get('/login', UserController.login_get );
@@ -60,7 +46,7 @@ function route(app) {
 
     // handle profile
     app.get('/myProfile',UserController.profile_get  );
-    app.post('/myProfile/changePhoto',upload.single('file-'),UserController.profile_post  );
+    app.post('/myProfile/changePhoto',UserController.profile_post  );
 
     app.get('/myProfile/editProfile',UserController.edit_profile_get  );
     app.post('/myProfile/editProfile',UserController.edit_profile_post  );

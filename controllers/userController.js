@@ -1,4 +1,7 @@
 const User = require('../models/UserModel');
+const Post = require('../models/PostModel');
+const mongodb = require("mongodb");
+const ObjectId = mongodb.ObjectId;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
@@ -12,6 +15,27 @@ const { google } = require("googleapis");
 const { rejects } = require('assert');
 const OAuth2 = google.auth.OAuth2;
 
+const multer  = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/demo')
+    },
+    fileFilter:function (req, file, cb) {
+      if(file.mimetype.startsWith('image/')){
+        cb(null, true)
+      }
+      else{
+        cb(null,false)
+      }
+    },limits:{
+      fileSize:5000,
+    },
+    filename: function (req, file, cb) {
+      // cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.')[1])
+       cb(null,file.originalname)
+    }
+})
+const upload = multer({storage: storage})
 
 // trang home
 const index = (req, res) => {
@@ -20,7 +44,11 @@ const index = (req, res) => {
         return res.redirect('/login')
     }
     var user = req.session.user
-    res.render('homePage/home',{image:user.profileImage})
+    var name =""
+    if(user.name!=""){
+        name = user.name
+    }
+    res.render('homePage/home',{image:user.profileImage,fullname:user.fullname,name:name})
 }
   
 // display form login
@@ -399,25 +427,57 @@ const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
-  
-    User.findOne({_id:req.session.user._id},function(err,user){
-        console.log("mua he")
-        res.render('profile/myProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name})
+    User.collection.find({_id:ObjectId(req.session.user._id)})
+    .toArray( function(err,user){
+        var lengthPost = 0;
+        var like=""
+        var imgPost = []
+        var vidPost = []
+        for(var i = 0;i<user.length;i++){
+            image=user[i].profileImage
+            fullname=user[i].fullname
+            bio = user[i].bio
+            name=user[i].name
+            lengthPost = user[i].posts.length
+            for(var j =0;j<user[i].posts.length;j++){
+                post = user[i].posts
+                like = user[i].posts[j].likers.length
+                imgPost=user[i].posts[j].image
+                vidPost=user[i].posts[j].video      
+            }
+        }        
+        if(like == ""){
+            like = 0
+        }
+        res.render('profile/myProfile',{
+            image:image,
+            fullname:fullname,
+            bio:bio,
+            name:name,
+            lengthPost:lengthPost,
+            post:post,
+            like:like
+        })
     })
+ 
 
 }
 
 // change photo
 const profile_post = (req, res) => {
     var id= req.session.user._id;
-    req.session.user.profileImage = '/img/'+req.file.filename
-    User.updateOne({ _id: id}, {profileImage:'/img/'+req.file.filename },function (err, result) {
+    let uploader = upload.single('file-')
+    uploader(req,res,err=>{
+    req.session.user.profileImage = '/demo/'+req.file.filename
+    User.updateOne({ _id: id}, {$set:{'profileImage':'/demo/'+req.file.filename}},function (err, result) {
         if (err) {
             return res.send("Loi");
         }
-        else{
-            return res.json({data: '/img/'+req.file.filename})
-        }
+        Post.collection.updateMany({'user._id':ObjectId(id)}, {$set: { "user.profileImage" :'/demo/'+req.file.filename }})
+        return res.json({data: '/demo/'+req.file.filename})
+        
+    })
+    
     })
 }
 
@@ -435,10 +495,19 @@ const edit_profile_get = (req, res) => {
 const edit_profile_post = (req, res) => {
     var id= req.session.user._id;
     var {fullname,bio,name} = req.body
+    req.session.user.fullname = fullname
+    req.session.user.name = name
     User.findByIdAndUpdate({ _id: id}, {fullname:fullname,bio:bio,name:name},function (err, result) {
         if (err) {
             res.end("Lỗi hệ thống!")
         } else {
+            Post.collection.updateMany({'user._id':ObjectId(id)}, {
+                $set: 
+                { 
+                    "user.name" :name,
+                    "user.fullname": fullname
+                }
+             })
             res.json({
                 data: {
                     name:name,

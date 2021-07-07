@@ -20,6 +20,97 @@
     
 </body>
 
+<script>
+    //  Show notifications
+     function showNotice(self) {
+        var colorHeart = $(self).children().children().attr("d")
+        var color = "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"
+        if(colorHeart == color){
+            $("#t4").attr("d","M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z")
+            $("#t1").attr("d","M 45.3 48 H 30 c -0.8 0 -1.5 -0.7 -1.5 -1.5 V 34.2 c 0 -2.6 -2 -4.6 -4.6 -4.6 s -4.6 2 -4.6 4.6 v 12.3 c 0 0.8 -0.7 1.5 -1.5 1.5 H 2.5 c -0.8 0 -1.5 -0.7 -1.5 -1.5 V 23 c 0 -0.4 0.2 -0.8 0.4 -1.1 L 22.9 0.4 c 0.6 -0.6 1.5 -0.6 2.1 0 l 21.5 21.5 c 0.4 0.4 0.6 1.1 0.3 1.6 c 0 0.1 -0.1 0.1 -0.1 0.2 v 22.8 c 0.1 0.8 -0.6 1.5 -1.4 1.5 Z m -13.8 -3 h 12.3 V 23.4 L 24 3.6 l -20 20 V 45 h 12.3 V 34.2 c 0 -4.3 3.3 -7.6 7.6 -7.6 s 7.6 3.3 7.6 7.6 V 45 Z")
+        }else{
+            $("#t4").attr("d",color)
+            $("#t1").attr("d","M45.5 48H30.1c-.8 0-1.5-.7-1.5-1.5V34.2c0-2.6-2.1-4.6-4.6-4.6s-4.6 2.1-4.6 4.6v12.3c0 .8-.7 1.5-1.5 1.5H2.5c-.8 0-1.5-.7-1.5-1.5V23c0-.4.2-.8.4-1.1L22.9.4c.6-.6 1.6-.6 2.1 0l21.5 21.5c.3.3.4.7.4 1.1v23.5c.1.8-.6 1.5-1.4 1.5z")
+
+        }
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/getNotice", true);
+
+              ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    var html = ""
+                    for (var a = 0; a < response.data.length; a++) {
+                      var data = response.data[a];
+                        var current_user = response.id
+
+                            for (var b = 0; b < data.notifications.length; b++) {
+                                var notice = data.notifications[b];
+                                console.log("1  "+notice.isRead)
+                                    if(current_user != notice.idLiked && data._id != notice.idLiked && notice.isRead===false){
+                                        html += " <li> "
+                                            html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
+                                            html+= "<a  data-id="+notice.post._id+" id="+notice._id+" onclick="+'goPost(this)'+">"
+                                                html += notice.content
+                                            html += "</a>"
+                                        html+= "</li>"
+
+                                    } 
+                            }
+                        document.getElementById("list-noti").innerHTML = html;
+                        
+                    }
+                  
+               
+                }
+            };
+            var formData = new FormData();
+            ajax.send(formData);
+
+        }
+      
+        // Go to card liked
+        function goPost(self){
+            var val = $(self).attr("data-id")
+            var idNotice = $(self).attr("id")
+            var myHeart = $("#modalHeart");
+            var color = "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"
+            var idCard = "Newfeed-"+val
+            var x = document.getElementById(idCard).offsetTop; 
+            var body = $("html, body");
+            body.stop().animate({scrollTop:x}, 10, 'swing', function() { 
+            });
+            $.ajax({
+                    method: "POST",
+                    url: "/postNotice",
+                    data: {
+                        idPost:val,
+                        idNotice:idNotice
+                    },
+                    cache: false,
+                    success: function(responseText) {
+                        if (responseText.status == "success") {
+                            console.log("data   "+responseText.data)
+                            myHeart.removeClass('showHeart') 
+                            $("#t4").attr("d",color)
+                            $("#t1").attr("d","M45.5 48H30.1c-.8 0-1.5-.7-1.5-1.5V34.2c0-2.6-2.1-4.6-4.6-4.6s-4.6 2.1-4.6 4.6v12.3c0 .8-.7 1.5-1.5 1.5H2.5c-.8 0-1.5-.7-1.5-1.5V23c0-.4.2-.8.4-1.1L22.9.4c.6-.6 1.6-.6 2.1 0l21.5 21.5c.3.3.4.7.4 1.1v23.5c.1.8-.6 1.5-1.4 1.5z")
+                            showNotice();
+						}
+					
+                    },
+                    error:function(responseText) {
+                        alert(responseText)
+                    }
+                    });
+                            
+                      
+
+        }
+   
+   
+</script>
+
+
 <script src="/js/iconModal.js"></script>
 <script src="/js/filePro.js"></script>
 <script src="/js/sendMessage.js"></script>

@@ -196,9 +196,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     position: relative;
     top: 0;
     left: 0;
-    color: #fff;
-    cursor: pointer;
-    margin: 5px 15px;
 }
 
 .gallery-img:hover .gallery-item-info, .gallery-img:focus .gallery-item-info {
@@ -206,9 +203,11 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    top: 5.5rem;
+    left: 5.25rem;
+    width: 30%;
+    height: 28%;
+    border-radius: 50% 50%;
     background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -221,8 +220,95 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     display: inline-block;
     font-size: 20px;
     font-weight: 600;
+    margin-top: 1rem;
+    margin-left: -2rem;
 }
 
+/* scroll image gallery */
+
+.list-img-gallery {
+    display: flex;
+    overflow-x: scroll;
+    padding: 5px 5px;
+    margin-bottom: -0.025rem;
+
+    /* prevent accidentally going back or triggering other swipe events */
+    overscroll-behavior: contain;
+  
+    /* hide scroll bar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  
+    /* momentum scroll on iOS */
+    -webkit-overflow-scrolling: touch;
+  
+    /* disbable vertical scroll for touch */
+    touch-action: pan-x;
+  
+    /* scroll snapping */
+    scroll-snap-type: x mandatory;
+  
+    /* stop scrolling before reaching edge */
+    scroll-padding-left: 20px;
+    scroll-padding-inline-start: 20px;
+  }
+  
+  /* hide scroll bar */
+  .list-img-gallery::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .item-gallery {
+    height: 300px;
+    width: 280px;
+    flex-shrink: 0;
+
+  }
+
+  .item-gallery:not(:last-child){
+    margin-right: 0.5rem ;
+  }
+ 
+  .item-gallery img {
+    height: 300px;
+    width: 280px;
+  
+  }
+  
+  .viewport-gallery {
+    max-width: 290px;
+    width: calc(100% - 100px);
+    margin-left: 10px;
+  }
+
+  /* button next and prev */
+
+  .next-gal{
+    position: absolute;
+    top: 7rem;
+    right: 0.3rem;
+    z-index: 1;
+  
+    font-size:25px;
+    opacity: 0.5;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .prev-gal{
+    position: absolute;
+    top:7rem;
+    left: 0.3rem;
+  
+    z-index: 1;
+    font-size:25px;
+    opacity: 0;
+    color: #fff;
+    cursor: pointer;
+  
+  }
+
+ 
 /* Loader */
 
 /* 

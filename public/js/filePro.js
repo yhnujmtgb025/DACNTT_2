@@ -1,11 +1,3 @@
-$(".gallery-img").magnificPopup({
-    delegate: 'a',
-    type: 'image',
-    gallery:{
-      enabled: true
-    }
-  });
-
  
         // update photo
         function uploadImage() {
@@ -23,7 +15,7 @@ $(".gallery-img").magnificPopup({
                   var response = JSON.parse(this.responseText);
       
                   $("#photo").attr("src", response.data);
-
+                  $("#iconProfile").attr("src", response.data);
                 
                 }
             };

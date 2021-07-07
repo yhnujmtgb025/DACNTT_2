@@ -1,19 +1,20 @@
 require('dotenv').config();
-const express = require('express');
-const path = require('path');
-
-const session = require('express-session');
 const passport = require('passport');
 require('./auth/passport')(passport);
+const express = require('express');
+const path = require('path');
+const socketio = require('socket.io')
+const session = require('express-session');
+
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
-const socketio = require('socket.io');
-const methodOveride = require('method-override')
 
+const methodOveride = require('method-override')
+const { io } = require("./utils/socket");
 
 
 const db = require('./config/database/connect');
@@ -138,5 +139,7 @@ route(app)
 
 const port = process.env.PORT || 8080
 
+const server =  app.listen(port, ()=>console.log(`http://localhost:${port}`))
+io.attach(server);
 
-app.listen(port, ()=>console.log(`http://localhost:${port}`))
+

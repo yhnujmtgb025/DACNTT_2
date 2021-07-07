@@ -29,9 +29,29 @@
             <div class="inforFile-stats">
 
                 <ul>
-                    <li><span class="inforFile-stat-count">164</span> posts</li>
-                    <li><span class="inforFile-stat-count">188</span> followers</li>
-                    <li><span class="inforFile-stat-count">206</span> following</li>
+                    <li>
+                        <% if(lengthPost ==0 || lengthPost == 1){%>
+                        <span class="inforFile-stat-count" id="amount-post" >
+                                <%=lengthPost%> 
+                        </span> post
+                        <%}else{%>
+                            <span class="inforFile-stat-count" id="amount-post" >
+                                <%=lengthPost%> 
+                        </span> posts
+                        <%}%>
+                    </li>
+
+                    <li>
+                        <span class="inforFile-stat-count">188
+
+                        </span> followers
+                    </li>
+
+                    <li>
+                        <span class="inforFile-stat-count">206
+
+                        </span>following
+                    </li>
                 </ul>
 
             </div>
@@ -71,74 +91,149 @@
     </div>
 
 
-    <div class="container gallery">
+    <!-- <div class="container gallery">
         <div class="gallery-content">
             <div class="gallery-img">
                 <a href="/img/1.png">
-                    <img src="/img/1.png" alt="">
-                    <div class="gallery-item-info">
+                    <img src="/img/1.png" class="card-img-top" alt="">
+                     <div class="gallery-item-info">
                         <ul>
                             <li style="margin-left:-2rem" class="gallery-item-likes"><span
                                     class="visually-hidden">Likes:</span>
-                                <i class="fas fa-heart" aria-hidden="true"></i> 34
+                                <i class="fas fa-heart" aria-hidden="true"></i> <%=like%>
                             </li>
                             <li style="padding-left: 1em;" class="gallery-item-comments"><span
                                     class="visually-hidden">Comments:</span>
                                 1 <i class="fas fa-comment" aria-hidden="true"></i> </li>
                         </ul>
 
-                    </div>
+                    </div> 
                 </a>
+            
 
             </div>
             <div class="gallery-img">
-                <a href="/img/5.png">
-                    <img src="/img/5.png" alt="">
-                    <div class="gallery-item-info">
+                <a href="/img/1.png">
+                    <img src="/img/1.png" class="card-img-top" alt="">
+                     <div class="gallery-item-info">
                         <ul>
                             <li style="margin-left:-2rem" class="gallery-item-likes"><span
                                     class="visually-hidden">Likes:</span>
-                                <i class="fas fa-heart" aria-hidden="true"></i> 34
+                                <i class="fas fa-heart" aria-hidden="true"></i> <%=like%>
                             </li>
                             <li style="padding-left: 1em;" class="gallery-item-comments"><span
                                     class="visually-hidden">Comments:</span>
                                 1 <i class="fas fa-comment" aria-hidden="true"></i> </li>
                         </ul>
 
-                    </div>
+                    </div> 
                 </a>
-
-
-            </div>
-            <div class="gallery-img">
-                <a href="/img/6.png">
-                    <img src="/img/6.png" alt="">
-                    <div class="gallery-item-info">
-                        <ul>
-                            <li style="margin-left:-2rem" class="gallery-item-likes"><span
-                                    class="visually-hidden">Likes:</span>
-                                <i class="fas fa-heart" aria-hidden="true"></i> 34
-                            </li>
-                            <li style="padding-left: 1em;" class="gallery-item-comments"><span
-                                    class="visually-hidden">Comments:</span>
-                                1 <i class="fas fa-comment" aria-hidden="true"></i> </li>
-                        </ul>
-
-                    </div>
-                </a>
-
+            
 
             </div>
 
         </div>
 
 
+    </div> -->
+
+    <div class="container gallery">
+        <div class="gallery-content">
+            <% post.forEach(function(pos,i) {%>
+                <div class="viewport-gallery gallery-img">
+                    <ul class="list-img-gallery" id="list-img-gallery-<%=pos._id%>">
+                        <%pos.image.forEach(function(img) { %>
+                            <li class="item-gallery">
+                                <img src="/demo/<%=img.originalname %>"   alt="">
+                            </li>
+                         <%})%>
+                         <%pos.video.forEach(function(video) { %>
+                            <li class="item-gallery">
+                                <iframe width="280" height="300" src="/demo/<%=video.originalname%>" frameborder="0" allowfullscreen>'
+                                </iframe>
+                            </li>
+                        <%})%>
+                    </ul>
+                    <div class="gallery-item-info">
+                        <ul>
+                            <li class="gallery-item-likes">
+                                <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cover-btn-gallery" >
+                        <% if(pos.image.length >1){%>
+                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length%>','<%=pos._id%>')" >
+                            </i>
+                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length%>','<%=pos._id%>')">
+                            </i>
+                        <%}else if (pos.video.length >1){%>
+                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.video.length%>','<%=pos._id%>')" >
+                            </i>
+                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.video.length%>','<%=pos._id%>')">
+                            </i>
+                        <%}else if ((pos.video.length+pos.image.length) >1){%>
+                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')" >
+                            </i>
+                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')">
+                            </i>
+                        <%}%>
+                    </div>
+                </div>
+            <%})%>
+        </div>
     </div>
+
+    
     </div>
 
 
 
     <div class="loader"></div>
 
+    <script>
+
+       
+
+    function slideGallery(direction,size,id) {
+            var container = document.getElementById('list-img-gallery-'+id);
+            var x;
+            var x1;
+            var temp;
+            scrollCompleted = 0;
+            var slideVar = setInterval(function () {
+                if (size > 1) {
+                    if (direction == "right") {
+                        container.scrollLeft += 29;
+                        x = container.scrollLeft
+                        if (x == (size * 290) - 290) {
+                            $('#next-gal-' + id).css("opacity","0")   
+                        } else {
+                            $('#prev-gal-' + id).css("opacity","0.8") 
+                            $('#next-gal-' + id).css("opacity","0.8")  
+                        }
+                    }
+                    if (direction == "left") {
+                        container.scrollLeft -= 29;
+                        x1 = container.scrollLeft
+                        if (x1 == 0) {
+                            $('#prev-gal-' + id).css("opacity","0") 
+                        } else {
+                            $('#prev-gal-' + id).css("opacity","0.8") 
+                            $('#next-gal-' + id).css("opacity","0.8")  
+                        }
+
+                    }
+                    scrollCompleted += 10;
+                    if (scrollCompleted >= 100) {
+                        window.clearInterval(slideVar);
+                    }
+                }
+
+            }, 30);
+
+        }
+
+    </script>
 
     <%- include ("../shares/footer") %>
