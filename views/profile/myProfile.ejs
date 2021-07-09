@@ -30,13 +30,13 @@
 
                 <ul>
                     <li>
-                        <% if(lengthPost ==0 || lengthPost == 1){%>
+                        <% if(post.length ==0 || post.length == 1){%>
                         <span class="inforFile-stat-count" id="amount-post" >
-                                <%=lengthPost%> 
+                                <%=post.length%> 
                         </span> post
                         <%}else{%>
                             <span class="inforFile-stat-count" id="amount-post" >
-                                <%=lengthPost%> 
+                                <%=post.length%> 
                         </span> posts
                         <%}%>
                     </li>
@@ -149,7 +149,7 @@
                          <%})%>
                          <%pos.video.forEach(function(video) { %>
                             <li class="item-gallery">
-                                <iframe width="280" height="300" src="/demo/<%=video.originalname%>" frameborder="0" allowfullscreen>'
+                                <iframe width="280" height="300" src="/demo/<%=video.originalname%>" frameborder="0" allowfullscreen sandbox>'
                                 </iframe>
                             </li>
                         <%})%>

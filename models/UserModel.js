@@ -13,7 +13,10 @@ const UserSchema = new Schema({
     },
     profileImage:{type:String},
     resetLink: {type: String,default: ''},
+    isFollow:{type:Boolean,default:false},
     bio:{type:String,default: ''},
+    followings:{ type : Array , default : [] },
+    followers:{ type : Array , default : [] },
     role: {type: Number,
     validate : {
             validator : Number.isInteger,

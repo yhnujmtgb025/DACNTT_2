@@ -15,6 +15,7 @@ const resetValidator = require('../validators/resetValidator')
 function route(app) {
     app.get('/',UserController.index );
 
+
     // handle newfeed
     app.post('/addPost',PostController.post_Newfeed );
     app.post("/getNewsfeed", PostController.get_Newfeed);
@@ -50,6 +51,9 @@ function route(app) {
 
     app.get('/myProfile/editProfile',UserController.edit_profile_get  );
     app.post('/myProfile/editProfile',UserController.edit_profile_post  );
+
+    app.get('/userProfile',UserController.user_profile_get);
+    app.post('/userProfile',UserController.user_profile_post);
 
     // handle password 
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );

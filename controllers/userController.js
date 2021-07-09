@@ -34,13 +34,35 @@ const index = (req, res) => {
         return res.redirect('/login')
     }
     var user = req.session.user
+    var use = ''
+    if(user.fullname){
+        user = [].concat(req.session.user)
+        user=user[0]
+    }else{
+        console.log("2")
+        for(var i = 0; i < user.length;i++){
+            if(user[i].followings.length > 0){
+                user = [].concat(user[i])
+                user = user[0]
+            }else{
+                user = [].concat(user[i])
+                user = user[0]
+            }
+        }
+    }
     var name =""
     if(user.name!=""){
         name = user.name
     }
-    res.render('homePage/home',{image:user.profileImage,fullname:user.fullname,name:name})
+    User.collection.find({
+    })
+    .limit(5)
+    .toArray(function(err,data){
+        res.render('homePage/home',{image:user.profileImage,fullname:user.fullname,name:name,idCurrent:user._id,data:data,curUser:user})
+    })
 }
-  
+
+
 // display form login
 const login_get = (req, res) => {
     if(req.session.user){
@@ -223,6 +245,8 @@ const handle_activity = (req,res)=>{
                         bio:"",
                         name:"",
                         role:1,
+                        followings:[],
+                        followers:[]
                     })
                     return user.save()
                 })
@@ -420,17 +444,19 @@ const profile_get = (req, res) => {
     User.collection.find({_id:ObjectId(req.session.user._id)})
     .toArray( function(err,user){
         var lengthPost = 0;
-        var like=""
+        var like=0
         var post =[]
+        console.log("user\n",user)
         for(var i = 0;i<user.length;i++){
             image=user[i].profileImage
             fullname=user[i].fullname
             bio = user[i].bio
             name=user[i].name
-            lengthPost = user[i].posts.length
-            for(var j =0;j<user[i].posts.length;j++){
-                post = user[i].posts
-                like = user[i].posts[j].likers.length    
+            if(user[i].posts && user[i].posts != null && user[i].posts != undefined){
+                for(var j =0;j<user[i].posts.length;j++){
+                    post = user[i].posts
+                    like = user[i].posts[j].likers.length    
+                }
             }
         }        
         if(like == ""){
@@ -441,7 +467,6 @@ const profile_get = (req, res) => {
             fullname:fullname,
             bio:bio,
             name:name,
-            lengthPost:lengthPost,
             post:post,
             like:like
         })
@@ -466,6 +491,150 @@ const profile_post = (req, res) => {
     })
     
     })
+}
+
+// user profile
+const user_profile_post = (req, res) => {
+    var reqUser = [].concat(req.session.user)
+    var current_user = reqUser[0]
+    var id = req.body._id
+    User.collection.findOne({
+        _id:ObjectId(id)
+    },function(err,user){
+        if(err){
+            req.flash('error',err)
+            return res.redirect('/')
+        }else if(user == null){
+            req.flash('error',"Vui lòng đăng nhập lại !")
+            return res.redirect('/login')
+        }else{
+            var isFollowed = false
+            var idfollow = ''
+            var idNotice = ''
+            for(var i = 0;i < user.followers.length;i++){
+                var follower = user.followers[i]
+                if(follower.idFollower.toString() == current_user._id.toString()){
+                    idfollow = follower._id
+                    idNotice = user.notifications[i]._id
+                    isFollowed = true
+                    break;
+                } 
+            }
+            if(isFollowed){
+               User.collection.updateOne(
+                {
+                    "_id":ObjectId(user._id)
+                },{
+                    $pull:{
+                        "followers":{
+                            "_id":idfollow
+                        },
+                        "notifications":{
+                            "_id":idNotice
+                        }
+                    }
+                },function(err,data){
+                    User.collection.updateOne({
+                          "_id": ObjectId(current_user._id)
+                      }, {
+                        $pull: {
+                          "followings": {
+                            "idFollowing":ObjectId(user._id)
+                          }
+                        }
+                      },function(err,data){
+                        let result = req.session.user[0]
+                        if(result){
+                            for( var i = 0; i < req.session.user[0].followings.length; i++){ 
+                                if ( req.session.user[0].followings[i].idFollowing.toString() === user._id.toString()) { 
+                                    req.session.user[0].followings.splice(i, 1); 
+                                    i--; 
+                                }
+                            }
+                        }else{
+                            req.session.user.followings = []
+                        }
+
+                        res.json({
+                            "status": "unfollow"
+                          });
+                      });
+                    
+                })
+            }else{
+                User.collection.updateOne({
+                    "_id": ObjectId(user._id)
+                }, {
+                    $push: {
+                        "followers": {
+                            "_id": ObjectId(),
+                            "idFollower":ObjectId(current_user._id),
+                            "fullname": current_user.fullname,
+                            "name": current_user.name,
+                            "profileImage": current_user.profileImage,
+                            "type": "follower",
+                            "createdAt": new Date().getTime()
+                        },
+                        "notifications": {
+                            "_id": ObjectId(),
+                            "idFollowed":ObjectId(current_user._id),
+                            "type": "follower",
+                            "content": current_user.fullname + " has followed your !",
+                            "profileImage": current_user.profileImage,
+                            "createdAt": new Date().getTime()
+                        }
+                    }
+                },function (error, data) {
+                    User.collection.updateOne(
+                        { 
+                          "_id": ObjectId(current_user._id)
+                        }, { 
+                            $push: 
+                              { 
+                                "followings": {
+                                  "_id": ObjectId(),
+                                  "idFollowing":ObjectId(user._id),
+                                  "fullname": user.fullname,
+                                  "name": user.name,
+                                  "profileImage": user.profileImage,
+                                  "type": "following",
+                                  "createdAt": new Date().getTime()
+                                }
+                              } 
+                        },function (error, success) {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                let product = {
+                                    "_id": ObjectId(),
+                                    "idFollowing":ObjectId(user._id),
+                                    "fullname": user.fullname,
+                                    "name": user.name,
+                                    "profileImage": user.profileImage,
+                                    "type": "following",
+                                    "createdAt": new Date().getTime()
+                                }
+                                var c =[].concat(req.session.user)
+                                req.session.user = c
+                                // console.log(req.session.user[0])
+                                req.session.user[0].followings.push(product)
+                                // console.log("\n jo",req.session.user[0].followings[0])
+                                res.json({
+                                    "status": "follow"
+                                });
+                            }
+                        }
+                    )
+
+               });
+            }
+        }
+    })
+}
+
+const user_profile_get = (req, res) => {
+    var id = req.params.id
+    console.log("idgets:             "+id)
 }
 
 
@@ -602,6 +771,9 @@ module.exports = {
 
     profile_get,
     profile_post,
+
+    user_profile_get,
+    user_profile_post,
 
     edit_profile_get,
     edit_profile_post,

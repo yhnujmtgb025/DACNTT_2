@@ -528,6 +528,65 @@ ul.listHelp li {
     border-radius:0 0 6px 6px ;
 }
 
+/* modal Compass */
+
+/* The Modal (background) */
+
+.molCompass {
+    position: relative;
+    top: 0;
+    right: 0;
+
+}
+
+.coverCompass {
+    position: absolute;
+    top: 2.25rem;
+    right: -1.25rem;
+    visibility: hidden;
+    z-index: 1;
+    width: 310px;
+    border-radius: 6px;
+    box-shadow: 0 0 5px 1px rgb(0 0 0 / 10%);
+    background-color: #FFFFFF;
+    
+}
+
+.showCompass{
+    visibility: visible;
+}
+
+.conCompass ul li {
+    padding: 10px 0 15px 10px;
+}
+
+.conCompass ul li:hover {
+    cursor: pointer;
+}
+
+.conCompass .listPro1 li a {
+    color: #333;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+.conCompass .listPro1 li a {
+    text-decoration: none;
+    color: #333;
+}
+
+#rhombus-compass {
+    position: absolute;
+    top: -0.85rem;
+    right: 1.95rem;
+}
+
+.conCompass ul li:hover {
+    background-color: #FAFAFA;
+    border-radius:0 0 6px 6px ;
+}
+
+
 /* card body */
 
 .card-body {

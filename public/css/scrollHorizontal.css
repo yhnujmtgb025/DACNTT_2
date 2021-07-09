@@ -10,10 +10,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  font-size: 15px;
-  color: #333;
-  font-weight: 500;
+
+}
+
+.nameLink button{
+
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+    
+    border: none;
+    background: none;
+    outline: none;
 }
 
 .nameBelow{
@@ -42,18 +50,45 @@
   font-size: 13px;
   background-color: #0095F6;
 }
+.btnFollowed{
+  position: relative;
+  top: 0;
+  left: 1.20rem;
+
+  width: 125px;
+  height: 30px;
+
+  font-size: 13px;
+  background-color: #fff;
+  border: 0.5px solid #DBDBDB;
+}
 
 .centerFollow{
   position: relative;
   top: -0.20rem;
   color:#fff;
   font-weight: bold;
-}
-
-.centerFollow:hover{
-  color: #fff;
   text-decoration: none;
 }
+.centerFollow:hover{
+  text-decoration: none;
+  color: #fff;
+}
+
+.centerFollowed{
+  position: relative;
+  top: -0.20rem;
+  color:#333;
+  font-weight: bold;
+  text-decoration: none;
+}
+.centerFollow:hover{
+  text-decoration: none;
+}
+
+/* .centerFollow:hover{
+
+} */
 
 /* handle scroll horizonal */
 .coverList{

@@ -29,10 +29,8 @@ const post_Newfeed = function (req, res) {
     var type = []
     var createdAt = new Date().getTime();
 
-    console.log("\nhelo   ",req.files)
     var files = []
-    files = [].concat(req.files);
-    // console.log(files)
+    files = files.concat(req.files)
     if (files[0].image != null && files[0].video != null) {
       console.log("1")
       for (var x = 0; x < files[0].image.length; x++) {
@@ -47,7 +45,7 @@ const post_Newfeed = function (req, res) {
           type.push(path.extname(video[x].filename))
         }
       }
-
+      req.files = []
     } else if (files[0].image != null && files[0].video == null) {
       console.log("2")
       for (var x = 0; x < files[0].image.length; x++) {
@@ -56,6 +54,7 @@ const post_Newfeed = function (req, res) {
           type.push(path.extname(img[x].filename))
         }
       }
+      req.files = []
     } else if (files[0].image == null && files[0].video != null) {
       console.log("3")
       for (var x = 0; x < files[0].video.length; x++) {
@@ -64,6 +63,7 @@ const post_Newfeed = function (req, res) {
           type.push(path.extname(video[x].filename))
         }
       }
+      req.files = []
     } else if (caption == "") {
       return res.json({
         error: "Vui lòng nhập caption "
@@ -167,8 +167,9 @@ const get_Newfeed = function (req, res) {
 const get_Notice = function (req, res) {
   var id = req.session.user._id;
   // console.log("\nreq   : ",req.session.user)
-  User.collection.find({
-  })
+    User.collection.find({
+      "_id":ObjectId(id)
+    })
     .sort({
       "createdAt": -1
     })
