@@ -21,7 +21,13 @@
                     <%=fullname%>
                 </h1>
 
-                <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
+                <% if(idUser){%>
+                    <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
+                <%}else{%>
+                    <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                        <a href="" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
+                    </button>
+                <%}%>
 
             </div>
 
@@ -42,15 +48,27 @@
                     </li>
 
                     <li>
-                        <span class="inforFile-stat-count">188
-
-                        </span> followers
+                        <% if(follower.length ==0 || follower.length == 1){%>
+                            <span class="inforFile-stat-count">
+                                <%=follower.length%> 
+                            </span> follower
+                        <%}else{%>
+                                <span class="inforFile-stat-count" id="amount-post" >
+                                    <%=follower.length%> 
+                                </span> followers
+                        <%}%>
                     </li>
 
                     <li>
-                        <span class="inforFile-stat-count">206
-
-                        </span>following
+                        <% if(following.length ==0 || following.length == 1){%>
+                            <span class="inforFile-stat-count">
+                                <%=following.length%> 
+                            </span>following
+                        <%}else{%>
+                            <span class="inforFile-stat-count" id="amount-post" >
+                                <%=following.length%> 
+                            </span> followings
+                        <%}%>
                     </li>
                 </ul>
 

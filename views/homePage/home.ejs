@@ -218,13 +218,13 @@
                 </div>
 
                 <!-- List card horizontal scroll -->
-                <div class="viewport" id="scrollBar">
+                <div class="viewport" id="scrollBar" data-id="<%=idCurrent%>" data-len="<%=data.length%>">
                     <p class="sugCard">Suggestions For You</p>
                     <a href="/listFollow" class="seeCard">See All</a>
-                    <i class="fas fa-chevron-circle-right " id="next" onclick="slide('right')"></i>
-                    <i class="fas fa-chevron-circle-left " id="prev" onclick="slide('left')"></i>
+                    <i class="fas fa-chevron-circle-right next" id="next-<%=idCurrent%>" onclick="slide('right','<%=data.length%>','<%=idCurrent%>')"></i>
+                    <i class="fas fa-chevron-circle-left prev" id="prev-<%=idCurrent%>" onclick="slide('left','<%=data.length%>','<%=idCurrent%>')"></i>
                     <div class="coverList" id="co">
-                        <div id="list">
+                        <div class="list" id="list-<%=idCurrent%>">
                             <ul id="scroll" data-id="<%=idCurrent%>">
                                 <% data.forEach(function(user) {%>
                                     <% if(user._id !=idCurrent) {%>
@@ -236,7 +236,7 @@
                                                     style="border-radius: 50% 50%;">
                                                 <div class="nameBelow">
                                                     <% if(user.name){%>
-                                                        <form action="/userProfile/<%=user._id%>" method="post">
+                                                        <form action="/userProfile/<%=user._id%>" method="GET">
                                                             <a class="nameLink"><button type="submit">
                                                                     <%=user.name%>
                                                                 </button></a>
@@ -248,32 +248,32 @@
                                                                     </button> </a>
                                                             </form>
                                                             <%}%>
-                                                                <p class="sug">Suggested for you</p>
+                                                        <p class="sug">Suggested for you</p>
                                                 </div>
 
                                                 <% if(curUser.followings !="" || curUser.followings.length > 0){%>               
                                                     <% curUser.followings.forEach(function(cur,index) {%>         
                                                         <% if(curUser.followings[index]){%>
                                                             <% if(curUser.followings[index].idFollowing==user._id){%>
-                                                                <button class="btn btnFollowed" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>')">
+                                                                <button class="btn btnFollowed" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
                                                                     <a href="" class="centerFollowed" id="<%=user._id%>">Unfollow</a>
                                                                 </button>
                                                             <%}else{%>
-                                                                <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>')">
+                                                                <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
                                                                     <a href="" class="centerFollow" id="<%=user._id%>">Follow</a>
                                                                 </button>
                                                             <%}%>
                                                         <%}%>
                                                     <%})%>
                                                 <%}else{%>
-                                                    <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>')">
+                                                    <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
                                                         <a href="" class="centerFollow" id="<%=user._id%>">Follow</a>
                                                     </button>
                                                 <%}%>
                                             </div>
                                         </li>
-                                        <%}%>
-                                            <%})%>
+                                    <%}%>
+                                <%})%>
                             </ul>
                         </div>
                     </div>
@@ -308,36 +308,40 @@
                     </div>
 
                     <!-- list user -->
-                    <div class="row belowSuggest">
-                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                            style="border-radius: 50% 50%;">
-                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
-                        <small class="midNameUser">Suggested for you</small>
-                        <a class="wordImg">Follow</a>
-
-                    </div>
-                    <div class="row belowSuggest">
-                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                            style="border-radius: 50% 50%;">
-                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
-                        <small class="midNameUser">Suggested for you</small>
-                        <a class="wordImg">Follow</a>
-                    </div>
-                    <div class="row belowSuggest">
-                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                            style="border-radius: 50% 50%;">
-                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
-                        <small class="midNameUser">Suggested for you</small>
-                        <a class="wordImg">Follow</a>
-
-                    </div>
-                    <div class="row belowSuggest">
-                        <img class="imgUserOther" width="50" height="50" src="/img/kim.png" alt="Card image cap"
-                            style="border-radius: 50% 50%;">
-                        <span class="card-title "><a href="#" class="nameOfUser">leejoon</a></span>
-                        <small class="midNameUser">Suggested for you</small>
-                        <a class="wordImg">Follow</a>
-                    </div>
+                    <% data.forEach(function(user) {%>
+                        <% if(user._id !=idCurrent) {%>
+                            <div class="row belowSuggest">
+                                <img class="imgUserOther" width="50" height="50" src="<%= user.profileImage%>" alt="Card image cap"
+                                    style="border-radius: 50% 50%;">
+                                <% if(user.name){%>
+                                    <span class="card-title "><a  class="nameOfUser"><%=user.name%></a></span>
+                                <%}else{%>
+                                    <span class="card-title ">
+                                        <form action="/userProfile/<%=user._id%>" method="post">
+                                            <button type="submit" style="border: hidden;">
+                                                <a class="nameOfUser"><%=user.fullname%></a>
+                                            </button>
+                                        </form>
+                                    </span>
+                                <%}%>  
+                                <small class="midNameUser">Suggested for you</small>
+                                <% if(curUser.followings !="" || curUser.followings.length > 0){%>               
+                                    <% curUser.followings.forEach(function(cur,index) {%>         
+                                        <% if(curUser.followings[index]){%>
+                                            <% if(curUser.followings[index].idFollowing==user._id){%>
+                                                    <a class="wordImg" id="right-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">Unfollow</a> 
+                                            <%}else{%>
+                                                    <a  class="wordImg" id="right-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">Follow</a>
+                                            <%}%>
+                                        <%}%>
+                                    <%})%>
+                                <%}else{%>
+                                        <a  class="wordImg" id="right-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">Follow</a>
+                                <%}%>
+                         
+                            </div>
+                        <%}%>
+                    <%})%>
 
                     <!-- copy right -->
                     <div class="optionBelow">
@@ -372,6 +376,11 @@
 
         $(document).ready(function () {
             showNewsfeed();
+            var len = $('#scrollBar').attr("data-len")
+            var id= $('#scrollBar').attr("data-id")
+            if(len<=3){
+                $('#next-' + id).css("opacity", "0")
+            }
         })
 
         // preview image before post
@@ -933,45 +942,170 @@
                 }
 
             }, 45);
+        
         }
 
+        // scroll by button
+        function slide(direction,size,id){
+            var container = document.getElementById('list-'+id);
+            var x ;
+            var x1;
+            var temp;
+            scrollCompleted = 0;
+            var temp = size
+            size = (size / 3).toFixed(1)
+            temp = temp % 3
 
-
-        // follow
-        function btnFollow(self, id) {
-            console.log('id' + id)
-            $.ajax({
-                method: "POST",
-                url: "/userProfile",
-                data: {
-                    _id: id
-                },
-                cache: false,
-                success: function (responseText) {
-                    countHeart = responseText.count
-                    if (responseText.status == "follow") {
-                        $("#" + id).text('Unfollow')
-                        $("#" + id).css('color', '#333')
-                        $("#" + id).css(" text-decoration", "none")
-                        $("#btn-" + id).css("background-color", "#fff")
-                        $("#btn-" + id).css("border", "0.5px solid #DBDBDB")
+            var slideVar = setInterval(function(){
+            if(size == 2){
+                if (direction == "right") {
+                    container.scrollLeft += 58;
+                    x = container.scrollLeft
+                    console.log("x : \n"+x)
+                    if (x == (size * 580) - 580) {
+                        $('#next-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
                     }
-                    if (responseText.status == "unfollow") {
-                        $("#" + id).text('Follow')
-                        $("#" + id).css('color', '#fff')
-                        $("#btn-" + id).css("background-color", "#0095F6")
-                    }
-                },
-                error: function (responseText) {
-                    alert(responseText)
                 }
-            });
+                if (direction == "left") {
+                    container.scrollLeft -= 58;
+                    x1 = container.scrollLeft
+                    if (x1 == 0) {
+                        $('#prev-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+               
+            }else if(size == 3){
+                if (direction == "right") {
+                    container.scrollLeft += 58;
+                    x = container.scrollLeft
+                    console.log("x : \n"+x)
+                    if (x == (size * 580) - 584) {
+                        $('#next-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+                if (direction == "left") {
+                    container.scrollLeft -= 58;
+                    x1 = container.scrollLeft
+                    if (x1 == 0) {
+                        $('#prev-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+            }
+            else if( size == 1.3) {
+                if (direction == "right") {
+                    container.scrollLeft += 20;
+                    x = container.scrollLeft
+                    console.log("x : \n"+x)
+                    if (x == 196) {
+                        $('#next-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+                if (direction == "left") {
+                    container.scrollLeft -= 20;
+                    x1 = container.scrollLeft
+                    if (x1 == 0) {
+                        $('#prev-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+            }
+            else if( size == 1.7) {
+                if (direction == "right") {
+                    container.scrollLeft += 20;
+                    x = container.scrollLeft
+                    console.log("x : \n"+x)
+                    if (x == 200) {
+                        $('#next-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+                if (direction == "left") {
+                    container.scrollLeft -= 20;
+                    x1 = container.scrollLeft
+                    if (x1 == 0) {
+                        $('#prev-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+            }
+            else if( size == 2.3) {
+                if (direction == "right") {
+                    container.scrollLeft += 20;
+                    x = container.scrollLeft
+                    console.log("x : \n"+x)
+                    if (x == 772) {
+                        $('#next-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+                if (direction == "left") {
+                    container.scrollLeft -= 20;
+                    x1 = container.scrollLeft
+                    if (x1 == 0) {
+                        $('#prev-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+            }
+            else if( size == 2.7) {
+                if (direction == "right") {
+                    container.scrollLeft += 20;
+                    x = container.scrollLeft
+                    console.log("x : \n"+x)
+                    if (x == 964) {
+                        $('#next-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+                if (direction == "left") {
+                    container.scrollLeft -= 20;
+                    x1 = container.scrollLeft
+                    if (x1 == 0) {
+                        $('#prev-' + id).css("opacity", "0")
+                    } else {
+                        $('#prev-' + id).css("opacity", "0.2")
+                        $('#next-' + id).css("opacity", "0.2")
+                    }
+                }
+            }
+            else{
+                $('#next-' + id).css("opacity", "0")
+            }
+            scrollCompleted += 10;
+                if (scrollCompleted >= 100) {
+                    window.clearInterval(slideVar);
+            }
+            }, 45);
+            }
 
-
-
-        }
-
-
+            
     </script>
 
 

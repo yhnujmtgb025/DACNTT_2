@@ -43,7 +43,7 @@ function route(app) {
     app.get('/reset/:id',UserController.reset_get );
     app.post('/reset/:id',resetValidator,UserController.reset_post );
 
-    app.get('/sendMessage',UserController.message_get  );
+    app.get('/sendMessage',UserController.message_get);
 
     // handle profile
     app.get('/myProfile',UserController.profile_get  );
@@ -53,7 +53,9 @@ function route(app) {
     app.post('/myProfile/editProfile',UserController.edit_profile_post  );
 
     app.get('/userProfile',UserController.user_profile_get);
-    app.post('/userProfile',UserController.user_profile_post);
+    app.post('/userProfile/:id',UserController.user_profile_post);
+    app.post('/userFollow',UserController.user_follow_post);
+    
 
     // handle password 
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );

@@ -97,6 +97,7 @@ const post_Newfeed = function (req, res) {
             $push: {
               "posts": {
                 "_id": data.insertedId,
+                "myPost":ObjectId(user._id),
                 "caption": caption,
                 "image": img,
                 "video": video,
@@ -120,47 +121,48 @@ const post_Newfeed = function (req, res) {
 // trang home
 
 const get_Newfeed = function (req, res) {
-  var id = req.session.user._id;
-  // console.log("\nreq   : ",req.session.user)
-  Post.collection.find({
-  })
-    .sort({
-      "createdAt": -1
-    })
-    .toArray(function (error, data) {
-      res.json({
-        "status": "success",
-        "message": "Record has been fetched",
-        "data": data,
-        "id": id
-      });
-    });
-  // User.findOne({
-  //   "_id": id
-  // }, function (error, user) {
-  //   if (user == null) {
-  //     res.redirect('/login')
-  //   } else {
-  //     var ids = [];
-  //     ids.push(user._id);
-  //     Post.collection.find({
-  //       "user._id": {
-  //         $in: ids
-  //       }
-  //     })
-  //       .sort({
-  //         "createdAt": -1
-  //       })
-  //       .toArray(function (error, data) {
-  //         res.json({
-  //           "status": "success",
-  //           "message": "Record has been fetched",
-  //           "data": data
-  //         });
-  //       });
-  //   }
-  // });
-
+      var id = req.session.user._id;
+      User.collection.findOne({
+        "_id":ObjectId(id)
+      },function(err,user){
+        if(err){
+          res.json({"error":err})
+        }
+        if(user == null){
+          res.redirect("/login")
+        }else{
+         var ids = [];
+         if(user.followings.length > 0){
+           for(var i =0 ;i < user.followings.length; i++){
+              var follow = user.followings[i]
+              ids.push(follow.idFollowing);
+           }
+         }
+         if(user.posts){
+            for(var i =0 ;i < user.posts.length; i++){
+              var post = user.posts[i]
+              ids.push(post.myPost);
+            }
+         }
+      
+          Post.collection.find({
+            "user._id": {
+                $in: ids
+              }
+          })
+          .sort({
+            "createdAt": -1
+          })
+          .toArray(function (error, data) {
+            res.json({
+              "status": "success",
+              "message": "Record has been fetched",
+              "data": data,
+              "id": id
+            });
+          });
+        }
+        })
 
 }
 

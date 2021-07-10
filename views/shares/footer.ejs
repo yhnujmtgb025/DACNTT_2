@@ -134,7 +134,7 @@
                     var html = ""
                     for (var a = 0; a < response.data.length; a++) {
                       var data = response.data[a];
-                      console.log("hei"+ data.followings.length)
+         
                         var current_user = response.id
 
                             for (var i = 0; i < data.notifications.length; i++) {
@@ -150,22 +150,22 @@
                                                     var follow = data.followings[j];
                                         
                                                     if(follow.idFollowing == notice.idFollowed){
-                                                        html+='<button type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
-                                                            html+= '<p style="position:relative;top:-8px;right:12px">'
+                                                        html+='<button id="btn-'+notice.idFollowed+'"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +')"  type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
+                                                            html+= '<p style="position:relative;top:-8px;right:12px" id="'+notice.idFollowed+'">'
                                                                 html += 'Unfollow'
                                                             html+= '</p>'
                                                         html+= '</button>'
                                                     }else{
-                                                        html+='<button type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
-                                                            html+= '<p style="position:relative;top:-8px;right:12px">'
+                                                        html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px;text-align:center ;margin-left:3px;font-size:14px;color:#fff">'
+                                                            html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
                                                                 html += 'Follow'
                                                             html+= '</p>'
                                                         html+= '</button>'
                                                     }
                                                  }
                                             }else{
-                                                html+='<button type="button" class="btn btn-primary" style="width:50px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
-                                                    html+= '<p style="position:relative;top:-8px;right:10px">'
+                                                html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
+                                                    html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
                                                         html += 'Follow'
                                                     html+= '</p>'
                                                 html+= '</button>'
@@ -188,7 +188,48 @@
             ajax.send(formData);
 
         }
+
+         // follow
+         function btnFollow(self, id,clas) {
+            $.ajax({
+                method: "POST",
+                url: "/userFollow",
+                data: {
+                    _id: id
+                },
+                cache: false,
+                success: function (responseText) {
+                    countHeart = responseText.count
+                    if (responseText.status == "follow") {
+                        if(clas === "wordImg"){
+                            $("#right-" + id).text('Unfollow')
+                            $("#" + id).text('Unfollow')
+                            $("#" + id).css('color', '#333')
+                            $("#" + id).css("text-decoration", "none")
+                            $("#btn-" + id).css("background-color", "#fff")
+                            $("#btn-" + id).css("border", "0.5px solid #DBDBDB")
+                        }
+                    }
+                    if (responseText.status == "unfollow") {
+                        if(clas === "wordImg"){
+                            $("#right-" + id).text('Follow')
+                            $("#" + id).text('Follow')
+                            $("#" + id).css('color', '#fff')
+                            $("#btn-" + id).css("background-color", "#0095F6")
+                        }
+                    
+                    }
+                },
+                error: function (responseText) {
+                    alert(responseText)
+                }
+            });
+        }
+
+
 </script>
+
+
 
 
 <script src="/js/iconModal.js"></script>

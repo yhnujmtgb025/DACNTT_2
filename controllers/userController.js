@@ -39,7 +39,6 @@ const index = (req, res) => {
         user = [].concat(req.session.user)
         user=user[0]
     }else{
-        console.log("2")
         for(var i = 0; i < user.length;i++){
             if(user[i].followings.length > 0){
                 user = [].concat(user[i])
@@ -441,34 +440,44 @@ const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
+    if(   req.session.user._id == undefined){
+        req.session.user._id = req.session.user[0]._id
+    }
+ 
     User.collection.find({_id:ObjectId(req.session.user._id)})
     .toArray( function(err,user){
         var lengthPost = 0;
         var like=0
         var post =[]
-        console.log("user\n",user)
+      
         for(var i = 0;i<user.length;i++){
             image=user[i].profileImage
             fullname=user[i].fullname
             bio = user[i].bio
             name=user[i].name
+            
             if(user[i].posts && user[i].posts != null && user[i].posts != undefined){
                 for(var j =0;j<user[i].posts.length;j++){
                     post = user[i].posts
-                    like = user[i].posts[j].likers.length    
+                    like = user[i].posts[j].likers.length   
+                    following =  user[i].followings
+                    follower =  user[i].followers
                 }
             }
         }        
         if(like == ""){
             like = 0
         }
+        
         res.render('profile/myProfile',{
             image:image,
             fullname:fullname,
             bio:bio,
             name:name,
             post:post,
-            like:like
+            like:like,
+            following:following,
+            follower:follower
         })
     })
  
@@ -494,7 +503,7 @@ const profile_post = (req, res) => {
 }
 
 // user profile
-const user_profile_post = (req, res) => {
+const user_follow_post = (req, res) => {
     var reqUser = [].concat(req.session.user)
     var current_user = reqUser[0]
     var id = req.body._id
@@ -616,9 +625,7 @@ const user_profile_post = (req, res) => {
                                 }
                                 var c =[].concat(req.session.user)
                                 req.session.user = c
-                                // console.log(req.session.user[0])
                                 req.session.user[0].followings.push(product)
-                                // console.log("\n jo",req.session.user[0].followings[0])
                                 res.json({
                                     "status": "follow"
                                 });
@@ -634,10 +641,68 @@ const user_profile_post = (req, res) => {
 
 const user_profile_get = (req, res) => {
     var id = req.params.id
-    console.log("idgets:             "+id)
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    User.collection.find({_id:ObjectId(id)})
+    .toArray( function(err,user){
+        var lengthPost = 0;
+        var like=0
+        var post = []
+      
+        for(var i = 0;i<user.length;i++){
+            image=user[i].profileImage
+            fullname=user[i].fullname
+            bio = user[i].bio
+            name=user[i].name
+            
+            if(user[i].posts && user[i].posts != null && user[i].posts != undefined){
+                for(var j =0;j<user[i].posts.length;j++){
+                    post = user[i].posts
+                    like = user[i].posts[j].likers.length   
+                    following =  user[i].followings
+                    follower =  user[i].followers
+                }
+            }
+        }        
+        if(like == ""){
+            like = 0
+        }
+        
+        res.render('profile/myProfile',{
+            image:image,
+            fullname:fullname,
+            bio:bio,
+            name:name,
+            post:post,
+            like:like,
+            following:following,
+            follower:follower,
+            idUser:req.session.user._id
+        })
+    })
 }
 
-
+const user_profile_post = (req, res) => {
+    var id = req.params.id
+    var idUser = req.session.user._id
+    User.collection.findOne({
+        "_id":ObjectId(id)
+    },function(err,user){
+        var per = [].concat(user)
+        res.render('profile/myProfile',{
+            image:user.image,
+            fullname:user.fullname,
+            bio:user.bio,
+            name:user.name,
+            post:post,
+            like:like,
+            following:following,
+            follower:follower,
+            idUser:idUser
+        })
+    })
+}
 // update profile
 const edit_profile_get = (req, res) => {
     if(!req.session.user){
@@ -774,6 +839,7 @@ module.exports = {
 
     user_profile_get,
     user_profile_post,
+    user_follow_post,
 
     edit_profile_get,
     edit_profile_post,
