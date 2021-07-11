@@ -122,6 +122,12 @@ const post_Newfeed = function (req, res) {
 
 const get_Newfeed = function (req, res) {
       var id = req.session.user._id;
+      if(id){
+        id = id
+      }else{
+        user = [].concat(req.session.user)
+        id=user[0]._id
+      }
       User.collection.findOne({
         "_id":ObjectId(id)
       },function(err,user){
@@ -138,6 +144,8 @@ const get_Newfeed = function (req, res) {
               ids.push(follow.idFollowing);
            }
          }
+       
+       
          if(user.posts){
             for(var i =0 ;i < user.posts.length; i++){
               var post = user.posts[i]
@@ -154,11 +162,12 @@ const get_Newfeed = function (req, res) {
             "createdAt": -1
           })
           .toArray(function (error, data) {
+
             res.json({
               "status": "success",
               "message": "Record has been fetched",
               "data": data,
-              "id": id
+              "user":user
             });
           });
         }

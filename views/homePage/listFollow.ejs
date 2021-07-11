@@ -1,0 +1,52 @@
+<%- include ("../shares/header") %>
+    <!-- List user not follow -->
+    
+    <div class="container listUn">
+        <p id="sug">Suggested</p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="inforUser">
+                    <ul class="listPeople">
+                        <% data.forEach(function(user) {%>
+                            <% if(user._id !=idCurrent) {%>
+                                <li>
+                                    <div class="row belowSuggest1">
+                                        <img class="imgUserOther1" width="60" height="60" src="<%=user.profileImage%>" alt="Card image cap"
+                                            style="border-radius: 50% 50%;">
+                                        <% if(user.name){%>
+                                            <span class="card-title "><a href="#" class="nameOfUser1"><%=user.name%></a></span>
+                                        <%}else{%>
+                                            <span class="card-title "><a href="#" class="nameOfUser1"><%=user.fullname%></a></span>
+                                        <%}%>
+                                        <small class="midNameUser1">Instagram recommended</small>
+                                        <% if(curUser.followings !="" || curUser.followings.length > 0){%>               
+                                            <% curUser.followings.forEach(function(cur,index) {%>         
+                                                <% if(curUser.followings[index]){%>
+                                                    <% if(curUser.followings[index].idFollowing==user._id){%>
+                                                        <a class="btn btn-primary wordImg1" style="background-color: #fff;color: #333;border: 0.5px solid #DBDBDB;" id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                            Unfollow
+                                                        </a>
+                                                    <%}else{%>
+                                                        <a class="btn btn-primary wordImg1" id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                            Follow
+                                                        </a>
+                                                    <%}%>
+                                                <%}%>
+                                            <%})%>
+                                        <%}else{%>
+                                            <a class="btn btn-primary wordImg1" id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                Follow
+                                            </a>
+                                        <%}%>
+                                    </div>
+                                </li>
+                            <%}%>
+                        <%})%>
+                    </ul>
+                </div>
+             
+            </div>
+        </div>
+    </div>
+    
+<%- include ("../shares/footer") %>

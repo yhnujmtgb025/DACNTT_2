@@ -6,12 +6,16 @@
         <div class="inforFile">
             <div class="testimonial">
                 <figure class="inforFile-image">
-                    <img class="imaProfile testimonial__img" id="photo" src='<%=image%>' alt="hyun">
-                    <label class="testimonial__caption" for="file" id="label-upload">
-                        Change photo
-                    </label>
-                    <input  name="profileImage" type="file" class=" upload-photo" id="file" accept="image/*"
-                        onchange="uploadImage();">
+                    <% if(userCurrent==""){%>
+                        <img class="imaProfile testimonial__img" id="photo" src='<%=image%>' alt="hyun">
+                        <label class="testimonial__caption" for="file" id="label-upload">
+                            Change photo
+                        </label>
+                        <input  name="profileImage" type="file" class=" upload-photo" id="file" accept="image/*"
+                            onchange="uploadImage();">
+                    <%}else{%>
+                        <img class="imaProfile " id="photo" src='<%=per.profileImage%>' alt="hyun">
+                    <%}%>
                 </figure>
             </div>
 
@@ -21,12 +25,26 @@
                     <%=fullname%>
                 </h1>
 
-                <% if(idUser){%>
-                    <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
+                <% if(userCurrent!=""){%>
+                    <% if(follower.length > 0) {%>
+                        <% follower.forEach(function(follow) {%>
+                            <% if(follow.idFollower == userCurrent._id){ %>
+                                <a href="" style="background-color:#fff;color:#333;border: 0.5px solid #DBDBDB;" class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>" onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                                    Unfollow
+                                </a>
+                            <%}else{%>
+                                <a href="" style="background-color:#0095F6;color:#fff" class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>" onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                                    Follow
+                                </a>
+                            <%}%>
+                        <%})%>
+                    <%}else{%>
+                        <a href="" style="background-color:#0095F6;color:#fff" class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>" onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                            Follow
+                        </a>
+                    <%}%>
                 <%}else{%>
-                    <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
-                        <a href="" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
-                    </button>
+                    <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
                 <%}%>
 
             </div>

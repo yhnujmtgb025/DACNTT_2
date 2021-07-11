@@ -52,10 +52,11 @@ function route(app) {
     app.get('/myProfile/editProfile',UserController.edit_profile_get  );
     app.post('/myProfile/editProfile',UserController.edit_profile_post  );
 
-    app.get('/userProfile',UserController.user_profile_get);
-    app.post('/userProfile/:id',UserController.user_profile_post);
+    app.get('/userProfile/:id',UserController.user_profile_get);
     app.post('/userFollow',UserController.user_follow_post);
     
+    // list follow
+    app.get('/homePage/listFollow',UserController.user_follow);
 
     // handle password 
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );
