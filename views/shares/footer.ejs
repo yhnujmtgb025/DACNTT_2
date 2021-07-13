@@ -1,4 +1,4 @@
-    <!-- modal Card  -->
+    <!-- modal edit Card newfeed -->
     <div id="myModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content" id="modCon">
@@ -17,6 +17,7 @@
 
     </div>
 
+    
     
 </body>
 
@@ -55,7 +56,7 @@
                             for (var b = 0; b < data.notifications.length; b++) {
                                 var notice = data.notifications[b];
                                 
-                                    if( data._id != notice.idLiked && notice.isRead===false){
+                                    if( data._id != notice.idLiked && notice.isRead===false || data._id != notice.idCommented && notice.type == 'post_comment'){
                                         html += " <li> "
                                             html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
                                             html+= "<a  data-id="+notice.post._id+" id="+notice._id+" onclick="+'goPost(this)'+">"
@@ -64,7 +65,7 @@
                                         html+= "</li>"
                                       
                                     }
-                                  
+                                    
                                 
                                     
                             }
@@ -380,6 +381,7 @@
                     for (var a = 0; a < response.data.length; a++) {
                         var data = response.data[a];
                         var user = response.user
+                        var id = response.id
                         html += '<div class="card nameCard" id="Newfeed-' + data._id + '">';
 
                         html += '<div class="row nameInfor">';
@@ -518,8 +520,7 @@
                         var check = false;
                         for (var b = 0; b < data.likers.length; b++) {
                             var liker = data.likers[b];
-                            if (liker._id == id) {
-                                console.log("first")
+                            if (liker._id == id) {                      // id user so sanh voi liker
                                 isLiked = true;
                                 break;
                             }
@@ -528,20 +529,20 @@
 
                         html += '<button class="btnHeart ani" data-id="' + data._id + '" onclick="toggleLike(this,' + a + ');" >';
                         html += '<svg  aria-label="Like" fill="#262626" height="25" viewBox="0 0 48 48" width="25">';
-                        if (isLiked) {
-                            html += '<path id="heart-' + a + '" fill="#ed4956"  d="M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z">';
-                            html += '</path>';
+                            if (isLiked) {
+                                html += '<path id="heart-' + a + '" fill="#ed4956"  d="M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z">';
+                                html += '</path>';
 
-                        }
-                        else {
-                            html += '<path id="heart-' + a + '" fill="#262626"  d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">';
-                            html += '</path>';
+                            }
+                            else {
+                                html += '<path id="heart-' + a + '" fill="#262626"  d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">';
+                                html += '</path>';
 
-                        }
+                            }
                         html += '</svg>';
                         html += '</button>';
 
-                        html += '<button >'
+                        html += '<button data-id="'+data._id+'" onclick="modalComment(this)" >'
                         html += ' <svg aria-label="Comment" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
                         html += '<path clip-rule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fill-rule="evenodd">';
                         html += '</path>';
@@ -581,42 +582,330 @@
 
                         html += '<p style="font-size: 15px; font-weight: 500; padding-left: 15px;" class="likePost">';
                         if (data.caption != "" && data.image != "") {
-                            html += ' <p class="card-text caption-text1" style="margin:-1rem 0 0 15px">';
-                            html += data.caption;
+                            var cap = ""
+                            for(var j = 0; j < 2; j ++){
+                                cap +=" "+ data.caption.split(" ")[j] 
+                            }
+                            html += ' <p class="card-text caption-text1" >';
+                            html += data.user.fullname;
+                                html += '<span class="cap">'
+                                    html +=  cap + '...'
+                                html += '</span>'
+                                html += '<span class="complete">'
+                                    html += data.caption
+                                html += ' </span>'
+                                html += '<span class="more" onclick="toggleComment(this)">more'
+                                html += '</span>'
+                               
                             html += '</p>';
                         }
                         html += '</p>';
 
+
+                        html += '<p class="view-comment" data-id="'+data._id+'" onclick="modalComment(this)">'
+                            html += 'View all'
+                            if(data.comments.length == 0 || data.comments.length == 1){
+                                html +=' '+ data.comments.length + ' comment' 
+                            }else{
+                                html +=' '+ data.comments.length + ' comments' 
+                            }
+                        html += '</p>'
+                        html += '<div >'
+                            for (var c = 0; c < data.comments.length; c++) {
+                                var commenter = data.comments[c];               
+                                html += '<div class="comment-post" id="comment-display">'
+                                    html += '<a style="font-weight:600">'
+                                        html += '' +  commenter.fullname
+                                    html += '</a>'
+                                    html += '<p style="padding-left:5px">'
+                                        html += ''+ commenter.content_comment
+                                    html += '</p>'
+                                html+= '</div>'
+                            }
+                        html+= '</div>'
+
                         html += '<hr width="100%" style="margin-bottom: 0rem">';
 
                         html += ' <div class="container textChat">';
-                        html += '<div class="comment">';
-                        html += ' <div class="commenter">';
-                        html += '<img src=" ' + user.profileImage + ' " class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
+                            html += '<div class="comment">';
+                                html += ' <div class="commenter">';
+                                    html += '<img src=" ' + user.profileImage + ' " class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
+                                html += '</div>';
+
+                                html += '<form id="post-comment-new" onsubmit="return doPostComment(this)">'
+                                    html += '<div class="comment-text-area">';
+                                        html += '<input type="hidden" name="_id" value="'+data._id+'">'
+                                        html += '<textarea class="textinput  textComment" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
+                                        html += '</textarea>';
+                                        html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
+                                        html += '</button>';
+                                    html += '</div>';
+                                html += '</form>'
+
+                            html += '</div>';
                         html += '</div>';
 
-                        html += ' <div class="comment-text-area">';
-                        html += '<textarea class="textinput  textComment " placeholder="Add comment ...">';
-                        html += '</textarea>';
-
-                        html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
-
-                        html += '</button>';
-                        html += '</div>';
-                        html += '</div>';
                         html += '</div>';
 
                         html += '</div>';
 
-                        html += '</div>';
+                        // modal comment 
+                        html+= '<div id="modalComment" class="modal-com-new">'
+                            html+= '<div class="modal-content-comment" id="modal-view">'
+                               html += '<i class="fas fa-times exit-modal-comment" id="exit-modal-comment">'
+                                html += '</i>'
+                                html+= '<div class="card card-comment" >'
+                                    if (data.image.length !== 0 && data.video.length !== 0) {
+                                        var sumLength = data.video.length + data.image.length
+
+                                        html += ' <div class="cover-next-prev-modal">'
+                                                html += ' <i class="fas fa-chevron-circle-right next-img-modal" id="next-img-modal-' + data._id + '" onclick="slideImageModal(' + "'" + "right" + "'" + "," + "'" + sumLength + "'" + "," + "'" + data._id + "'" + ')" >'
+                                                html += ' </i>'
+                                                html += ' <i class="fas fa-chevron-circle-left prev-img-modal"  id="prev-img-modal-' + data._id + '" onclick="slideImageModal(' + "'" + "left" + "'" + "," + "'" + sumLength + "'" + "," + "'" + data._id + "'" + ')">'
+                                                html += ' </i>'
+                                        html += '</div>'
+
+                                        html+= '<div class="viewport-modal">'
+                                            html+= '<ul class="list-modal" id="list-modal-'+ data._id +'">'
+                                            for (var j = 0; j < data.image.length; j++) {
+                                                html+= '<li class="item-modal">'
+                                                    html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                                html+= '</li>'
+                                            }
+                                            for (var j = 0; j < data.video.length; j++) {
+                                                html += ' <li class="item-image" id="1">'
+                                                    html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen>'
+                                                    html += '</iframe>'
+                                                html += ' </li>'
+                                            }
+                                            html+= '</ul>'
+                                        html+= ' </div>'
+                                        }
+
+                                    if (data.image.length !== 0 && data.video.length == 0) {
+
+                                        html += ' <div class="cover-next-prev-modal">'
+                                            if (data.image.length > 1) {
+                                                html += ' <i class="fas fa-chevron-circle-right next-img-modal" id="next-img-modal-' + data._id + '" onclick="slideImageModal(' + "'" + "right" + "'" + "," + "'" + data.image.length + "'" + "," + "'" + data._id + "'" + ')" >'
+                                                html += ' </i>'
+                                                html += ' <i class="fas fa-chevron-circle-left prev-img-modal"  id="prev-img-modal-' + data._id + '" onclick="slideImageModal(' + "'" + "left" + "'" + "," + "'" + data.image.length + "'" + "," + "'" + data._id + "'" + ')">'
+                                                html += ' </i>'
+                                            }
+                                        html += '</div>'
+
+                                        html+= '<div class="viewport-modal">'
+                                            html+= '<ul class="list-modal" id="list-modal-'+ data._id +'">'
+                                            for (var j = 0; j < data.image.length; j++) {
+                                                html+= '<li class="item-modal">'
+                                                    html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                                html+= '</li>'
+                                            }
+                                            html+= '</ul>'
+                                        html+= ' </div>'
+
+                                    }
+                                    
+                                    if (data.image.length == 0 && data.video.length !== 0) {
+                    
+                                        html += ' <div class="cover-next-prev-modal">'
+                                            if (data.video.length > 1) {
+                                                html += ' <i class="fas fa-chevron-circle-right next-img-modal" id="next-img-modal-' + data._id + '" onclick="slideImageModal(' + "'" + "right" + "'" + "," + "'" + data.video.length + "'" + "," + "'" + data._id + "'" + ')" >'
+                                                html += ' </i>'
+                                                html += ' <i class="fas fa-chevron-circle-left prev-img-modal"  id="prev-img-modal-' + data._id + '" onclick="slideImageModal(' + "'" + "left" + "'" + "," + "'" + data.video.length + "'" + "," + "'" + data._id + "'" + ')">'
+                                                html += ' </i>'
+                                            }
+                                        html += '</div>'
+
+                                        html+= '<div class="viewport-modal">'
+                                            html+= '<ul class="list-modal" id="list-modal-'+ data._id +'">'
+                                                for (var j = 0; j < data.video.length; j++) {
+                                                    html += ' <li class="item-image" id="1">'
+                                                    html += '   <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen sandbox>'
+                                                    html += '</iframe>'
+                                                    html += ' </li>'
+                                                }
+                                            html+= '</ul>'
+                                        html+= ' </div>'
+
+                                        }
+                                    // frame comment
+                                    html+= '<div class="card-body" >'
+                                        // infor user
+                                        html += '<div class="row nameInfor img-cover-modal">';
+                                            html += '<img  src=" ' + data.user.profileImage + ' " id="img-user-modal"  alt="Card image cap" >';
+                                            html += ' <span class="card-title ">';
+                                                html += '<a href="' + '/user/' + data.user.fullname + '" class="nameOf-modal">';
+                                                    html += data.user.fullname;
+                                                html += '</a>';
+                                            html += '</span>';
+
+                                            html += '<i class="fas fa-ellipsis-h action-icon" style="margin-top:10px" id="mod-' + data._id + '" data-id="' + data._id + '" class="threeDot" onclick="modelCard(this)">';
+                                            html += '</i>';
+
+                                        html += '</div>';
+                                    
+                                        // interact user
+                                        html += '<div class="view-comment-modal">'
+                                            html += '<ul class="list-comment" id="list-comment-id">'
+                                                html += '<li class=" item-comment" id="item-comment">'
+                                                    html += '<img  src=" ' + data.user.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
+                                                    html += '<p  class="likePost">';
+
+                                                        if (data.caption != "" && data.image != "") {
+                                                            var cap = ""
+                                                            for(var j = 0; j < 2; j ++){
+                                                                cap +=" "+ data.caption.split(" ")[j] 
+                                                            }
+                                                                html += ' <p class="card-text caption-text1" id="tag-cap" >';
+                                                                    html += data.user.fullname;
+                                                                        html += '<span class="cap">'
+                                                                            html +=  cap + '...'
+                                                                        html += '</span>'
+                                                                        html += '<span class="complete">'
+                                                                            html += data.caption
+                                                                        html += ' </span>'
+                                                                        html += '<span class="more" onclick="toggleComment(this)">more'
+                                                                        html += '</span>'
+                                                                html += '</p>';
+
+                                                        }
+                                                    html += '</p>';
+                                                html += '</li>'
+                                                        
+                                                  
+
+                                                            for (var c = 0; c < data.comments.length; c++) {
+                                                                var commenter = data.comments[c];
+                                                                html += '<li class="item-comment">'               
+                                                                    html += '<div class="comment-post">'
+                                                                        html += '<img  src=" ' + commenter.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
+                                                                            html += '<div class="in-img">' 
+                                                                                  
+                                                                                html += '<a style="font-weight:600">'
+                                                                                    html += '' +  commenter.fullname
+                                                                                html += '</a>'
+                                                                            
+                                                                                html += '<p style="padding-left:5px;">'
+                                                                                    html += ''+ commenter.content_comment 
+                                                                                    html += '<br>'
+                                                                                    html += '<a>'
+                                                                                        html +='1w'
+                                                                                    html += '</a>'
+                                                                                    html += '<a>'
+                                                                                        html +='169 likes'
+                                                                                    html += '</a>'
+                                                                                    html += '<a>'
+                                                                                        html +='Reply'
+                                                                                    html += '</a>'
+                                                                                html += '</p>'
+
+
+                                                                            html+= '</div>'
+                                                                                    
+                                                                      
+                                                                          
+                                                                    html+= '</div>'
+
+                                                                
+                                                                html += '</li>'
+                                                            }
+                                              
+                                                    
+                                                  
+                                            html += '</ul>'
+                                        html += '</div>'
+
+                                        // like, share
+                                        html += '<div class="row modal-icon-newfeed iconCard" style="margin-top:18px">';
+                                            html += '<button class="btnHeart ani" data-id="' + data._id + '" onclick="toggleLike(this,' + a + ');" >';
+                                                html += '<svg  aria-label="Like" fill="#262626" height="25" viewBox="0 0 48 48" width="25">';
+                                                if (isLiked) {
+                                                    html += '<path id="heart-' + a + '" fill="#ed4956"  d="M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z">';
+                                                    html += '</path>';
+                                                }
+                                                else {
+                                                    html += '<path id="heart-' + a + '" fill="#262626"  d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">';
+                                                    html += '</path>';
+                                                }
+                                                html += '</svg>';
+                                            html += '</button>'
+                                            
+                                            html += '<button data-id="'+data._id+'" onclick="modalComment(this)" >'
+                                                html += ' <svg aria-label="Comment" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                                                    html += '<path clip-rule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fill-rule="evenodd">';
+                                                    html += '</path>';
+                                                html += '</svg>';
+                                            html += '</button>';
+
+                                            html += '<button >';
+                                                html += '<svg aria-label="Share Post" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                                                    html += '<path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">';
+                                                    html += '</path>';
+                                                html += '</svg>';
+                                            html += '</button>';
+
+                                            html += '<button class="savePost">';
+                                                html += '<svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                                                    html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
+                                                    html += '</path>';
+                                                html += '</svg>';
+                                            html += '</button>';
+                                        html += '</div>';
+                                        
+                                        html += '<div class="view-like" style="margin-left:0.75rem">'
+                                            html += '<small id="like-' + data._id + '" data-id="' + data.likers.length + '" style="font-weight:600">'
+
+                                            if (data.likers.length == "" || data.likers.length == 0) {
+                                                html += '0 like</small>'
+                                            } else if (data.likers.length == 1) {
+                                                html += data.likers.length
+                                                html += ' like</small>'
+                                            }
+                                            else {
+                                                html += data.likers.length
+                                                html += ' likes</small>'
+                                            }
+                                        html += '</div>'
+
+                                        html += ' <div class="container textChat">';
+                                            html += '<div class="comment">';
+                                                html += ' <div class="commenter">';
+                                                    html += '<img  src=" ' + user.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
+                                                html += '</div>';
+
+                                                html += '<form id="post-comment-new" onsubmit="return doPostCommentModal(this)">'
+                                                    html += '<div class="comment-text-area">';
+                                                        html += '<input type="hidden" name="_id" value="'+data._id+'">'
+                                                        html += '<textarea class="textinput  textComment" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
+                                                        html += '</textarea>';
+                                                        html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
+                                                        html += '</button>';
+                                                    html += '</div>';
+                                                html += '</form>'
+
+                                            html += '</div>';
+                                        html += '</div>';
+
+                                    html+= '</div>'
+
+                                  
+
+                                html+= ' </div>'
+
+                    
+                            html+= '</div>'
+                        html+= '</div>'
                     }
                     document.getElementById("cardShow").innerHTML = html;
+               
                     inputPost();
                     inputComment();
                     toggleLike();
                     dropSave();
                     modelCard();
+                    modalComment();
                     slideImage();
+                    slideImageModal();
                 }
             };
             var formData = new FormData();
@@ -624,7 +913,76 @@
 
         }
 
-        // display modal of cards
+        function doPostComment(form,id){
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/addComment", true);
+
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response.status == "success") {
+                        var html = ""
+                        document.getElementById("post-comment-new").querySelector("textarea[name='commentPost']").value = "";
+                        showNewsfeed();
+                        form.reset();
+                    }
+                    else {
+                        alert(response.error)
+                    }
+
+                }
+
+            };
+
+            var formData = new FormData(form);
+            ajax.send(formData);
+
+            return false;
+        }
+        function doPostCommentModal(form){
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/addComment", true);
+
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response.status == "success") {
+                        console.log(response.imageProfile)
+                        document.getElementById("post-comment-new").querySelector("textarea[name='commentPost']").value = "";
+                        var html =""
+                        html += '<li class="item-comment">'               
+                            html += '<div class="comment-post">'
+                                html += '<img  src=" ' + response.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
+                                    html += '<div class="in-img">'   
+                                        html += '<a style="font-weight:600">'
+                                            html += '' +  response.fullname
+                                        html += '</a>'
+                                        html += '<p style="padding-left:5px;">'
+                                            html += ''+ response.comment
+                                        html += '</p>'
+                                    html+= '</div>'
+                            html+= '</div>'
+                        html += '</li>'
+                        var list = $("#list-comment-id");
+                        list.append(html);
+                       
+                        form.reset();
+                    }
+                    else {
+                        alert(response.error)
+                    }
+
+                }
+
+            };
+
+            var formData = new FormData(form);
+            ajax.send(formData);
+
+            return false;
+        }
+
+        // display modal edit of cards newfeed
         function modelCard(self) {
             // handle modal card
             var modal = document.getElementById("myModal");
@@ -640,6 +998,7 @@
                 modal.style.display = "block";
                 modCon.style.display = "block";
                 modal.style.opacity = "1";
+                $('.seeCard').css('z-index','-1')
             }
 
 
@@ -656,6 +1015,44 @@
             }
         }
 
+        // display modal comment card newfeed
+        function modalComment(self) {
+            // handle modal card
+            var modal = document.getElementById("modalComment");
+            var modCon = document.getElementById("modal-view");
+            var nav = document.getElementById("navColor")
+            var id = $(self).attr("data-id")
+            // var idMod = "mod-"+id
+            // var btn = document.getElementsById(idMod); // Get the button that opens the modal
+            var span = document.getElementsByClassName("exit-modal-comment")[0]; // Get the <span> element that closes the modal
+
+            if (id) {
+                // When the user clicks the button, open the modal card
+                modal.style.display = "block";
+                modCon.style.display = "block";
+                modal.style.opacity = "1";
+                $('.seeCard').css('z-index','0')
+                $('body').addClass('stop-scrolling')
+                $('.comment-post').addClass('post-pad')
+               
+            }
+
+
+            // When the user clicks on button cancle the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+                $('body').removeClass('stop-scrolling')
+                $('.comment-post').removeClass('post-pad')
+                showNewsfeed();
+            }
+            // When the user clicks anywhere outside of the modal or body, close it
+            window.onclick = function (event) {
+                if (event.target == modal || event.target == nav) {
+                    modal.style.display = "none";
+                    modCon.style.display = "none"
+                }
+            }
+        }
         // toggle opacity button post
         function inputComment() {
             // handle textarea card
@@ -712,6 +1109,26 @@
             })
         }
 
+        // toggle comment
+        function toggleComment(self){
+            var dot = $('.cap').text()
+            if($('.completed').hasClass('completed')){
+                $('.completed').toggleClass('complete')    
+                $('.complete').removeClass('completed') 
+                $('.cap').css('display','')
+                $(self).text('more')  
+           
+            }else{
+                $('.complete').toggleClass('completed')    
+                $('.completed').removeClass('complete') 
+                $(self).text('less')    
+                $('.cap').css('display','none')     
+            }
+           
+         
+          
+        }
+
         // fill color icon heart card and icon save
         function toggleLike(self, index) {
             var _id = $(self).attr("data-id")
@@ -730,6 +1147,7 @@
                     countHeart = responseText.count
                     if (responseText.status == "success") {
                         if (c == "#262626") {
+                            console.log("hello")
                             $(self).toggleClass("anime")
                             $(self).toggleClass("ani")
                             showNewsfeed()
@@ -816,6 +1234,48 @@
         
         }
 
+         // silde image card modal
+         function slideImageModal(direction, size, id) {
+            var container = document.getElementById('list-modal-' + id);
+            var x;
+            var x1;
+            var temp;
+            scrollCompleted = 0;
+            var slideVar = setInterval(function () {
+                if (size > 1) {
+                    if (direction == "right") {
+                        container.scrollLeft += 58;
+                        x = container.scrollLeft
+                        console.log("x\n"+x)
+                        if (x == (size * 580) - 580) {
+                            $('#next-img-modal-' + id).css("opacity", "0")
+                        } else {
+                            $('#prev-img-modal-' + id).css("opacity", "0.8")
+                            $('#next-img-modal-' + id).css("opacity", "0.8")
+                        }
+                    }
+                    if (direction == "left") {
+                        container.scrollLeft -= 58;
+                        x1 = container.scrollLeft
+                        if (x1 == 0) {
+                            $('#prev-img-modal-' + id).css("opacity", "0")
+                        } else {
+                            $('#prev-img-modal-' + id).css("opacity", "0.8")
+                            $('#next-img-modal-' + id).css("opacity", "0.8")
+                        }
+
+                    }
+                    scrollCompleted += 10;
+                    if (scrollCompleted >= 100) {
+                        window.clearInterval(slideVar);
+                    }
+                }
+
+            }, 45);
+        
+        }
+
+        
         // scroll by button
         function slide(direction,size,id){
             var container = document.getElementById('list-'+id);

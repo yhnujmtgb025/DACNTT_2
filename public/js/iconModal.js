@@ -37,6 +37,8 @@ btnHeart.addEventListener("click", function(e) {
 },true)
 
 
+
+
  // When the user clicks anywhere outside of the modal or body, close it
 
 // handle textarea card

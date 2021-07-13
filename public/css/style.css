@@ -218,7 +218,9 @@ body {
     margin-left: 1rem;
 }
 .caption-text1{
-    margin-left: 1rem;
+    margin:-1rem 0 0 15px;
+    font-size:14px;
+    font-weight:600;
 }
 /* rightCard */
 
@@ -403,6 +405,232 @@ ul.listHelp li {
 
 .hrList {
     width: 100%;
+}
+
+/* modal comment card newfed */
+.modal-com-new {
+    /* display: none; */
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+  }
+
+/* Modal Content */
+
+.modal-content-comment {
+    margin:-1rem 0 0 2rem;
+}
+
+.card.card-comment {
+    margin:-1.75rem 8.25rem;
+    flex-direction: row;
+    border-radius: 0;
+    border: none;
+    width:55%;
+  }
+.card-comment img {
+    width: 80%;
+    border-radius: 0;
+}
+
+.img-cover-modal{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.nameOf-modal {
+    margin-left: 3.5rem;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+#img-user-modal{
+    position: absolute;
+    top: 8px;
+    left: 25px;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50% 50%;
+}
+
+.commenter .icon-comment-modal{
+    width: 40px;
+    height: 40px;
+    border-radius: 50% 50%;
+}
+
+.comment-post{
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.infor-comment{
+    position: absolute;
+    top: 1.5rem;
+    left: 0.75rem;
+}
+
+.infor-comment ul li{
+    display: inline;
+    color: #8E8E8E;
+   
+}
+
+.infor-comment ul li:last-child{
+    cursor: pointer;
+}
+
+.infor-comment ul li+li {
+    padding-left: 0.25rem;
+}
+
+.post-pad{
+    padding-top: 1.5rem;
+}
+
+.in-img{
+    position: absolute;
+    top: -1.35rem;
+    display: flex;
+    margin-left: 2.75rem;   
+    margin-bottom: 1rem;
+}
+
+.in-img a{
+    max-width: 100%;
+    width: 160px;
+}
+
+.in-img p a {
+    position: relative;
+    top: 5px;
+    left:-5rem;
+    
+    color: #8E8E8E;
+    cursor: pointer;
+}
+
+.in-img p a+a {
+    padding-left: 1rem;
+}
+
+.in-img p a:hover{
+    color: #8E8E8E;
+}
+
+.comment-post .icon-comment-modal{
+    width: 40px;
+    height: 40px;
+    border-radius: 50% 50%;
+}
+
+.comment-post p{
+    display: block;
+    max-width: 200px;
+    width: 100%;
+}
+
+
+
+#item-comment{
+    position: relative;
+    top: 15px;
+    left: 0;
+
+}
+
+.item-comment:not(:first-child){
+    margin-top: 2.5rem;
+    margin-bottom: 3.5rem;
+    margin-left: -14px;
+
+}
+
+#exit-modal-comment{
+    position: relative;
+    top: -0.25rem;
+    left:54.25rem;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.item-comment .icon-comment-modal{
+    position: absolute;
+    top: -10px;
+    left: 5px;
+    
+    width: 40px;
+    height: 40px;
+    border-radius: 50% 50%;
+}
+
+#tag-cap{
+    margin-left: 2.75rem;
+
+    font-size: 15px; 
+    font-weight: 500; 
+
+}
+
+.view-comment-modal{
+    max-width: 520px;
+    width: calc(109% - 20px);
+    margin-left: -0.23rem !important;
+    margin-top: 1px !important;
+    padding: 0;
+    background-color: #fff;
+    border-top:0.5px solid #EFEFEF ;
+    border-bottom:0.5px solid #EFEFEF;
+}
+
+.list-comment {
+    overflow-y: scroll;
+    height: 360px;
+    width: 320px;
+    display:block;
+    padding: 5px 0px 0 10px;
+  }
+  
+  /* hide scroll bar */
+  .list-comment::-webkit-scrollbar {
+    display: none;
+  }
+
+.modal-icon-newfeed button+button:not(:last-child){
+    padding-left: 0.1em;
+}
+ 
+.iconUser-modal {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+}
+.card-comment .card-body{
+    padding: 5px 5px;
+    width: 45% ;
+    min-width: 45%;
+    background-color: #fff;
 }
 
 /* modal Profile */
@@ -639,6 +867,12 @@ ul li {
     display: block;
 }
 
+.view-comment{
+    font-size:13px;
+    color:#8E8E8E;
+    margin:-17px 0 10px 17px;
+    cursor:pointer
+}
 
 
 
@@ -695,6 +929,40 @@ ul li {
     width: 100%;
     height: auto;
     margin: 10px auto;
+}
+
+.comment-post{
+    font-size:14px;
+    margin:0 0 -15px 15px;
+
+    display:flex
+}
+
+.cap{
+    font-size:13px;
+    padding-left:5px
+}
+
+.complete{
+    display: none;
+}
+
+.completed{
+    display:inline;
+    font-size:13px;
+    padding-left:10px;
+    width: 10rem;
+}
+
+.completed::after{
+    content:"\a";
+    white-space: normal;
+}
+
+.more{
+    font-size:13px;
+    color:#8E8E8E;
+    cursor:pointer
 }
 
 .commenter {

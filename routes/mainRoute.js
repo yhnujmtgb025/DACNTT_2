@@ -20,8 +20,10 @@ function route(app) {
     app.post('/addPost',PostController.post_Newfeed );
     app.post("/getNewsfeed", PostController.get_Newfeed);
 
+    // handle interaction
     app.post("/toggleLike",PostController.post_ToggleLike);
-    
+    app.post("/addComment",PostController.post_Comment);
+
     // notification
     app.post("/getNotice", PostController.get_Notice);
     app.post("/postNotice", PostController.post_Notice);

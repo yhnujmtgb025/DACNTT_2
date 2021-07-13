@@ -162,11 +162,11 @@ const get_Newfeed = function (req, res) {
             "createdAt": -1
           })
           .toArray(function (error, data) {
-
             res.json({
               "status": "success",
               "message": "Record has been fetched",
               "data": data,
+              "id":id,
               "user":user
             });
           });
@@ -185,7 +185,6 @@ const get_Notice = function (req, res) {
       "createdAt": -1
     })
     .toArray(function (error, data) {
-      // console.log("data  ",data[1])
       res.json({
         "status": "success",
         "message": "Record has been fetched",
@@ -361,6 +360,7 @@ const post_ToggleLike = function (req, res) {
                      }
                 })
             })
+          
           }
       
       
@@ -371,8 +371,89 @@ const post_ToggleLike = function (req, res) {
   })
 }
 
+const post_Comment = function (req,res){
+  var idUser = req.session.user._id
+  var uploader = upload.none()
+  uploader(req,res,next =>{
+    var {_id,commentPost} = req.body
+    User.collection.findOne({
+      "_id":ObjectId(idUser)
+    },function(err,user){
+      if(err){
+        res.json({
+          "status":err
+        })
+      }
+      else{
+        Post.collection.findOne({
+          "_id":ObjectId(_id)
+        },function(err,post){
+          User.collection.updateOne({
+            "_id":post.user._id
+          }, {
+            $push: {
+              "notifications": {
+                "_id": ObjectId(),
+                "type": "post_comment",
+                "content": user.fullname + " has commented your post.",
+                "profileImage": user.profileImage,
+                "post": {
+                  "_id": post._id
+                },
+                "isRead":false,
+                "idCommented": user._id,
+                "createdAt": new Date().getTime()
+              }
+            }
+          });
+          Post.collection.updateOne({
+            "_id": ObjectId(_id)
+          }, {
+            $push: {
+              "comments": {
+                "_id": user._id,
+                "fullname": user.fullname,
+                "profileImage": user.profileImage,
+                "content_comment":commentPost,
+                "createdAt": new Date().getTime()
+              }
+            }
+          }, function (error, data) {
+            User.collection.findOneAndUpdate(
+              { 
+                "posts._id":post._id
+              }, { 
+                  $push: 
+                    { 
+                      "posts.$.comments": {
+                        "_id": user._id,
+                        "fullname": user.fullname,
+                        "profileImage": user.profileImage
+                      }
+                    } 
+              },function (error, success) {
+                   if (error) {
+                       console.log(error);
+                   } else {
+                    res.json({
+                      "status": "success",
+                      "message": "Post has been commented.",
+                      "comment":commentPost,
+                      "fullname":user.fullname,
+                      "profileImage":user.profileImage
+                    });
+                   }
+              })
+          })
+        })
+
+      }
+    })
+  })
+ 
+}
 
 module.exports = {
-  post_Newfeed, get_Newfeed, post_ToggleLike, get_Notice, post_Notice
+  post_Newfeed, get_Newfeed, post_ToggleLike, post_Comment,get_Notice, post_Notice
 };
 
