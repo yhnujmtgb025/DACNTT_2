@@ -375,7 +375,9 @@ const post_Comment = function (req,res){
   var idUser = req.session.user._id
   var uploader = upload.none()
   uploader(req,res,next =>{
-    var {_id,commentPost} = req.body
+    var {_id,commentPost,id_comment,id_user_comment} = req.body
+    console.log("idCom : "+_idComment)
+
     User.collection.findOne({
       "_id":ObjectId(idUser)
     },function(err,user){
@@ -406,45 +408,105 @@ const post_Comment = function (req,res){
               }
             }
           });
-          Post.collection.updateOne({
-            "_id": ObjectId(_id)
-          }, {
-            $push: {
-              "comments": {
-                "_id": user._id,
-                "fullname": user.fullname,
-                "profileImage": user.profileImage,
-                "content_comment":commentPost,
-                "createdAt": new Date().getTime()
+          // reply 1 comment user
+          if(id_comment){
+            Post.collection.updateOne({
+              $and: [{
+                "_id":ObjectId(_id)
+              }, {
+                "comments._id": ObjectId(id_comment)
+              }]
+            }, {
+              $push: {
+                "comments.$.replies": {
+                  "_id": ObjectId(),
+                  "user_comment": user._id,
+                  "fullname": user.fullname,
+                  "profileImage": user.profileImage,
+                  "content_reply":commentPost,
+                  "createdAt": new Date().getTime()
+                }
               }
-            }
-          }, function (error, data) {
-            User.collection.findOneAndUpdate(
-              { 
-                "posts._id":post._id
-              }, { 
-                  $push: 
-                    { 
-                      "posts.$.comments": {
-                        "_id": user._id,
-                        "fullname": user.fullname,
-                        "profileImage": user.profileImage
-                      }
-                    } 
-              },function (error, success) {
-                   if (error) {
-                       console.log(error);
-                   } else {
-                    res.json({
-                      "status": "success",
-                      "message": "Post has been commented.",
-                      "comment":commentPost,
-                      "fullname":user.fullname,
-                      "profileImage":user.profileImage
-                    });
-                   }
-              })
-          })
+            }, function (error, data) {
+              User.collection.findOneAndUpdate(
+                { 
+                  "_id":id_user_comment
+                }, { 
+                    $push: 
+                      { 
+                        "notifications": {
+                          "_id": ObjectId(),
+                          "type": "reply_comment",
+                          "content": user.fullname + " has commented your comment.",
+                          "profileImage": user.profileImage,
+                          "post": {
+                            "_id": post._id
+                          },
+                          "isRead":false,
+                          "id_reply_comment": user._id,
+                          "createdAt": new Date().getTime()
+                        }
+                      } 
+                },function (error, success) {
+                     if (error) {
+                         console.log(error);
+                     } else {
+                      res.json({
+                        "status": "success",
+                        "message": "reply",
+                        "comment":commentPost,
+                        "fullname":user.fullname,
+                        "profileImage":user.profileImage,
+                        "_idComment":_idComment
+                      });
+                     }
+                })
+            })
+          }
+          // comment independent for a post
+          else{
+            Post.collection.updateOne({
+              "_id": ObjectId(_id)
+            }, {
+              $push: {
+                "comments": {
+                  "_id": ObjectId(),
+                  "idComment": user._id,
+                  "fullname": user.fullname,
+                  "profileImage": user.profileImage,
+                  "content_comment":commentPost,
+                  "createdAt": new Date().getTime()
+                }
+              }
+            }, function (error, data) {
+              User.collection.findOneAndUpdate(
+                { 
+                  "posts._id":post._id
+                }, { 
+                    $push: 
+                      { 
+                        "posts.$.comments": {
+                          "idComment":user._id,
+                          "fullname": user.fullname,
+                          "profileImage": user.profileImage
+                        }
+                      } 
+                },function (error, success) {
+                     if (error) {
+                         console.log(error);
+                     } else {
+                      res.json({
+                        "status": "success",
+                        "message": "Post has been commented.",
+                        "comment":commentPost,
+                        "fullname":user.fullname,
+                        "profileImage":user.profileImage
+                      });
+                     }
+                })
+            })
+          }
+       
         })
 
       }

@@ -772,49 +772,63 @@
                                                     html += '</p>';
                                                 html += '</li>'
                                                         
-                                                  
+                  
+                                                for (var c = 0; c < data.comments.length; c++) {
+                                                        var commenter = data.comments[c];
+                                                        html += '<li class="item-comment">'               
+                                                            html += '<div class="user-chat">'
+                                                                html += '<img  src=" ' + commenter.profileImage + ' " class="iconComment user-chat-modal"  alt="Card image cap" >';
+                                                                html += '<a>'
+                                                                    html += '' +  commenter.fullname
+                                                                html += '</a>'
 
-                                                            for (var c = 0; c < data.comments.length; c++) {
-                                                                var commenter = data.comments[c];
-                                                                html += '<li class="item-comment">'               
-                                                                    html += '<div class="comment-post">'
-                                                                        html += '<img  src=" ' + commenter.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
-                                                                            html += '<div class="in-img">' 
-                                                                                  
-                                                                                html += '<a style="font-weight:600">'
-                                                                                    html += '' +  commenter.fullname
-                                                                                html += '</a>'
-                                                                            
-                                                                                html += '<p style="padding-left:5px;">'
-                                                                                    html += ''+ commenter.content_comment 
-                                                                                    html += '<br>'
-                                                                                    html += '<a>'
-                                                                                        html +='1w'
-                                                                                    html += '</a>'
-                                                                                    html += '<a>'
-                                                                                        html +='169 likes'
-                                                                                    html += '</a>'
-                                                                                    html += '<a>'
-                                                                                        html +='Reply'
-                                                                                    html += '</a>'
-                                                                                html += '</p>'
+                                                                html += '<span>'
+                                                                    html += ''+ commenter.content_comment 
+                                                                html += '</span>'
+                                                            html += '</div>'
 
+                                                            html += '<div class="reply-chat">'
+                                                                html += '<ul>'
+                                                                    html += '<li>'
+                                                                        html += '1w'
+                                                                    html += '</li>'  
+                                                                    html += '<li>'
+                                                                        html += '0 like'
+                                                                    html += '</li>'
+                                                                    html += '<li>'
+                                                                        html += '<a  onclick="displayName(' + "'" + commenter.fullname + "'"+ "," + "'" + commenter._id + "'"+ "," + "'" + commenter.idComment + "'" + "," + "'" + data._id + "'" +')">'
+                                                                            html += 'Reply'
+                                                                        html +='</a>'  
+                                                                    html += '</li>'
+                                                                html += '</ul>'
+                                                            html += '</div>'  
 
-                                                                            html+= '</div>'
-                                                                                    
-                                                                      
-                                                                          
-                                                                    html+= '</div>'
-
-                                                                
-                                                                html += '</li>'
-                                                            }
-                                              
+                                                            html += '<div class="view-reply">'
+                                                                html += '<span onclick="displayReplies(this,'+"'" + commenter.idComment + "'" +')">'
+                                                                    html += '&#9135&#9135&#9135 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;View replies (3)'
+                                                                html += '</span>'
+                                                                html += '<ul class="list-reply" id="list-reply-'+ commenter.idComment +'">'
+                                                                    html += '<li class="user-reply">'
+                                                                        html += '<img  src=" ' + commenter.profileImage + ' " class="iconComment user-chat-modal"  alt="Card image cap" >';
+                                                                        html += '<a>'
+                                                                            html += '' +  commenter.fullname
+                                                                        html += '</a>'
+                                                                        html += '<span>'
+                                                                            html += ''+ commenter.content_comment 
+                                                                        html += '</span>'
+                                                                    html += '</li>'  
+                                                               
+                                                                html += '</ul>'
+                                                            html += '</div>' 
+                                                        html += '</li>'                                              
+                                                }
+                                                
                                                     
-                                                  
+                                                                                  
+
                                             html += '</ul>'
                                         html += '</div>'
-
+                                    
                                         // like, share
                                         html += '<div class="row modal-icon-newfeed iconCard" style="margin-top:18px">';
                                             html += '<button class="btnHeart ani" data-id="' + data._id + '" onclick="toggleLike(this,' + a + ');" >';
@@ -876,7 +890,9 @@
                                                 html += '<form id="post-comment-new" onsubmit="return doPostCommentModal(this)">'
                                                     html += '<div class="comment-text-area">';
                                                         html += '<input type="hidden" name="_id" value="'+data._id+'">'
-                                                        html += '<textarea class="textinput  textComment" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
+                                                        html += '<input type="hidden" id="idComment-'+data._id+'" name="id_comment" value="">'
+                                                        html += '<input type="hidden" id="idUserComment-'+data._id+'" name="id_user_comment" value="">'
+                                                        html += '<textarea class="textinput  textComment text-comment-modal" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
                                                         html += '</textarea>';
                                                         html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
                                                         html += '</button>';
@@ -946,8 +962,11 @@
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
-                    if (response.status == "success") {
-                        console.log(response.imageProfile)
+                    if (response.status == "success" && response.message == "reply") {
+                        
+                        form.reset();
+                    }
+                    else {
                         document.getElementById("post-comment-new").querySelector("textarea[name='commentPost']").value = "";
                         var html =""
                         html += '<li class="item-comment">'               
@@ -963,13 +982,8 @@
                                     html+= '</div>'
                             html+= '</div>'
                         html += '</li>'
-                        var list = $("#list-comment-id");
-                        list.append(html);
-                       
+                        $("#list-comment-id").append(html);
                         form.reset();
-                    }
-                    else {
-                        alert(response.error)
                     }
 
                 }
@@ -992,27 +1006,50 @@
             // var idMod = "mod-"+id
             // var btn = document.getElementsById(idMod); // Get the button that opens the modal
             var span = document.getElementsByClassName("cancelList")[0]; // Get the <span> element that closes the modal
-
+            var mode = document.getElementsByClassName("modal-content")[0]; 
+            var mod = document.getElementsByClassName("modal")[0]; 
+            var navbar= document.getElementsByClassName("navbar")[0]; 
             if (id) {
                 // When the user clicks the button, open the modal card
                 modal.style.display = "block";
                 modCon.style.display = "block";
                 modal.style.opacity = "1";
                 $('.seeCard').css('z-index','-1')
+                $('.sticky-top').css('z-index','0')
+                $('.card').css('z-index','-1')
+                $('body').addClass('stop-scrolling')
             }
 
 
             // When the user clicks on button cancle the modal
             span.onclick = function () {
                 modal.style.display = "none";
+                $('body').removeClass('stop-scrolling')
+                $('.sticky-top').css('z-index','1')
+                $('.card').css('z-index','0')
             }
-            // When the user clicks anywhere outside of the modal or body, close it
-            window.onclick = function (event) {
-                if (event.target == modal || event.target == nav) {
-                    modal.style.display = "none";
-                    modCon.style.display = "none"
-                }
+            mode.onclick = function () {
+                modal.style.display = "none";
+                modCon.style.display = "none";
+                $('body').removeClass('stop-scrolling')
+                $('.sticky-top').css('z-index','1')
+                $('.card').css('z-index','0')
             }
+            mod.onclick = function () {
+                modal.style.display = "none";
+                modCon.style.display = "none";
+                $('body').removeClass('stop-scrolling')
+                $('.sticky-top').css('z-index','1')
+                $('.card').css('z-index','0')
+            }
+            navbar.onclick = function () {
+                modal.style.display = "none";
+                modCon.style.display = "none";
+                $('body').removeClass('stop-scrolling')
+                $('.sticky-top').css('z-index','1')
+                $('.card').css('z-index','0')
+            }
+        
         }
 
         // display modal comment card newfeed
@@ -1032,8 +1069,11 @@
                 modCon.style.display = "block";
                 modal.style.opacity = "1";
                 $('.seeCard').css('z-index','0')
+                $('.sticky-top').css('z-index','0')
+                $('.card.nameCard').css('z-index','-1')
                 $('body').addClass('stop-scrolling')
                 $('.comment-post').addClass('post-pad')
+                
                
             }
 
@@ -1043,16 +1083,36 @@
                 modal.style.display = "none";
                 $('body').removeClass('stop-scrolling')
                 $('.comment-post').removeClass('post-pad')
+                $('.sticky-top').css('z-index','1')
+                $('.card').css('z-index','0')
                 showNewsfeed();
             }
-            // When the user clicks anywhere outside of the modal or body, close it
-            window.onclick = function (event) {
-                if (event.target == modal || event.target == nav) {
-                    modal.style.display = "none";
-                    modCon.style.display = "none"
-                }
-            }
+       
+         
+           
         }
+        
+        // display name in comment reply
+        function displayName(name,id_comment,id_user_comment,id_post){
+            $('.text-comment-modal').text('@'+name+' ') 
+            $('#idComment-'+id_post).val(id_comment)
+            $('#idUserComment-'+id_post).val(id_user_comment)
+        }
+
+        // toggle list reply
+        function displayReplies(self,id_reply){
+            if($('.list-reply').hasClass('display')){
+                $(self).html('&#9135&#9135&#9135 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Views replies(13)')
+                $('#list-reply-'+id_reply).css('display','none')
+                $('#list-reply-'+id_reply).removeClass('display')
+            }else{
+                $(self).html('&#9135&#9135&#9135 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hide replies')
+                $('#list-reply-'+id_reply).css('display','block')
+                $('#list-reply-'+id_reply).addClass('display')
+            }
+            
+        }
+
         // toggle opacity button post
         function inputComment() {
             // handle textarea card
