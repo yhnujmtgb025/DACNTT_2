@@ -5,7 +5,9 @@ const ObjectId = mongodb.ObjectId;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt') 
 const fs = require('fs')
-
+const { JSDOM } = require( "jsdom" );
+const { window } = new JSDOM( "" );
+const $ = require( "jquery" )( window );
 const path = require('path');
 const session = require('express-session');
 const  {validationResult} = require('express-validator')
@@ -15,7 +17,8 @@ const { google } = require("googleapis");
 const { rejects } = require('assert');
 const OAuth2 = google.auth.OAuth2;
 
-const multer  = require('multer')
+const multer  = require('multer');
+const { Console } = require('console');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './public/demo')
@@ -56,7 +59,16 @@ const index = (req, res) => {
     })
     .limit(5)
     .toArray(function(err,data){
-        res.render('homePage/home',{userCurrent:"",image:user.profileImage,fullname:user.fullname,name:name,idCurrent:user._id,data:data,curUser:user})
+        res.render('homePage/home',{
+            userCurrent:"",
+            image:user.profileImage,
+            fullname:user.fullname,
+            name:name,
+            idCurrent:user._id,
+            data:data,
+            curUser:user,
+            plane:""
+        })
     })
 }
 
@@ -89,7 +101,7 @@ const user_follow = (req, res) => {
     })
     .limit(5)
     .toArray(function(err,data){
-        res.render('homePage/listFollow',{userCurrent:"",image:user.profileImage,fullname:user.fullname,name:name,idCurrent:user._id,data:data,curUser:user})
+        res.render('homePage/listFollow',{userCurrent:"",image:user.profileImage,fullname:user.fullname,name:name,idCurrent:user._id,data:data,curUser:user, plane:""})
     })
 }
 
@@ -156,8 +168,6 @@ const register_get = (req, res) => {
     const success = req.flash('success') || ''
     res.render('handleLogin/signup',{error,success,name, email, password})
 }
-
-
 
 const register_post =  (req, res,next) => {
     let result = validationResult(req);
@@ -509,7 +519,8 @@ const profile_get = (req, res) => {
             like:like,
             following:following,
             follower:follower,
-            userCurrent:""
+            userCurrent:"",
+            plane:""
         })
     })
  
@@ -719,7 +730,8 @@ const user_profile_get = (req, res) => {
             following:following,
             follower:follower,
             userCurrent:userCurrent,
-            imgCurrent:imgCurrent
+            imgCurrent:imgCurrent,
+            plane:""
         })
     })
 }
@@ -729,35 +741,100 @@ const edit_profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
-    User.findOne({_id:req.session.user._id},function(err,user){
-        res.render('profile/editProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name})
+    var userCurrent = req.session.user
+    if(userCurrent.fullname){
+        userCurrent =userCurrent
+    }else{
+        userCurrent = req.session.user[0]
+    }
+    User.findOne({_id:userCurrent._id},function(err,user){
+        res.render('profile/editProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name,userCurrent:userCurrent,imgCurrent:user.profileImage, plane:""})
     })
 }
 
 const edit_profile_post = (req, res) => {
-    var id= req.session.user._id;
+    var user= req.session.user;
+    if(user.fullname){
+        user = user
+    }else{
+        user = req.session.user[0]
+    }
     var {fullname,bio,name} = req.body
-    req.session.user.fullname = fullname
-    req.session.user.name = name
-    User.findByIdAndUpdate({ _id: id}, {fullname:fullname,bio:bio,name:name},function (err, result) {
+    user.fullname = fullname
+    user.name = name
+    var _idPost = {}
+    var id_post = []
+    for(var i= 0 ; i< user.posts.length;i++){
+        var post = user.posts[i]
+       _idPost.id=post._id
+       var list = [_idPost]
+        $.each(list, function(index, value){
+            if(id_post.indexOf(value.id) === -1){
+                id_post.push(value.id);
+            }
+        });
+    }
+    var obj = Object.assign({}, id_post);
+    
+    User.findByIdAndUpdate({ _id: user._id}, {fullname:fullname,bio:bio,name:name},function (err, result) {
         if (err) {
             res.end("Lỗi hệ thống!")
         } else {
-            Post.collection.updateMany({'user._id':ObjectId(id)}, {
-                $set: 
+            Post.collection.updateMany(
+                { "user._id": ObjectId(user._id)},
                 { 
-                    "user.name" :name,
-                    "user.fullname": fullname
-                }
-             })
-            res.json({
-                data: {
-                    name:name,
-                    fullname:fullname,
-                    bio:bio
-                }
-            });
+                    "$set": 
+                    { 
+                        "comments.$[elem].fullname": fullname
+                    } 
+                },
+                { "arrayFilters": [ 
+                    { 
+                        "elem.idComment": ObjectId(user._id)
+                    }
+                ], "multi": true 
+            },function(err,data){
+                 Post.collection.updateMany({'user._id':ObjectId(user._id)}, 
+                 {
+                    $set: 
+                    { 
+                        "user.name" :name,
+                        "user.fullname": fullname,
+                    }
+                },function(err,data){
+                    Object.entries(obj).map(([key, value]) =>
+                       Post.collection.updateMany(
+                        {"user._id": ObjectId(user._id) },
+                        { 
+                            "$set": 
+                            { 
+                                "comments.$[com].replies.$[rep].fullname": fullname
+                            } 
+                        },
+                        { "arrayFilters": [ 
+                            { 
+                                "com.id_post": ObjectId(value)
+                            },
+                            { 
+                                "rep.user_comment": ObjectId(user._id)
+                            }
+                        ]
+                    })
+                    )
+                    return res.json({
+                        data: {
+                            name:name,
+                            fullname:fullname,
+                            bio:bio
+                        }
+                    });
+              
+                })
+               
+            })
         }
+                
+      
     })
 }
 
@@ -773,7 +850,7 @@ const change_password_get = (req, res) => {
     const oldPass =   req.flash('oldPass') || ''
     const success = req.flash('success') || ''
     User.findOne({_id:req.session.user._id},function(err,user){
-        res.render('profile/changePass',{image:user.profileImage,error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email,fullname:user.fullname})
+        res.render('profile/changePass',{image:user.profileImage,error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email,fullname:user.fullname, plane:""})
     })
 }
 
@@ -834,8 +911,47 @@ const change_password_post = (req,res)=>{
     }
 }
 
-const message_get = (req, res) => {
-    res.render('homePage/sendMessage')
+const get_sendMessage = (req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    if(req.session.user._id == undefined){
+        req.session.user._id = req.session.user[0]._id
+    }
+ 
+    User.collection.find({_id:ObjectId(req.session.user._id)})
+    .toArray( function(err,user){
+        var lengthPost = 0;
+        var like=0
+        var post =[]
+        var following =[]
+        var follower =[]
+        for(var i = 0;i<user.length;i++){
+            image=user[i].profileImage
+            fullname=user[i].fullname
+            bio = user[i].bio
+            name=user[i].name
+            following =  user[i].followings
+            follower =  user[i].followers
+        }   
+          
+        if(like == ""){
+            like = 0
+        }
+        
+        res.render('homePage/sendMessage',{
+            image:image,
+            fullname:fullname,
+            bio:bio,
+            name:name,
+            post:post,
+            like:like,
+            following:following,
+            follower:follower,
+            userCurrent:"",
+            plane:"d"
+        })
+    })
 }
   
 module.exports = {
@@ -867,7 +983,10 @@ module.exports = {
 
     change_password_get,
     change_password_post,
-    message_get
+
+    get_sendMessage
+
+    
 }
 
 

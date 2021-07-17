@@ -19,10 +19,14 @@ function route(app) {
     // handle newfeed
     app.post('/addPost',PostController.post_Newfeed );
     app.post("/getNewsfeed", PostController.get_Newfeed);
+    app.post("/getPost", PostController.get_PostModal);
 
     // handle interaction
     app.post("/toggleLike",PostController.post_ToggleLike);
     app.post("/addComment",PostController.post_Comment);
+
+    // send message
+    app.post("/sendMessage",UserController.get_sendMessage );
 
     // notification
     app.post("/getNotice", PostController.get_Notice);
@@ -45,7 +49,7 @@ function route(app) {
     app.get('/reset/:id',UserController.reset_get );
     app.post('/reset/:id',resetValidator,UserController.reset_post );
 
-    app.get('/sendMessage',UserController.message_get);
+    app.get('/sendMessage',UserController.get_sendMessage);
 
     // handle profile
     app.get('/myProfile',UserController.profile_get  );

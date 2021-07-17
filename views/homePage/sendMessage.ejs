@@ -4,15 +4,30 @@
 
         <main>
           <div class="preview">
-            <div id="user-name">leejoon <i class='fas fa-angle-down'></i></div>
-            <div>
-              <span id="pic-div">
-                <img id="pic" src="/img/hyun.jpg">
-              </span>
-              <div id="chat-username">
-                <a href="#" id="name" style=""> <span >leehyun</span></a>
-                <span id="msg">I picked up some kambucha..</span>
+              <div id="user-name">
+                <%if(name){%>
+                    <%=name%>
+                <i class='fas fa-angle-down'></i>
+                <%}else{%>
+                    <%=fullname%>
+                <%}%>
               </div>
+            <div>
+              <%if(following.length > 0){%>
+                  <% following.forEach(function(following) {%>
+                    <span id="pic-div">
+                      <img id="pic" src="<%=following.profileImage%>">
+                    </span>
+                    <div id="chat-username">
+                      <a href="#" id="name" > 
+                        <span >
+                          <%=following.fullname%>
+                        </span>
+                      </a>
+                      <span id="msg">Following</span>
+                    </div>
+                  <%})%>
+              <%}%>
             </div>
         
           </div>
@@ -21,9 +36,17 @@
               <div class="sticky-top chat-banner">
                   <div>
                     <span id="chat-pic"> 
-                    <img id="pic" src="/img/kim.png"  style="margin-bottom: 0.5rem;" />
+                    <img id="pic" src="<%=image%>"  style="margin-bottom: 0.5rem;" />
                     </span>
-                    <a href="#"  style="margin-left:5px;cursor: pointer; text-decoration: none; color: #333;"> <span>leejoon</span></a>
+                    <a href="#"  style="margin-left:5px;cursor: pointer; text-decoration: none; color: #333;">
+                       <span>
+                        <%if(name){%>
+                          <%=name%>
+                        <%}else{%>
+                            <%=fullname%>
+                        <%}%>
+                        </span>
+                      </a>
                   </div>
               </div>
           
@@ -62,6 +85,5 @@
           </div>
         
         </main>
-      
-    
+
 <%- include ("../shares/footer") %>

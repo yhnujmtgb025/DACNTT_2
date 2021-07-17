@@ -20,7 +20,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 const post_Newfeed = function (req, res) {
-  var user = req.session.user;
+  var user= req.session.user;
+  if(user.fullname){
+      user = user
+  }else{
+      user = req.session.user[0]
+  }
   var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
   uploader(req, res, next => {
     var { caption } = req.body
@@ -175,6 +180,40 @@ const get_Newfeed = function (req, res) {
 
 }
 
+const get_PostModal = function (req, res) {
+  var id = req.session.user._id;
+  var id_post_current = req.body._id
+  if(id){
+    id = id
+  }else{
+    user = [].concat(req.session.user)
+    id=user[0]._id
+  }
+  User.collection.findOne({
+    "_id":ObjectId(id)
+  },function(err,user){
+    if(err){
+      res.json({"error":err})
+    }
+    if(user == null){
+      res.redirect("/login")
+    }else{
+      Post.collection.find({
+        "_id": ObjectId(id_post_current)
+      })
+      .toArray(function (error, data) {
+        res.json({
+          "status": "success",
+          "data": data,
+          "id":id,
+          "user":user
+        });
+      });
+    }
+    })
+
+}
+
 const get_Notice = function (req, res) {
   var id = req.session.user._id;
   // console.log("\nreq   : ",req.session.user)
@@ -239,10 +278,16 @@ const post_Notice = function (req, res) {
 }
 
 const post_ToggleLike = function (req, res) {
-  var idUser = req.session.user._id;
+  var user= req.session.user;
+  if(user.fullname){
+      user = user
+  }else{
+      user = req.session.user[0]
+  }
   var _id = req.body._id
+
   User.collection.findOne({
-    "_id": ObjectId(idUser)
+    "_id": ObjectId(user._id)
   }, function (error, user) {
     if (error) {
       return res.json({
@@ -300,8 +345,7 @@ const post_ToggleLike = function (req, res) {
             
               res.json({
                 "status": "unliked",
-                "message": "Post has been unliked.",
-                "isLiked": isLiked
+                "message": "Post has been unliked."
               });
         
             })
@@ -354,8 +398,7 @@ const post_ToggleLike = function (req, res) {
                      } else {
                       res.json({
                         "status": "success",
-                        "message": "Post has been liked.",
-                        "isLiked": isLiked
+                        "message": "Post has been liked."
                       });
                      }
                 })
@@ -372,14 +415,23 @@ const post_ToggleLike = function (req, res) {
 }
 
 const post_Comment = function (req,res){
-  var idUser = req.session.user._id
+  var user= req.session.user;
+  if(user.fullname){
+      user = user
+  }else{
+      user = req.session.user[0]
+  }
   var uploader = upload.none()
   uploader(req,res,next =>{
-    var {_id,commentPost,id_comment,id_user_comment} = req.body
-    console.log("idCom : "+_idComment)
-
+    var {_id,commentPost,nameReply,id_comment,id_user_comment} = req.body
+    var name_comment = ""
+    if(commentPost.includes(nameReply)){
+      var length_name = nameReply.length
+      name_comment = commentPost.substr(0,length_name)
+      commentPost = commentPost.substr(length_name,commentPost.length)
+    }
     User.collection.findOne({
-      "_id":ObjectId(idUser)
+      "_id":ObjectId(user._id)
     },function(err,user){
       if(err){
         res.json({
@@ -404,6 +456,7 @@ const post_Comment = function (req,res){
                 },
                 "isRead":false,
                 "idCommented": user._id,
+                "idLiked": user._id,
                 "createdAt": new Date().getTime()
               }
             }
@@ -420,6 +473,7 @@ const post_Comment = function (req,res){
               $push: {
                 "comments.$.replies": {
                   "_id": ObjectId(),
+                  "name_comment":name_comment,
                   "user_comment": user._id,
                   "fullname": user.fullname,
                   "profileImage": user.profileImage,
@@ -430,7 +484,7 @@ const post_Comment = function (req,res){
             }, function (error, data) {
               User.collection.findOneAndUpdate(
                 { 
-                  "_id":id_user_comment
+                  "_id":ObjectId(id_user_comment)
                 }, { 
                     $push: 
                       { 
@@ -447,20 +501,8 @@ const post_Comment = function (req,res){
                           "createdAt": new Date().getTime()
                         }
                       } 
-                },function (error, success) {
-                     if (error) {
-                         console.log(error);
-                     } else {
-                      res.json({
-                        "status": "success",
-                        "message": "reply",
-                        "comment":commentPost,
-                        "fullname":user.fullname,
-                        "profileImage":user.profileImage,
-                        "_idComment":_idComment
-                      });
-                     }
                 })
+
             })
           }
           // comment independent for a post
@@ -471,10 +513,12 @@ const post_Comment = function (req,res){
               $push: {
                 "comments": {
                   "_id": ObjectId(),
+                  "id_post":ObjectId(_id),
                   "idComment": user._id,
                   "fullname": user.fullname,
                   "profileImage": user.profileImage,
                   "content_comment":commentPost,
+                  "replies":[],
                   "createdAt": new Date().getTime()
                 }
               }
@@ -485,30 +529,26 @@ const post_Comment = function (req,res){
                 }, { 
                     $push: 
                       { 
-                        "posts.$.comments": {
-                          "idComment":user._id,
+                        "posts.$.comments": {         
+                          "_id": ObjectId(),
+                          "id_post":ObjectId(post._id),
+                          "idComment": user._id,
                           "fullname": user.fullname,
-                          "profileImage": user.profileImage
+                          "profileImage": user.profileImage,
+                          "content_comment":commentPost,
+                          "replies":[],
+                          "createdAt": new Date().getTime()
                         }
                       } 
-                },function (error, success) {
-                     if (error) {
-                         console.log(error);
-                     } else {
-                      res.json({
-                        "status": "success",
-                        "message": "Post has been commented.",
-                        "comment":commentPost,
-                        "fullname":user.fullname,
-                        "profileImage":user.profileImage
-                      });
-                     }
                 })
             })
           }
-       
+          res.json({
+            "status": "success",
+            "message": "Record has been fetched",
+            "id_post":_id,
+          });
         })
-
       }
     })
   })
@@ -516,6 +556,6 @@ const post_Comment = function (req,res){
 }
 
 module.exports = {
-  post_Newfeed, get_Newfeed, post_ToggleLike, post_Comment,get_Notice, post_Notice
+  post_Newfeed, get_Newfeed, post_ToggleLike, post_Comment,get_Notice, post_Notice,get_PostModal
 };
 

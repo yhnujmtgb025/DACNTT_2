@@ -495,13 +495,13 @@ ul.listHelp li {
 .user-chat span{
     font-size: 13px;
     width: 8rem;
-    padding-left: 5px;
+    padding:7px 0 0 5px;
 }
 
 .user-chat a{
     font-weight: 600;
     font-size: 15px;
-    padding-left: 10px;
+    padding: 5px 0 0 10px;
 }
 
 
@@ -521,7 +521,6 @@ ul.listHelp li {
 }
 
 .view-reply{
-    transform: scale(0.9);
     margin-left: 15px;
     padding: 0 8px;
 }
@@ -539,9 +538,13 @@ ul.listHelp li {
     border-radius: 50% 50%;
 }
 
-.list-reply{
+.list-replies{
     margin-top: 8px;
     display: none;
+}
+
+.user-reply{
+    display: inline-block;
 }
 
 .user-reply a{
@@ -550,26 +553,43 @@ ul.listHelp li {
     padding-left: 10px;
 }
 
+.user-reply .name_replied{
+    font-weight: 100;
+    font-size: 15px;
+    color: #0095F6;
+    margin-left: -10px;
+}
+
 .user-reply span{
-    font-size: 13px;
+    font-size: 14px;
     width: 8rem;
-    padding-left: 5px;
+    margin-left: 2.5rem;
+}
+
+
+
+.user-reply span a:hover{
+    color: #0095F6;
 }
 
 .comment-post{
     position: relative;
     top: 0;
     left: 0;
+
+    display: flex;
+    font-size: 14px;
+    margin-left: 0.75rem;
+    margin-top: -0.25rem;
+    height: 25px;
 }
+
+
 
 .post-pad{
     padding-top: 1.5rem;
 }
-.comment-post .icon-comment-modal{
-    width: 40px;
-    height: 40px;
-    border-radius: 50% 50%;
-}
+
 
 #item-comment{
     position: relative;
@@ -590,8 +610,8 @@ ul.listHelp li {
 
 #exit-modal-comment{
     position: relative;
-    top: -0.25rem;
-    left:54.25rem;
+    top: -0.75rem;
+    left:64rem;
     color: white;
     font-size: 30px;
     cursor: pointer;
@@ -955,14 +975,6 @@ ul li {
     margin: 10px auto;
 }
 
-.comment-post{
-    font-size:14px;
-    margin:0 0 0px 15px;
-
-    position: relative;
-    top: 0;
-    left: 0;
-}
 
 .cap{
     font-size:13px;
