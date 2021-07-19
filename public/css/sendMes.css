@@ -1,23 +1,5 @@
-.container.sendMes{
-    width: 75%;
-    min-width: 75%;
-
-    background-color: #FFFFFF;
-
-    margin: 20px auto 10px auto;
-}
 
 
-
-.table{
-    width: 90%;
-    max-width: 90%;
-    height: 600px;
-
-    background-color: #FFFFFF;
-    margin: 20px auto;
-    
-}
 :root {
     --white: #fafafa;
     --grey: #717171;
@@ -27,8 +9,6 @@
     --text-color:#262626;
     
 }
-
-
 
 main {
   margin-left: 8rem;
@@ -40,10 +20,10 @@ main {
   
   height: 83.25vh;
   width: 70vw;
-  border: none;
+  border: 1px solid #dbdbdb;
   background-color: #FFFFFF;
  
-  border: 1px solid #dbdbdb
+ 
 }
 .preview {
   display: flex;
@@ -53,7 +33,6 @@ main {
   height: 100%;
   width: 40%;
   border-right: 1px solid var(--medium-grey);
-  
 }
 .preview>div {
   display: flex;
@@ -62,7 +41,11 @@ main {
   justify-content: flex-start;
   height: 70px;
   width: 100%;
+
 }
+
+
+
 .chats {
   display: flex;
   flex-direction: column;
@@ -70,12 +53,18 @@ main {
   overflow:hidden;
   height: 80vh;
   width: 60%;
-  overflow-y: scroll;
-  overflow-x: none;
-  
+
 }
 
+.frame-chat{
+  height: 66vh;
+  width: 100%;
+  overflow-y: scroll;
+}
 
+.frame-chat::-webkit-scrollbar {
+  display: none;
+}
 
 .chat-banner {
     width: 100%;
@@ -87,11 +76,14 @@ main {
     border-bottom: 1px solid var(--medium-grey);
   
     background-color: #FFFFFF;
+
 }
 .chat-banner>div {
-   
   padding: 10px;
 }
+
+
+
 #user-name {
   min-height: 60px;
   display: flex;
@@ -105,40 +97,47 @@ main {
   font-size: 1em;
   padding-left: 5px;
 }
-#pic-div, #pic, #chat-pic {
+.pic-div, .pic, .chat-pic {
   height: 50px;
   width: 50px;
   border-radius: 50%;
 }
 #pic {
-    height: 50px;
-    width: 50px;
-  margin-left: 0.5em;
+    height: 50px ;
+    width: 50px ;
+    margin-left: 0.5em;
+    border-radius: 50% ;
 }
 
 
 
-#chat-pic {
+.chat-pic {
   height:20px;
   width: 20px;
 }
-#chat-username {
+.chat-username {
   padding: 10px;
   margin-left: 0.5em;
   display: flex;
   flex-direction: column;
+
 }
-#chat-username>span {
+.chat-username>span {
   height: 50%;
   width: auto;
 }
-#name {
-    
+.name {
     cursor: pointer; 
     text-decoration: none; 
     color: #333;
 }
-#msg {
+
+.name:hover{
+  text-decoration: none; 
+  color: #333;
+}
+
+.msg {
   color:var(--grey);
   font-size: 13px;
 }
@@ -151,6 +150,7 @@ main {
   border-radius: 20px;
   border: 1px solid var(--medium-grey);
   transition: all .2s ease;
+
 }
 .sender:hover {
   background-color: pink;
@@ -159,24 +159,24 @@ main {
 .receiver, .user-input {
   margin-left: 22vw;
   background-color: var(--medium-grey);
+
 }
 .user-input {
   display : none;
 }
-#heart {
+.heart {
   height: 30px;
   width: 30px;
   margin-top: -1.5em;
   margin-left: 1em;
   visibility: hidden;
 }
-.inputFlex{
-
+.inputFlex{ 
     width: 100%;
     height: auto;
 }
 
-.input-msg {
+.input-msg form {
     position: relative;
     top: 0;
     left: 0;
@@ -189,14 +189,20 @@ main {
 
   height: 50px;
   width: 100%;
-  margin-top: 1rem;
   padding-top: 10px;
 
   border-top: 1px solid var(--medium-grey);
+
 }
 
 .input-msg a {
-  padding:0 10px;
+  padding:0 8px;
+}
+
+.input-msg a button{
+    border: none;
+    outline: none;
+    background:none;
 }
 
 .btnSmile{
@@ -209,6 +215,7 @@ main {
     
     outline: none;
     border: none;
+
 }
 
 .btnCover{
@@ -225,7 +232,7 @@ main {
     border: none;
 }
 
-#send-input {
+.send-input {
   font-size: 15px; 
   padding-left: 50px;
   margin-left: 12px;
@@ -236,7 +243,7 @@ main {
   width: 100%;
 }
 
-#send-input:focus{
+.send-input:focus{
     border: 1px solid #dbdbdb;
     outline: none;
 }

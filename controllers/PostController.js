@@ -50,7 +50,7 @@ const post_Newfeed = function (req, res) {
           type.push(path.extname(video[x].filename))
         }
       }
-      req.files = []
+
     } else if (files[0].image != null && files[0].video == null) {
       console.log("2")
       for (var x = 0; x < files[0].image.length; x++) {
@@ -59,7 +59,6 @@ const post_Newfeed = function (req, res) {
           type.push(path.extname(img[x].filename))
         }
       }
-      req.files = []
     } else if (files[0].image == null && files[0].video != null) {
       console.log("3")
       for (var x = 0; x < files[0].video.length; x++) {
@@ -68,7 +67,6 @@ const post_Newfeed = function (req, res) {
           type.push(path.extname(video[x].filename))
         }
       }
-      req.files = []
     } else if (caption == "") {
       return res.json({
         error: "Vui lòng nhập caption "
@@ -215,7 +213,14 @@ const get_PostModal = function (req, res) {
 }
 
 const get_Notice = function (req, res) {
-  var id = req.session.user._id;
+  var id =''
+  if(req.session.user.fullname){
+    id= req.session.user._id;
+  }else{
+    req.session.user=req.session.user[0]
+    id=req.session.user._id
+  }
+   
   // console.log("\nreq   : ",req.session.user)
     User.collection.find({
       "_id":ObjectId(id)
@@ -555,7 +560,225 @@ const post_Comment = function (req,res){
  
 }
 
+// handle send message with friends
+const get_sendMessage = (req,res)=>{
+  if(!req.session.user){
+      return res.redirect('/login')
+  }
+  if(req.session.user._id == undefined){
+      req.session.user._id = req.session.user[0]._id
+  }
+
+  User.collection.find({_id:ObjectId(req.session.user._id)})
+  .toArray( function(err,user){
+      var lengthPost = 0;
+      var like=0
+      var post =[]
+      var following =[]
+      var follower =[]
+      for(var i = 0;i<user.length;i++){
+          image=user[i].profileImage
+          fullname=user[i].fullname
+          bio = user[i].bio
+          name=user[i].name
+          following =  user[i].followings
+          follower =  user[i].followers
+      }   
+        
+      if(like == ""){
+          like = 0
+      }
+      
+      res.render('homePage/sendMessage',{
+          image:image,
+          fullname:fullname,
+          bio:bio,
+          name:name,
+          post:post,
+          like:like,
+          following:following,
+          follower:follower,
+          userCurrent:"",
+          plane:"d"
+      })
+  })
+}
+
+// get message
+const get_Message = (req,res)=>{
+  if(!req.session.user){
+      return res.redirect('/login')
+  }
+  if(req.session.user._id == undefined){
+      req.session.user._id = req.session.user[0]._id
+      req.session.user=req.session.user[0]
+  }
+  var id = req.body._id  // id following
+  User.collection.find({
+    $and: [{
+      "_id":ObjectId(req.session.user._id)
+    }, {
+      "followings.idFollowing": ObjectId(id)
+    }]
+  })
+  .toArray( function(err,user){
+      res.json({
+          "status":"success",
+          "user":user,
+          "id":req.session.user._id
+      })
+  })
+}
+
+const post_sendMessage = (req,res)=>{
+  if(!req.session.user){
+      return res.redirect('/login')
+  }
+  var user_current = req.session.user
+  if(user_current.fullname){
+      use_current=user_current 
+  }else{
+      user_current = user_current[0]
+  }
+  var uploader = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }])
+  uploader(req, res, next => {
+    var { _id,id_follow,message } = req.body
+    User.collection.findOne({
+      "_id":ObjectId(id_follow)
+    },function(err,user){
+      if(err){
+        return res.json({
+          "error":err
+        })
+      }
+      if(user==null){
+        return res.redirect('/login')
+      }
+      else{
+          isFollowing = false
+          for(var i =0 ;i < user.followings.length;i++){
+              var follow = user.followings[i]
+              if(follow.idFollowing.toString() == user_current._id.toString()){
+                    isFollowing = true;
+                    break;
+              }
+          }
+          if(isFollowing){
+              User.collection.updateOne({
+                $and: [{
+                  "_id":ObjectId(user._id)
+                }, {
+                  "followings.idFollowing": ObjectId(user_current._id)
+                }]
+              },{
+                $push : 
+                {
+                    "followings.$.inbox":
+                    {
+                        "_id":ObjectId(),
+                        "message":message,
+                        "from": user_current._id,
+                        "to": user._id
+                    }
+                }
+              },function(err,data){
+                User.collection.updateOne({
+                  $and: [{
+                    "_id":ObjectId(user_current._id)
+                  }, {
+                    "followings.idFollowing": ObjectId(user._id)
+                  }]
+                },{
+                  $push : 
+                  {
+                      "followings.$.inbox":
+                      {
+                          "_id":ObjectId(),
+                          "message":message,
+                          "from": user_current._id,
+                          "to":user._id
+                      }
+                  }
+                })
+                res.json({
+                    "status":"success",
+                    "id":id_follow
+                })
+              })
+          }
+          else{
+            User.collection.updateOne({
+              $and: [{
+                "_id":ObjectId(user_current._id)
+              }, {
+                "followings.idFollowing": ObjectId(user._id)
+              }]
+          
+            },{
+              $push : 
+              {
+                  "followings.$.inbox":
+                  {
+                      "_id":ObjectId(),
+                      "message":message,
+                      "from": user_current._id,
+                      "to":user._id
+                  }
+              }
+            },function(err,data){
+              User.collection.updateOne(
+                {"_id": ObjectId(user._id) },
+                { 
+                    "$set": 
+                    { 
+                        "notifications.$[com].id_follow_back": user._id
+                    } 
+                },
+                { "arrayFilters": [ 
+                    { 
+                        "com._id": ObjectId(user._id)
+                    }
+                ]
+            })
+              res.json({
+                  "status":"success",
+                  "id":id_follow
+              })
+            })
+            User.collection.updateOne({
+              "_id":ObjectId(user._id)
+            },{
+              $set : 
+              {
+                "notifications.": {
+                  "_id": ObjectId(user._id),
+                  "type": "received_message",
+                  "idFollowed":user_current._id,
+                  "content": user_current.fullname + " sent you a message, follow back to read the message",
+                  "profileImage": user_current.profileImage,
+                  "createdAt": new Date().getTime()
+                }
+              }
+            })
+          }
+      }
+    })
+
+  })
+  
+
+}
+
 module.exports = {
-  post_Newfeed, get_Newfeed, post_ToggleLike, post_Comment,get_Notice, post_Notice,get_PostModal
+  post_Newfeed, 
+  get_Newfeed, 
+  post_ToggleLike, 
+  post_Comment,
+  get_Notice, 
+  post_Notice,
+  get_PostModal,
+  get_sendMessage, 
+  post_sendMessage,
+  get_Message
 };
 

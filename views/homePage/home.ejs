@@ -255,7 +255,7 @@
                                                     <% curUser.followings.forEach(function(cur,index) {%>         
                                                         <% if(curUser.followings[index]){%>
                                                             <% if(curUser.followings[index].idFollowing==user._id){%>
-                                                                <button class="btn btnFollowed" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                                <button class="btn btnFollowed" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg','')">
                                                                     <a href="" class="centerFollowed" id="<%=user._id%>">Unfollow</a>
                                                                 </button>
                                                             <%}else{%>
@@ -346,7 +346,7 @@
                                         <%}%>
                                     <%})%>
                                 <%}else{%>
-                                        <a  class="wordImg" id="right-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">Follow</a>
+                                    <a  class="wordImg" id="right-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">Follow</a>
                                 <%}%>
                          
                             </div>

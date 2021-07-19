@@ -26,7 +26,10 @@ function route(app) {
     app.post("/addComment",PostController.post_Comment);
 
     // send message
-    app.post("/sendMessage",UserController.get_sendMessage );
+    app.get("/sendMessage", PostController.get_sendMessage );
+    app.post("/sendMessageFriends", PostController.post_sendMessage );
+
+    app.post("/getInbox",PostController.get_Message)
 
     // notification
     app.post("/getNotice", PostController.get_Notice);
@@ -48,8 +51,6 @@ function route(app) {
     app.get('/forget/:token',UserController.forgot_activity );
     app.get('/reset/:id',UserController.reset_get );
     app.post('/reset/:id',resetValidator,UserController.reset_post );
-
-    app.get('/sendMessage',UserController.get_sendMessage);
 
     // handle profile
     app.get('/myProfile',UserController.profile_get  );

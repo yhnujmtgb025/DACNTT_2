@@ -49,16 +49,13 @@
 
                             for (var b = 0; b < data.notifications.length; b++) {
                                 var notice = data.notifications[b];
-                                    console.log("data._id : "+data._id)
-                                    console.log("\nnotice.idCommented : "+notice.idCommented)
-                                    if( (data._id != notice.idLiked && notice.isRead===false) || data._id != notice.idCommented && (notice.type == 'post_comment' || notice.type == 'reply_comment')){
+                                    if( (data._id != notice.idLiked && notice.isRead===false) || data._id != notice.idCommented && (notice.type == 'post_comment' || notice.type == 'reply_comment') ){
                                         html += " <li> "
                                             html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
                                             html+= "<a  data-id="+notice.post._id+" id="+notice._id+" onclick="+'goPost(this)'+">"
                                                 html += notice.content
                                             html += "</a>"
                                         html+= "</li>"
-                                      
                                     }
                                     
                                 
@@ -142,7 +139,7 @@
 
                             for (var i = 0; i < data.notifications.length; i++) {
                                 var notice = data.notifications[i];
-                                    if(notice.type == "follower" && notice.type != "photo_liked" ){
+                                    if(notice.type == "follower" && notice.type != "photo_liked" && notice.type !="received_message"){
                                         html += " <li> "
                                             html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
                                             html+= "<a  data-id="+notice._id+" id="+notice._id+" >"
@@ -153,13 +150,13 @@
                                                     var follow = data.followings[j];
                                         
                                                     if(follow.idFollowing == notice.idFollowed){
-                                                        html+='<button id="btn-'+notice.idFollowed+'"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +')"  type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
+                                                        html+='<button id="btn-'+notice.idFollowed+'"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'"+"," + "'" + "wordImg" + "'" +"," + "''" + ","  + "'" + notice._id +"'" +')"  type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
                                                             html+= '<p style="position:relative;top:-8px;right:12px" id="'+notice.idFollowed+'">'
                                                                 html += 'Unfollow'
                                                             html+= '</p>'
                                                         html+= '</button>'
                                                     }else{
-                                                        html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px;text-align:center ;margin-left:3px;font-size:14px;color:#fff">'
+                                                        html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'"+"," + "'" + "wordImg" + "'" +"," + "'"+notice.id_follow_back+"'" + ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px;text-align:center ;margin-left:3px;font-size:14px;color:#fff">'
                                                             html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
                                                                 html += 'Follow'
                                                             html+= '</p>'
@@ -167,7 +164,43 @@
                                                     }
                                                  }
                                             }else{
-                                                html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
+                                                html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'"+notice.id_follow_back+"'" + ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
+                                                    html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
+                                                        html += 'Follow'
+                                                    html+= '</p>'
+                                                html+= '</button>'
+                                            }
+                                         
+                                         
+                                        html+= "</li>"
+                                    }
+                                    if(notice.type != "follower" && notice.type != "photo_liked" && notice.type =="received_message"){
+                                      
+                                        html += " <li> "
+                                            html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
+                                            html+= "<a  data-id="+notice._id+" id="+notice._id+" >"
+                                                html += notice.content
+                                            html += "</a>"
+                                            if( data.followings.length > 0){
+                                                for(var j = 0; j < data.followings.length; j++){
+                                                    var follow = data.followings[j];
+                                                   
+                                                    if(follow.idFollowing == notice.idFollowed){
+                                                        html+='<button id="btn-'+notice.idFollowed+'"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "" + ","  + "'" + notice._id +"'"+')"  type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
+                                                            html+= '<p style="position:relative;top:-8px;right:12px" id="'+notice.idFollowed+'">'
+                                                                html += 'Unfollow'
+                                                            html+= '</p>'
+                                                        html+= '</button>'
+                                                    }else{
+                                                        html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'" + notice.id_follow_back + "'" + ","  + "'" + notice._id +"'"+')" type="button" class="btn btn-primary" style="width:60px; height:24px;text-align:center ;margin-left:3px;font-size:14px;color:#fff">'
+                                                            html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
+                                                                html += 'Follow'
+                                                            html+= '</p>'
+                                                        html+= '</button>'
+                                                    }
+                                                 }
+                                            }else{
+                                                html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'" + notice.id_follow_back + "'"+ ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
                                                     html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
                                                         html += 'Follow'
                                                     html+= '</p>'
@@ -193,12 +226,15 @@
         }
 
          // follow
-         function btnFollow(self, id,clas) {
+         function btnFollow(self, id,clas,id_follow_back,id_notice) {
+             console.log(id)
             $.ajax({
                 method: "POST",
                 url: "/userFollow",
                 data: {
-                    _id: id
+                    _id: id,
+                    id_follow_back:id_follow_back,
+                    id_notice:id_notice
                 },
                 cache: false,
                 success: function (responseText) {
