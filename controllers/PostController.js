@@ -7,6 +7,8 @@ const fs = require('fs')
 const bcrypt = require('bcrypt');
 var path = require('path')
 const { collection } = require('../models/UserModel');
+const socket= require('../utils/socket.js')
+const io= require('../utils/socket.js')
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -238,7 +240,6 @@ const get_Notice = function (req, res) {
     });
 
 }
-
 
 const post_Notice = function (req, res) {
   var id = req.session.user._id;
@@ -614,6 +615,7 @@ const get_Message = (req,res)=>{
       req.session.user=req.session.user[0]
   }
   var id = req.body._id  // id following
+ 
   User.collection.find({
     $and: [{
       "_id":ObjectId(req.session.user._id)
@@ -622,6 +624,7 @@ const get_Message = (req,res)=>{
     }]
   })
   .toArray( function(err,user){
+
       res.json({
           "status":"success",
           "user":user,
@@ -700,6 +703,10 @@ const post_sendMessage = (req,res)=>{
                       }
                   }
                 })
+                res.io.emit('messageReceived', {
+                  "message":message,
+                  "from":user_current._id
+                });
                 res.json({
                     "status":"success",
                     "id":id_follow
@@ -727,11 +734,17 @@ const post_sendMessage = (req,res)=>{
               }
             },function(err,data){
               User.collection.updateOne(
-                {"_id": ObjectId(user._id) },
+                { $and: [{
+                  "_id":ObjectId(user._id)
+                }, {
+                  "notifications._id": ObjectId(user._id)
+                }]},
                 { 
                     "$set": 
                     { 
-                        "notifications.$[com].id_follow_back": user._id
+                        "notifications.$[com].id_follow_back": user._id,
+                        "notifications.$[com].content": user_current.fullname + " sent you a message follow to see it !",
+                        "notifications.$[com].type": "received_message"
                     } 
                 },
                 { "arrayFilters": [ 
@@ -739,27 +752,17 @@ const post_sendMessage = (req,res)=>{
                         "com._id": ObjectId(user._id)
                     }
                 ]
-            })
-              res.json({
-                  "status":"success",
-                  "id":id_follow
               })
+              
             })
-            User.collection.updateOne({
-              "_id":ObjectId(user._id)
-            },{
-              $set : 
-              {
-                "notifications.": {
-                  "_id": ObjectId(user._id),
-                  "type": "received_message",
-                  "idFollowed":user_current._id,
-                  "content": user_current.fullname + " sent you a message, follow back to read the message",
-                  "profileImage": user_current.profileImage,
-                  "createdAt": new Date().getTime()
-                }
-              }
-            })
+            res.io.emit('messageReceived', {
+              "message":message,
+              "from":user_current._id
+            });
+            res.json({
+              "status":"success",
+              "id":id_follow
+          })
           }
       }
     })

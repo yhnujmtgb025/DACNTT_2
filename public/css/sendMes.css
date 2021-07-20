@@ -57,6 +57,9 @@ main {
 }
 
 .frame-chat{
+  position: relative;
+  top: 0;
+  left: 0;
   height: 66vh;
   width: 100%;
   overflow-y: scroll;
@@ -65,6 +68,24 @@ main {
 .frame-chat::-webkit-scrollbar {
   display: none;
 }
+
+.image-message{
+  position: absolute;
+  top: 7rem;
+  left: 11rem;
+
+  display: block;
+}
+
+.image-message svg{
+  margin-left: 1rem;
+}
+
+.image-message p{
+    font-size: 25px;
+    font-weight: 300;
+}
+
 
 .chat-banner {
     width: 100%;
@@ -75,6 +96,7 @@ main {
     justify-content: space-between;
     border-bottom: 1px solid var(--medium-grey);
   
+    z-index: 0;
     background-color: #FFFFFF;
 
 }

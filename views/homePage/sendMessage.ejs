@@ -54,11 +54,11 @@
                     </div>
                 </div>
                 <div class="frame-chat">
-                
-                      <!-- <div class="sender"></div>
-                      <div class="heart">❤️</div>
-
-                      <div class="receiver"></div> -->
+                  
+                  <div class="image-message">
+                      <svg id="Capa_1" enable-background="new 0 0 512.004 512.004" height="100" viewBox="0 0 512.004 512.004" width="100" xmlns="http://www.w3.org/2000/svg"><g><path d="m511.35 52.881-122 400c-3.044 9.919-14.974 13.828-23.29 7.67-7.717-5.727-203.749-151.217-214.37-159.1l-142.1-54.96c-5.79-2.24-9.6-7.81-9.59-14.02.01-6.21 3.85-11.77 9.65-13.98l482-184c5.824-2.232 12.488-.626 16.67 4.17 3.37 3.87 4.55 9.24 3.03 14.22z" fill="#94dfda"/><path d="m511.35 52.881-122 400c-3.044 9.919-14.974 13.828-23.29 7.67l-190.05-141.05 332.31-280.84c3.37 3.87 4.55 9.24 3.03 14.22z" fill="#61a7c5"/><path d="m507.89 58.821-271.49 286.4-63 125.03c-3.16 6.246-10.188 9.453-16.87 7.84-6.76-1.6-11.53-7.64-11.53-14.59v-175.3c0-4.86 2.35-9.41 6.31-12.23l337-239.69c6.29-4.48 14.95-3.45 20.01 2.38 5.07 5.83 4.88 14.56-.43 20.16z" fill="#eef4ff"/><path d="m507.89 58.821-271.49 286.4-63 125.03c-3.16 6.246-10.188 9.453-16.87 7.84-6.76-1.6-11.53-7.64-11.53-14.59l31.01-144 332.31-280.84c5.07 5.83 4.88 14.56-.43 20.16z" fill="#d9e6fc"/></g></svg>
+                      <p>Your message</p>
+                  </div>
 
                 </div>
             
@@ -102,16 +102,25 @@
         
         </main>
 
+<script src="/socket.io/socket.io.js"></script>
 <script>
+  
+  var socket= io();
+  
 
+  $(".inputFlex").css('display','none')
   function directPerson(self,id,id_follow,image,name){
       $("img.pic").attr("src",image)
       $("#name-selected").text(name)
       $("#_id").val(id)
       $("#id-follow").val(id_follow)
+      $(".inputFlex").css('display','block')
+      $(".framechat").css('display','none')
       getMessage(id_follow)
-      }
+  }
+
   function getMessage(id){
+    socket.emit("id-socket",{"id":socket.id})
     $.ajax({
             method: "POST",
             url: "/getInbox",
@@ -120,13 +129,14 @@
             },
             cache: false,
             success: function (responseText) {
-                if (responseText.status == "success") {    
+                if (responseText.status == "success") {  
+                  
+                 
                     var html =""
                     user = responseText.user[0]
                     for(var i= 0;i < user.followings.length;i++){
                       var follow = user.followings[i]
                       if(follow.idFollowing.toString() == id.toString()){
-                        console.log(follow.inbox.length)
                           for(var j = 0; j < follow.inbox.length ; j++){
                               var inbox = follow.inbox[j]
                               if(inbox.from.toString() ==  responseText.id.toString()){
@@ -143,8 +153,9 @@
                           }
                       }
                     }
-                    
-                    $(".frame-chat").html(html)
+                    var chat = document.getElementsByClassName("frame-chat")[0]
+                    chat.innerHTML=html
+                    chat.scrollTop=chat.scrollHeight;
                 }
             }
         })
@@ -161,7 +172,16 @@
               if (response.status == "success") {
                   var html = ""
                   document.getElementById("post-message").querySelector("input[name='message']").value = "";
-                  getMessage(response.id)
+                  var chat = $(".frame-chat")
+                  // getMessage(response.id)
+                  
+                  socket.on("messageReceived",function(msg){
+                        if(msg.from.toString() != response.id.toString()){
+                          getMessage(response.id)
+                        }else{
+                          getMessage(response.id)
+                        }
+                  })
                   form.reset();
               }
               else {

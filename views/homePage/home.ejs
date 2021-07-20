@@ -255,19 +255,19 @@
                                                     <% curUser.followings.forEach(function(cur,index) {%>         
                                                         <% if(curUser.followings[index]){%>
                                                             <% if(curUser.followings[index].idFollowing==user._id){%>
-                                                                <button class="btn btnFollowed" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg','')">
-                                                                    <a href="" class="centerFollowed" id="<%=user._id%>">Unfollow</a>
+                                                                <button class="btn btnFollowed btn-<%=user._id%>"  onclick="btnFollow('this','<%=user._id%>','wordImg','')">
+                                                                    <a href="" class="centerFollow clas-<%=user._id%>">Unfollow</a>
                                                                 </button>
                                                             <%}else{%>
-                                                                <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
-                                                                    <a href="" class="centerFollow" id="<%=user._id%>">Follow</a>
+                                                                <button class="btn btnFollow btn-<%=user._id%>"  onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                                    <a href="" class="centerFollow clas-<%=user._id%>">Follow</a>
                                                                 </button>
                                                             <%}%>
                                                         <%}%>
                                                     <%})%>
                                                 <%}else{%>
-                                                    <button class="btn btnFollow" id="btn-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
-                                                        <a href="" class="centerFollow" id="<%=user._id%>">Follow</a>
+                                                    <button class="btn btnFollow btn-<%=user._id%>"  onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                        <a href=""  class="centerFollow clas-<%=user._id%>">Follow</a>
                                                     </button>
                                                 <%}%>
                                             </div>

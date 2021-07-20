@@ -29,7 +29,8 @@ const app = express();
 
 
 app.set('view engine', 'ejs')
-
+app.set('io', io)
+app.get('io')
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({
   extended: true,
@@ -62,7 +63,10 @@ app.use(function(req, res, next) {
 app.use(passport.initialize());  // khởi tạo chế độ passport
 app.use(passport.session());
 
-
+app.use(function(req,res,next){
+  res.io = io;
+  next();
+})
 // routes
 
 passport.serializeUser(function (user, done) {

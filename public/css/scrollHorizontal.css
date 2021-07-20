@@ -69,21 +69,46 @@
   color:#fff;
   font-weight: bold;
   text-decoration: none;
+
 }
 .centerFollow:hover{
   text-decoration: none;
   color: #fff;
 }
 
-.centerFollowed{
-  position: relative;
-  top: -0.20rem;
-  color:#333;
-  font-weight: bold;
-  text-decoration: none;
+.follow-notice{
+    background-color: #0095F6;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 13px;
+    border-radius: 4px 4px;
+    height: 24px;
+    margin-left: 3px;
+    text-decoration: none;
+    outline: none;
 }
-.centerFollow:hover{
+
+.follow-notice:hover, .followed-notice:focus{
   text-decoration: none;
+  outline: none;
+}
+
+.followed-notice{
+  background-color: #fff;
+  border:0.5px solid #DBDBDB;
+  color: #333;
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 4px 4px;
+  height: 24px;
+  margin-right: 10px;
+  text-decoration: none;
+  outline: none;
+}
+.followed-notice:hover, .followed-notice:focus{
+  text-decoration: none;
+  outline: none;
 }
 
 /* .centerFollow:hover{

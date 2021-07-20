@@ -139,8 +139,8 @@
 
                             for (var i = 0; i < data.notifications.length; i++) {
                                 var notice = data.notifications[i];
-                                    if(notice.type == "follower" && notice.type != "photo_liked" && notice.type !="received_message"){
-                                        html += " <li> "
+                                    if(notice.type == "follower" && notice.type != "photo_liked" || notice.type =="received_message"){
+                                        html += " <li style="+'display:flex'+" > "
                                             html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
                                             html+= "<a  data-id="+notice._id+" id="+notice._id+" >"
                                                 html += notice.content
@@ -150,66 +150,32 @@
                                                     var follow = data.followings[j];
                                         
                                                     if(follow.idFollowing == notice.idFollowed){
-                                                        html+='<button id="btn-'+notice.idFollowed+'"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'"+"," + "'" + "wordImg" + "'" +"," + "''" + ","  + "'" + notice._id +"'" +')"  type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
-                                                            html+= '<p style="position:relative;top:-8px;right:12px" id="'+notice.idFollowed+'">'
+                                                        html+='<button class="btn-notice-'+notice.idFollowed+' followed-notice"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'"+"," + "'" + "wordImg" + "'" +"," + "''" + ","  + "'" + notice._id +"'" +')"  type="button" class="btn btn-primary" >'
+                                                            html+= '<p  class="clas-'+notice.idFollowed+'">'
                                                                 html += 'Unfollow'
                                                             html+= '</p>'
                                                         html+= '</button>'
                                                     }else{
-                                                        html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'"+"," + "'" + "wordImg" + "'" +"," + "'"+notice.id_follow_back+"'" + ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px;text-align:center ;margin-left:3px;font-size:14px;color:#fff">'
-                                                            html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
+                                                        html+='<button class="btn-notice-'+notice.idFollowed+' follow-notice" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'"+"," + "'" + "wordImg" + "'" +"," + "'"+notice.id_follow_back+"'" + ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" >'
+                                                            html+= '<p  class="clas-'+notice.idFollowed+'">'
                                                                 html += 'Follow'
                                                             html+= '</p>'
                                                         html+= '</button>'
                                                     }
                                                  }
                                             }else{
-                                                html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'"+notice.id_follow_back+"'" + ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
-                                                    html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
-                                                        html += 'Follow'
-                                                    html+= '</p>'
-                                                html+= '</button>'
+                                           
+                                                    html+='<button class="btn-notice-'+notice.idFollowed+' follow-notice" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'"+notice.id_follow_back+"'" + ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" >'
+                                                        html+= '<p  class="clas-'+notice.idFollowed+'">'
+                                                            html += 'Follow'
+                                                        html+= '</p>'
+                                                    html+= '</button>'
                                             }
                                          
                                          
                                         html+= "</li>"
                                     }
-                                    if(notice.type != "follower" && notice.type != "photo_liked" && notice.type =="received_message"){
-                                      
-                                        html += " <li> "
-                                            html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
-                                            html+= "<a  data-id="+notice._id+" id="+notice._id+" >"
-                                                html += notice.content
-                                            html += "</a>"
-                                            if( data.followings.length > 0){
-                                                for(var j = 0; j < data.followings.length; j++){
-                                                    var follow = data.followings[j];
-                                                   
-                                                    if(follow.idFollowing == notice.idFollowed){
-                                                        html+='<button id="btn-'+notice.idFollowed+'"  onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "" + ","  + "'" + notice._id +"'"+')"  type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px; color:#333;  background-color: #fff; border: 0.5px solid #DBDBDB;">'
-                                                            html+= '<p style="position:relative;top:-8px;right:12px" id="'+notice.idFollowed+'">'
-                                                                html += 'Unfollow'
-                                                            html+= '</p>'
-                                                        html+= '</button>'
-                                                    }else{
-                                                        html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'" + notice.id_follow_back + "'" + ","  + "'" + notice._id +"'"+')" type="button" class="btn btn-primary" style="width:60px; height:24px;text-align:center ;margin-left:3px;font-size:14px;color:#fff">'
-                                                            html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
-                                                                html += 'Follow'
-                                                            html+= '</p>'
-                                                        html+= '</button>'
-                                                    }
-                                                 }
-                                            }else{
-                                                html+='<button id="btn-'+notice.idFollowed+'" onclick="btnFollow(' + "'" + "this" + "'" + "," + "'" + notice.idFollowed + "'" +"," + "'" + "wordImg" + "'" +"," + "'" + notice.id_follow_back + "'"+ ","  + "'" + notice._id +"'" +')" type="button" class="btn btn-primary" style="width:60px; height:24px; margin-left:3px;font-size:14px;color:#fff">'
-                                                    html+= '<p style="position:relative;top:-8px;right:10px" id="'+notice.idFollowed+'">'
-                                                        html += 'Follow'
-                                                    html+= '</p>'
-                                                html+= '</button>'
-                                            }
-                                         
-                                         
-                                        html+= "</li>"
-                                    }
+                                   
                                 
                                     
                             }
@@ -227,7 +193,6 @@
 
          // follow
          function btnFollow(self, id,clas,id_follow_back,id_notice) {
-             console.log(id)
             $.ajax({
                 method: "POST",
                 url: "/userFollow",
@@ -241,40 +206,48 @@
                     countHeart = responseText.count
                     if (responseText.status == "follow") {
                         if(clas === "wordImg"){
-                            $("#right-" + id).text('Unfollow')          // right card
-                            $("#btFollow-"+id).text('Unfollow')         // follow in profile
-                            $("#" + id).text('Unfollow')                // list scrollbar 
-                            $("#lis-" + id).text('Unfollow') 
+                            $("#right-" + id).text('Unfollow')                  // right card
+                            $("#btFollow-"+id).text('Unfollow')                 // follow in profile
+                            $(".clas-" + id).text('Unfollow')                   // list scrollbar 
+                            $("#lis-" + id).text('Unfollow')                    // list page follow 
+                            $(".btn-notice-"+id).removeClass('follow-notice')   // notice
+                            $(".btn-notice-"+id).addClass('followed-notice')    
+                            $(".btn-notice-"+id).text('Unfollow')  
 
-                            $("#" + id).css('color', '#333')
+                            $(".clas-" + id).css('color', '#333')
                             $("#btFollow-"+id).css('color','#333')
                             $("#lis-" + id).css('color','#333') 
-                            $("#" + id).css("text-decoration", "none")
+                            $(".clas-" + id).css("text-decoration", "none")
                             
                             $("#btFollow-"+id).css('background-color','#fff')
                             $("#lis-"+id).css('background-color','#fff')
-                            $("#btn-" + id).css("background-color", "#fff")
+                            $(".btn-" + id).css("background-color", "#fff")
+                            $(".clas-" + id).css("background-color", "#fff")
                           
                             $("#btFollow-"+id).css('border','0.5px solid #DBDBDB')
                             $("#lis-"+id).css('border','0.5px solid #DBDBDB')
-                            $("#btn-" + id).css("border", "0.5px solid #DBDBDB")
+                            $(".btn-" + id).css("border", "0.5px solid #DBDBDB")
+                           
                         }
                     }
                     if (responseText.status == "unfollow") {
                         if(clas === "wordImg"){
                             $("#right-" + id).text('Follow')
-                            $("#" + id).text('Follow')
+                            $(".clas-" + id).text('Follow')
                             $("#btFollow-"+id).text('Follow')
                             $("#lis-" + id).text('Follow') 
+                            $(".btn-notice-"+id).removeClass('followed-notice')  
+                            $(".btn-notice-"+id).addClass('follow-notice')   
+                            $(".btn-notice-"+id).text('Follow') 
 
-                            $("#" + id).css('color', '#fff')
+                            $(".clas-" + id).css('color', '#fff')
                             $("#btFollow-"+id).css('color','#fff')
                             $("#lis-" + id).css('color','#fff')
                            
                             $("#lis-" + id).css('background-color','#0095F6')
                             $("#btFollow-"+id).css('background-color','#0095F6')
-                            $("#btFollow-" + id).css("background-color", "#0095F6")
-                            $("#btn-" + id).css("background-color", "#0095F6")
+                            $(".btn-" + id).css("background-color", "#0095F6")
+                            $(".clas-" + id).css("background-color", "#0095F6")
                         }
                     
                     }

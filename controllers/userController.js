@@ -570,6 +570,9 @@ const user_follow_post = (req, res) => {
             return res.redirect('/login')
         }else{
             var isFollower = false
+            var isFollowing = false
+            var inbox = {}
+            var box_message = []
             var idfollow = ''
             var idNotice = id_notice
             for(var i = 0;i < user.followers.length;i++){
@@ -580,8 +583,53 @@ const user_follow_post = (req, res) => {
                     break;
                 } 
             }
-
+            for(var i = 0;i < user.followings.length;i++){
+                var following = user.followings[i]
+                if(following.idFollowing.toString() == current_user._id.toString()){
+                    isFollowing = true
+                    break;
+                } 
+            }
+             if( isFollowing ){
+                for(var i = 0;i < user.followings.length;i++){
+                    var following = user.followings[i]
+                    if(following.idFollowing.toString() == current_user._id.toString()){
+                        for(var j = 0;j<following.inbox.length;j++)
+                        {
+                            var inb = following.inbox[j]
+                            inbox._id=inb._id,
+                            inbox.message=inb.message,
+                            inbox.from= inb._id,
+                            inbox.to= inb._id
+                            box_message.push(inb)
+                        }
+ 
+                    } 
+                }
+              
+            }
             if(isFollower){
+                if(isFollowing && box_message.length>0){
+                    User.collection.updateOne(
+                        { $and: [{
+                          "_id":ObjectId(current_user._id)
+                        }, {
+                          "notifications._id": ObjectId(current_user._id)
+                        }]},
+                        { 
+                            "$set": 
+                            { 
+                                "notifications.$[com].content": current_user.fullname + " sent you a message follow to see it !",
+                                "notifications.$[com].type": "received_message"
+                            } 
+                        },
+                        { "arrayFilters": [ 
+                            { 
+                                "com._id": ObjectId(current_user._id)
+                            }
+                        ]
+                      })
+                }
                User.collection.updateOne(
                 {
                     "_id":ObjectId(user._id)
@@ -595,6 +643,7 @@ const user_follow_post = (req, res) => {
                         }
                     }
                 },function(err,data){
+                 
                     User.collection.updateOne({
                           "_id": ObjectId(current_user._id)
                       }, {
@@ -642,7 +691,7 @@ const user_follow_post = (req, res) => {
                             "idFollowed":ObjectId(current_user._id),
                             "type": "follower",
                             "id_follow_back":"",
-                            "content": current_user.fullname + " has followed your !",
+                            "content": current_user.fullname + " has followed your!",
                             "profileImage": current_user.profileImage,
                             "createdAt": new Date().getTime()
                         }
@@ -664,9 +713,6 @@ const user_follow_post = (req, res) => {
                                     inbox_msg.push(msg)
                                 }
                             }
-                        }
-                        for(var i =0;j<inbox_msg.length;i++){
-                            console.log("inbox_msg\n"+inbox_msg[i])
                         }
                         User.collection.updateOne(
                             { 
@@ -707,8 +753,48 @@ const user_follow_post = (req, res) => {
                                 }
                             }
                         )
-                    }else{
-                        console.log("2i")
+                    }else if(isFollowing && box_message.length > 0){
+                        User.collection.updateOne(
+                            { 
+                              "_id": ObjectId(current_user._id)
+                            }, { 
+                                $push: 
+                                  { 
+                                    "followings": {
+                                      "_id": ObjectId(),
+                                      "idFollowing":ObjectId(user._id),
+                                      "fullname": user.fullname,
+                                      "name": user.name,
+                                      "profileImage": user.profileImage,
+                                      "type": "following",
+                                      "inbox":box_message,
+                                      "createdAt": new Date().getTime()
+                                    }
+                                  } 
+                            },function (error, success) {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    let product = {
+                                        "_id": ObjectId(),
+                                        "idFollowing":ObjectId(user._id),
+                                        "fullname": user.fullname,
+                                        "name": user.name,
+                                        "profileImage": user.profileImage,
+                                        "type": "following",
+                                        "createdAt": new Date().getTime()
+                                    }
+                                    var c =[].concat(req.session.user)
+                                    req.session.user = c
+                                    req.session.user[0].followings.push(product)
+                                    res.json({
+                                        "status": "follow"
+                                    });
+                                }
+                            }
+                        )
+                    }
+                    else{
                         User.collection.updateOne(
                             { 
                               "_id": ObjectId(current_user._id)
