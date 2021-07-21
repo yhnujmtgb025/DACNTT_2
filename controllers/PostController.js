@@ -7,8 +7,9 @@ const fs = require('fs')
 const bcrypt = require('bcrypt');
 var path = require('path')
 const { collection } = require('../models/UserModel');
-const socket= require('../utils/socket.js')
-const io= require('../utils/socket.js')
+const {Socket,io,chat}= require('../utils/socket.js')
+
+
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -509,6 +510,39 @@ const post_Comment = function (req,res){
                       } 
                 })
 
+                User.collection.updateOne(
+                  { 
+                    $and: [{
+                    "_id":ObjectId(post.user._id)
+                    }, {
+                        "post._id": ObjectId(_id)
+                    }] 
+                  },
+                  { 
+                      "$push": 
+                      { 
+                          "posts.$[pos].comments.$[com].replies": 
+                          {
+                            "_id": ObjectId(),
+                            "name_comment":name_comment,
+                            "user_comment": user._id,
+                            "fullname": user.fullname,
+                            "profileImage": user.profileImage,
+                            "content_reply":commentPost,
+                            "createdAt": new Date().getTime()
+                          }
+                      } 
+                  },
+                  { "arrayFilters": [ 
+                      { 
+                          "pos._id": ObjectId(_id)
+                      },
+                      { 
+                          "com.user_comment": ObjectId(user._id)
+                      }
+                  ]
+              })
+               
             })
           }
           // comment independent for a post
@@ -605,6 +639,31 @@ const get_sendMessage = (req,res)=>{
   })
 }
 
+const connect_socket = (req,res)=>{
+  if(!req.session.user){
+    return res.redirect('/login')
+  }
+  if(req.session.user._id == undefined){
+      req.session.user._id = req.session.user[0]._id
+  }
+  User.collection.findOne(
+    {"_id":req.session.user._id },
+    function(err,user){
+      if(user==null){
+        res.json({
+          "status":"error",
+          "message":"User has been logged out. Please login again"
+        })
+      }else{
+        res.json({
+          "status":"success",
+          "message":"Socket has been connected"
+        })
+      }
+    }
+  )
+}
+
 // get message
 const get_Message = (req,res)=>{
   if(!req.session.user){
@@ -615,7 +674,9 @@ const get_Message = (req,res)=>{
       req.session.user=req.session.user[0]
   }
   var id = req.body._id  // id following
- 
+  
+  // users[req.session.user._id] = 
+
   User.collection.find({
     $and: [{
       "_id":ObjectId(req.session.user._id)
@@ -703,10 +764,19 @@ const post_sendMessage = (req,res)=>{
                       }
                   }
                 })
-                res.io.emit('messageReceived', {
-                  "message":message,
-                  "from":user_current._id
-                });
+                if ( chat[user.fullname]) {
+                  res.io.to(chat[user.fullname]).emit("messageReceived",{ 
+                        "message":message,
+                        "to":user._id
+                  })
+                }
+                if ( chat[user.fullname]) {
+                  res.io.to(chat[user_current.fullname]).emit("messageReceived",{ 
+                    "message":message,
+                    "from":user_current._id
+                })
+              }
+              
                 res.json({
                     "status":"success",
                     "id":id_follow
@@ -782,6 +852,7 @@ module.exports = {
   get_PostModal,
   get_sendMessage, 
   post_sendMessage,
-  get_Message
+  get_Message,
+  connect_socket
 };
 

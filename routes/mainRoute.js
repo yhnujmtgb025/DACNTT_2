@@ -1,9 +1,6 @@
 const checkAdmin = require('../auth/CheckAdmin')
 const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
 
-
-
-
 const UserController = require('../controllers/UserController')
 const PostController = require('../controllers/PostController')
 
@@ -30,7 +27,7 @@ function route(app) {
     app.post("/sendMessageFriends", PostController.post_sendMessage );
 
     app.post("/getInbox",PostController.get_Message)
-
+    app.post("/connectSocket",PostController.connect_socket)
     // notification
     app.post("/getNotice", PostController.get_Notice);
     app.post("/postNotice", PostController.post_Notice);

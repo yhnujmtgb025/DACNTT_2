@@ -5,23 +5,23 @@
 
         <main>
           <div class="preview">
-              <div id="user-name">
+              <div data-name="123" id="user-name">
                 <%if(name){%>
                     <%=name%>
-                <i class='fas fa-angle-down'></i>
                 <%}else{%>
                     <%=fullname%>
                 <%}%>
+                <!-- <i class='fas fa-angle-down'></i> -->
               </div>
          
               <%if(following.length > 0){%>
                   <% following.forEach(function(following) {%>
-                    <div class="user-following">
+                    <div class="user-following " id="user-following-<%=following._id%>">
                       <span class="pic-div">
                         <img id="pic" src="<%=following.profileImage%>">
                       </span>
                       <div class="chat-username">
-                        <a href="#" class="name" onclick="directPerson(this, '<%=following._id%>','<%=following.idFollowing%>' ,'<%=following.profileImage%>','<%=following.fullname%>')"> 
+                        <a href="#" class="name" onclick="directPerson(this, '<%=following._id%>','<%=following.idFollowing%>' ,'<%=following.profileImage%>','<%=following.fullname%>','<%=fullname%>')"> 
                           <span >
                             <%=following.fullname%>
                           </span>
@@ -106,21 +106,21 @@
 <script>
   
   var socket= io();
-  
-
+  var sender = ''
   $(".inputFlex").css('display','none')
-  function directPerson(self,id,id_follow,image,name){
+  function directPerson(self,id,id_follow,image,name,name_current){
       $("img.pic").attr("src",image)
       $("#name-selected").text(name)
       $("#_id").val(id)
       $("#id-follow").val(id_follow)
       $(".inputFlex").css('display','block')
       $(".framechat").css('display','none')
-      getMessage(id_follow)
+
+      socket.emit("message",{username:name_current})
+      getMessage(id_follow);
   }
 
   function getMessage(id){
-    socket.emit("id-socket",{"id":socket.id})
     $.ajax({
             method: "POST",
             url: "/getInbox",
@@ -130,8 +130,6 @@
             cache: false,
             success: function (responseText) {
                 if (responseText.status == "success") {  
-                  
-                 
                     var html =""
                     user = responseText.user[0]
                     for(var i= 0;i < user.followings.length;i++){
@@ -140,6 +138,7 @@
                           for(var j = 0; j < follow.inbox.length ; j++){
                               var inbox = follow.inbox[j]
                               if(inbox.from.toString() ==  responseText.id.toString()){
+                                sender =  responseText.id.toString()
                                 html += '<div class="receiver">'
                                   html += inbox.message
                                 html += '</div>'
@@ -147,8 +146,8 @@
                                 html += '<div class="sender">'
                                   html += inbox.message
                                 html += '</div>'
-                                html += '<div class="heart">❤️'
-                                html += '</div>'
+                                // html += '<div class="heart">❤️'
+                                // html += '</div>'
                               }
                           }
                       }
@@ -161,7 +160,26 @@
         })
   
   }
- 
+    
+  socket.on("messageReceived",(msg)=>{
+    var html = ""
+      if(msg.from){
+        html += '<div class="receiver">'
+          html += msg.message
+        html += '</div>'
+      }
+      if(msg.to){
+        html += '<div class="sender">'
+        html += msg.message
+        html += '</div>'
+      }
+      var chat = $(".frame-chat")
+      chat.append(html)
+      var c = document.getElementsByClassName("frame-chat")[0]
+      c.scrollTop=c.scrollHeight;
+  })
+
+
   function sendMessageFriends(form){
       var ajax = new XMLHttpRequest();
       ajax.open("POST", "/sendMessageFriends", true);
@@ -170,18 +188,10 @@
           if (this.readyState == 4 && this.status == 200) {
               var response = JSON.parse(this.responseText);
               if (response.status == "success") {
-                  var html = ""
                   document.getElementById("post-message").querySelector("input[name='message']").value = "";
-                  var chat = $(".frame-chat")
                   // getMessage(response.id)
-                  
-                  socket.on("messageReceived",function(msg){
-                        if(msg.from.toString() != response.id.toString()){
-                          getMessage(response.id)
-                        }else{
-                          getMessage(response.id)
-                        }
-                  })
+            
+                  // connectSocket()
                   form.reset();
               }
               else {

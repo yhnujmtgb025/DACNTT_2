@@ -144,6 +144,8 @@ main {
   flex-direction: column;
 
 }
+
+
 .chat-username>span {
   height: 50%;
   width: auto;
@@ -163,26 +165,35 @@ main {
   color:var(--grey);
   font-size: 13px;
 }
-.sender, .receiver, .user-input {
+.sender{
+  display:inline-block;
+  padding: 10px 10px 10px 10px;
   margin: 0.8em;
-  padding: 10px;
-  height: auto;
-  width: auto;
-  max-width: 140px;
-  border-radius: 20px;
-  border: 1px solid var(--medium-grey);
+
+  text-align: center;
+  font-size: 14px;
+  border-radius: 30px;
+  background-color: #fff;
+  border: 1px solid #EFEFEF;
   transition: all .2s ease;
 
 }
-.sender:hover {
-  background-color: pink;
-  cursor: pointer;
-}
-.receiver, .user-input {
-  margin-left: 22vw;
-  background-color: var(--medium-grey);
+.receiver {
+  display:inline-block;
+  margin: 0.8em 1em 0 0;
+  padding: 10px 10px 10px 10px;
+
+  text-align: center;
+  font-size: 14px;
+  border-radius: 30px;
+  background-color: #EFEFEF;
+  /* background-color: red; */
 
 }
+.sender:hover {
+  cursor: pointer;
+}
+
 .user-input {
   display : none;
 }

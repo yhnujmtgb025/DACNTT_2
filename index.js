@@ -63,10 +63,7 @@ app.use(function(req, res, next) {
 app.use(passport.initialize());  // khởi tạo chế độ passport
 app.use(passport.session());
 
-app.use(function(req,res,next){
-  res.io = io;
-  next();
-})
+
 // routes
 
 passport.serializeUser(function (user, done) {
@@ -129,8 +126,11 @@ app.get('/auth/google/callback',
   }
 )
 
-
-
+app.use(function(req,res,next){
+  res.io = io;
+  next();
+  })
+app.io = io
 route(app)
 
 

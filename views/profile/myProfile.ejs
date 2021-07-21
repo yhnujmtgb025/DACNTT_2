@@ -191,9 +191,12 @@
                         <%})%>
                     </ul>
                     <div class="gallery-item-info">
-                        <ul>
+                        <ul style="display: flex;">
                             <li class="gallery-item-likes">
                                 <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
+                            </li>
+                            <li class="gallery-item-comments">
+                                <i class="fas fa-comment"></i> <%=pos.comments.length%>
                             </li>
                         </ul>
                     </div>

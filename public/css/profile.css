@@ -1,12 +1,3 @@
-/*
-
-All grid code is placed in a 'supports' rule (feature query) at the bottom of the CSS (Line 310). 
-        
-The 'supports' rule will only run if your browser supports CSS grid.
-
-Flexbox and floats are used as a fallback so that browsers which don't support grid will still recieve a similar layout.
-
-*/
 
 /* Base Styles */
 
@@ -216,12 +207,24 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     color: #fff;
 }
 
-.gallery-item-info li {
-    display: inline-block;
-    font-size: 20px;
+/* .gallery-item-info ul li{
+    display: flex;
+}  */
+
+.gallery-item-info li:first-child {
+    display: flex;
+    font-size: 15px;
     font-weight: 600;
-    margin-top: 1rem;
+    margin-top: 1.7rem;
     margin-left: -2rem;
+}
+
+.gallery-item-info li:last-child {
+    display: flex;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 1.7rem; 
+     margin-left: 0.75rem;
 }
 
 /* scroll image gallery */
