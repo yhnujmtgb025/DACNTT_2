@@ -24,11 +24,6 @@ const upload = multer({ storage: storage })
 
 const post_Newfeed = function (req, res) {
   var user= req.session.user;
-  if(user.fullname){
-      user = user
-  }else{
-      user = req.session.user[0]
-  }
   var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
   uploader(req, res, next => {
     var { caption } = req.body
@@ -128,12 +123,6 @@ const post_Newfeed = function (req, res) {
 
 const get_Newfeed = function (req, res) {
       var id = req.session.user._id;
-      if(id){
-        id = id
-      }else{
-        user = [].concat(req.session.user)
-        id=user[0]._id
-      }
       User.collection.findOne({
         "_id":ObjectId(id)
       },function(err,user){
@@ -144,6 +133,8 @@ const get_Newfeed = function (req, res) {
           res.redirect("/login")
         }else{
          var ids = [];
+
+        //  bài post thằng mình đang follow
          if(user.followings.length > 0){
            for(var i =0 ;i < user.followings.length; i++){
               var follow = user.followings[i]
@@ -151,7 +142,7 @@ const get_Newfeed = function (req, res) {
            }
          }
        
-       
+        //  bai post của mình
          if(user.posts){
             for(var i =0 ;i < user.posts.length; i++){
               var post = user.posts[i]
@@ -184,12 +175,6 @@ const get_Newfeed = function (req, res) {
 const get_PostModal = function (req, res) {
   var id = req.session.user._id;
   var id_post_current = req.body._id
-  if(id){
-    id = id
-  }else{
-    user = [].concat(req.session.user)
-    id=user[0]._id
-  }
   User.collection.findOne({
     "_id":ObjectId(id)
   },function(err,user){
@@ -216,13 +201,7 @@ const get_PostModal = function (req, res) {
 }
 
 const get_Notice = function (req, res) {
-  var id =''
-  if(req.session.user.fullname){
-    id= req.session.user._id;
-  }else{
-    req.session.user=req.session.user[0]
-    id=req.session.user._id
-  }
+  var id=req.session.user._id
    
   // console.log("\nreq   : ",req.session.user)
     User.collection.find({
@@ -286,11 +265,6 @@ const post_Notice = function (req, res) {
 
 const post_ToggleLike = function (req, res) {
   var user= req.session.user;
-  if(user.fullname){
-      user = user
-  }else{
-      user = req.session.user[0]
-  }
   var _id = req.body._id
 
   User.collection.findOne({
@@ -423,11 +397,6 @@ const post_ToggleLike = function (req, res) {
 
 const post_Comment = function (req,res){
   var user= req.session.user;
-  if(user.fullname){
-      user = user
-  }else{
-      user = req.session.user[0]
-  }
   var uploader = upload.none()
   uploader(req,res,next =>{
     var {_id,commentPost,nameReply,id_comment,id_user_comment} = req.body
@@ -509,39 +478,38 @@ const post_Comment = function (req,res){
                         }
                       } 
                 })
-
-                User.collection.updateOne(
-                  { 
-                    $and: [{
-                    "_id":ObjectId(post.user._id)
-                    }, {
-                        "post._id": ObjectId(_id)
-                    }] 
-                  },
-                  { 
-                      "$push": 
-                      { 
-                          "posts.$[pos].comments.$[com].replies": 
-                          {
-                            "_id": ObjectId(),
-                            "name_comment":name_comment,
-                            "user_comment": user._id,
-                            "fullname": user.fullname,
-                            "profileImage": user.profileImage,
-                            "content_reply":commentPost,
-                            "createdAt": new Date().getTime()
-                          }
-                      } 
-                  },
-                  { "arrayFilters": [ 
-                      { 
-                          "pos._id": ObjectId(_id)
-                      },
-                      { 
-                          "com.user_comment": ObjectId(user._id)
-                      }
-                  ]
-              })
+              //   User.collection.updateOne(
+              //     { 
+              //       $and: [{
+              //           "_id":ObjectId(post.user._id)
+              //       }, {
+              //           "posts._id": ObjectId(_id)
+              //       }] 
+              //     },
+              //     { 
+              //         "$push": 
+              //         { 
+              //             "posts.$[pos].comments.$[com].replies": 
+              //             {
+              //               "_id": ObjectId(),
+              //               "name_comment":name_comment,
+              //               "user_comment": user._id,
+              //               "fullname": user.fullname,
+              //               "profileImage": user.profileImage,
+              //               "content_reply":commentPost,
+              //               "createdAt": new Date().getTime()
+              //             }
+              //         } 
+              //     },
+              //     { "arrayFilters": [ 
+              //         { 
+              //             "pos._id": ObjectId(_id)
+              //         },
+              //         { 
+              //             "com._id": ObjectId()
+              //         }
+              //     ]
+              // })
                
             })
           }
@@ -600,9 +568,7 @@ const get_sendMessage = (req,res)=>{
   if(!req.session.user){
       return res.redirect('/login')
   }
-  if(req.session.user._id == undefined){
-      req.session.user._id = req.session.user[0]._id
-  }
+
 
   User.collection.find({_id:ObjectId(req.session.user._id)})
   .toArray( function(err,user){
@@ -639,43 +605,13 @@ const get_sendMessage = (req,res)=>{
   })
 }
 
-const connect_socket = (req,res)=>{
-  if(!req.session.user){
-    return res.redirect('/login')
-  }
-  if(req.session.user._id == undefined){
-      req.session.user._id = req.session.user[0]._id
-  }
-  User.collection.findOne(
-    {"_id":req.session.user._id },
-    function(err,user){
-      if(user==null){
-        res.json({
-          "status":"error",
-          "message":"User has been logged out. Please login again"
-        })
-      }else{
-        res.json({
-          "status":"success",
-          "message":"Socket has been connected"
-        })
-      }
-    }
-  )
-}
-
 // get message
 const get_Message = (req,res)=>{
   if(!req.session.user){
       return res.redirect('/login')
   }
-  if(req.session.user._id == undefined){
-      req.session.user._id = req.session.user[0]._id
-      req.session.user=req.session.user[0]
-  }
   var id = req.body._id  // id following
-  
-  // users[req.session.user._id] = 
+
 
   User.collection.find({
     $and: [{
@@ -699,11 +635,6 @@ const post_sendMessage = (req,res)=>{
       return res.redirect('/login')
   }
   var user_current = req.session.user
-  if(user_current.fullname){
-      use_current=user_current 
-  }else{
-      user_current = user_current[0]
-  }
   var uploader = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }])
   uploader(req, res, next => {
     var { _id,id_follow,message } = req.body
@@ -770,7 +701,7 @@ const post_sendMessage = (req,res)=>{
                         "to":user._id
                   })
                 }
-                if ( chat[user.fullname]) {
+                if ( chat[user_current.fullname]) {
                   res.io.to(chat[user_current.fullname]).emit("messageReceived",{ 
                     "message":message,
                     "from":user_current._id
@@ -842,6 +773,34 @@ const post_sendMessage = (req,res)=>{
 
 }
 
+// delete post
+const post_deletePost = (req,res)=>{
+  if(!req.session.user){
+    return res.redirect('/login')
+  }
+  var id = req.body._id
+  
+  Post.collection.deleteOne(
+  {
+    "_id":ObjectId(id)
+  },function(err,data){
+    User.collection.updateOne({
+      "posts._id":ObjectId(id)
+    },{
+        $pull: 
+        {
+          "posts": {
+            "_id": ObjectId(id)
+          }
+        }
+    })
+    res.json({
+      "status":"success"
+    })
+  })
+ 
+}
+
 module.exports = {
   post_Newfeed, 
   get_Newfeed, 
@@ -853,6 +812,6 @@ module.exports = {
   get_sendMessage, 
   post_sendMessage,
   get_Message,
-  connect_socket
+  post_deletePost
 };
 

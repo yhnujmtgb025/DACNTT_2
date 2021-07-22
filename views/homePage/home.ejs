@@ -218,8 +218,8 @@
                 </div>
 
                 <!-- List card horizontal scroll -->
-                <div class="viewport" id="scrollBar" data-id="<%=idCurrent%>" data-len="<%=data.length%>">
-                    <p class="sugCard">Suggestions For You</p>
+                <div class="viewport" id="scrollBar" data-id="<%=idCurrent%>" data-len="<%=data.length-1%>">
+                    <!-- <p class="sugCard">Suggestions For You</p>
                     <a href="homePage/listFollow" class="seeCard">See All</a>
                     <i class="fas fa-chevron-circle-right next" id="next-<%=idCurrent%>" onclick="slide('right','<%=data.length%>','<%=idCurrent%>')"></i>
                     <i class="fas fa-chevron-circle-left prev" id="prev-<%=idCurrent%>" onclick="slide('left','<%=data.length%>','<%=idCurrent%>')"></i>
@@ -256,11 +256,11 @@
                                                         <% if(curUser.followings[index]){%>
                                                             <% if(curUser.followings[index].idFollowing==user._id){%>
                                                                 <button class="btn btnFollowed btn-<%=user._id%>"  onclick="btnFollow('this','<%=user._id%>','wordImg','')">
-                                                                    <a href="" class="centerFollow clas-<%=user._id%>">Unfollow</a>
+                                                                    <a  class="centerFollow clas-<%=user._id%>">Unfollow</a>
                                                                 </button>
                                                             <%}else{%>
                                                                 <button class="btn btnFollow btn-<%=user._id%>"  onclick="btnFollow('this','<%=user._id%>','wordImg')">
-                                                                    <a href="" class="centerFollow clas-<%=user._id%>">Follow</a>
+                                                                    <a class="centerFollow clas-<%=user._id%>">Follow</a>
                                                                 </button>
                                                             <%}%>
                                                         <%}%>
@@ -276,19 +276,15 @@
                                 <%})%>
                             </ul>
                         </div>
-                    </div>
-
-
-
-
+                    </div> -->
                 </div>
+
             </div>
 
             <!-- Right bar -->
             <div class="col-lg-5 ">
                 <div class="rightCard" id="rightCard">
-                    <!-- infor left of current user -->
-                    <div class="row rightInfor">
+                    <!-- <div class="row rightInfor">
                         <img class="imgUser" width="70" height="70" src="<%=image%>" alt="Card image cap"
                             style="border-radius: 50% 50%;">
                         <span class="card-title "><a href="#" class="nameImg">
@@ -300,14 +296,14 @@
                         <a href="/myProfile" class="wordImg" style="margin-top:1rem;text-decoration: none;">Profile</a>
                     </div>
 
-                    <!-- suggest for you -->
+              
                     <div class="row rightInfor">
                         <p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions
                             For You</p>
                         <a id="seeAll" href="/homePage/listFollow">See all</a>
                     </div>
 
-                    <!-- list user -->
+            
                     <% data.forEach(function(user) {%>
                         <% if(user._id !=idCurrent) {%>
                             <div class="row belowSuggest">
@@ -353,7 +349,7 @@
                         <%}%>
                     <%})%>
 
-                    <!-- copy right -->
+             
                     <div class="optionBelow">
                         <ul class="listHelp">
                             <li><a href="">About</a></li>
@@ -370,7 +366,8 @@
                             <li> <a href="">Language</a></li>
                         </ul>
                         <p style="margin-left:2rem; color:#C7C7C7">© 2021 INSTAGRAM FROM FACEBOOK</p>
-                    </div>
+                    </div>  -->
+                
                 </div>
 
 
@@ -380,18 +377,11 @@
 
     </div>
     <script src="/js/deleteCard.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
         // show new feed 
         $(document).ready(function () {
             showNewsfeed();
-            var len = $('#scrollBar').attr("data-len")
-            var id= $('#scrollBar').attr("data-id")
-            if(len<=3){
-                $('#next-' + id).css("opacity", "0")
-            }
-             
+            loadFollow();
         })
         function showNewsfeed() {
             var ajax = new XMLHttpRequest();
@@ -417,9 +407,12 @@
                         html += data.user.fullname;
                         html += '</a>';
                         html += '</span>';
-
-                        html += '<i class="fas fa-ellipsis-h action-icon" id="mod-' + data._id + '" data-id="' + data._id + '" class="threeDot" onclick="modelCard(this)">';
-                        html += '</i>';
+                        
+                        if(data.user._id.toString() == id.toString()){
+                            html += '<i class="fas fa-ellipsis-h action-icon" id="mod-' + data._id + '" data-id="' + data._id + '" class="threeDot" onclick="modelCard(this)">';
+                            html += '</i>';
+                        }
+                       
 
                         html += '</div>';
 
@@ -534,7 +527,7 @@
                         }
 
                         html += '<div class="card-body">';
-                        if (data.caption != "" && data.image == "") {
+                        if (data.caption != "" && data.image == "" && data.video =="") {
                             html += '<p class="card-text caption-text0">';
                             html += data.caption;
                             html += '</p>';
@@ -605,7 +598,7 @@
                         html += '</div>'
 
                         html += '<p style="font-size: 15px; font-weight: 500; padding-left: 15px;" class="likePost">';
-                        if (data.caption != "" && data.image != "") {
+                        if (data.caption != "" && data.image != "" || data.video != "") {
                             var cap = ""
                             for(var j = 0; j < 1; j ++){
                                 cap +=" "+ data.caption.split(" ")[j] 
@@ -684,6 +677,22 @@
                         html += '</div>';
 
                         html += '</div>';  
+
+                        html += '<div id="myModal" class="modal">'
+                            html += '<div class="modal-content" id="modCon">'
+                                html += '<ul class="list-group listDot">'
+                                    html += '<li style="color:red; font-weight:500">Edit'
+                                    html += '</li>'
+                                    html += '<hr class="hrList">'
+                                    html += '<li onclick="deletePost('+"'"+data._id+"'"+')">Delete'
+                                    html += '</li>'
+                                    html += '<hr class="hrList">'
+                                    html += '<li class="cancelList">Cancel'
+                                    html += '</li>'
+                            html += '</ul>'
+                       html += '</div>'
+
+                       html += '</div>'
                     }
                     document.getElementById("cardShow").innerHTML = html;
                
@@ -701,6 +710,219 @@
 
         }
 
+        function loadFollow(){
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/getFollow", true);
+
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if(response.status == "scroll"){
+                        var html = ""
+                    var data = response.data
+                    var length_user = data.length - 1
+ 
+                    var idCurrent = response.idCurrent
+                    html+='<p class="sugCard">Suggestions For You'
+                    html+='</p>'
+                    html+='<a href="homePage/listFollow" class="seeCard">See All'
+                    html+='</a>'
+                    html+='<i class="fas fa-chevron-circle-right next" id="next-'+idCurrent+'" onclick="slide('+"'"+"right"+"'"+","+"'"+length_user+"'"+","+"'"+idCurrent+"'"+')">'
+                    html+='</i>'
+                    html+='<i class="fas fa-chevron-circle-left prev" id="prev-'+idCurrent+'" onclick="slide('+"'"+"left"+"'"+","+"'"+length_user+"'"+","+"'"+idCurrent+"'"+')">'
+                    html+='</i>'
+
+                    html+='<div class="coverList" id="co">'
+                        html+='<div class="list" id="list-'+idCurrent+'">'
+                            html+='<ul id="scroll" data-id="'+idCurrent+'">'
+                                for(var i =0; i < data.length;i++){
+                                    if(data[i]._id !=idCurrent){
+                                        html+=' <li class="item" id="1">'
+                                            html+='<div class="cardSug">'
+                                                html+='<span class="close">&times;'
+                                                html+='</span>'
+                                                html+='<img class="imgCardSug" width="65" height="65" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
+                                                    html+='<div class="nameBelow">'
+                                                        if(data[i].name){
+                                                            html+='<form action="/userProfile/'+data[i]._id+'>" method="GET">'
+                                                                html+='<a class="nameLink">'
+                                                                    html+='<button type="submit">'
+                                                                        html += data[i].name    
+                                                                    html+='</button>'
+                                                                html+='</a>'
+                                                            html+='</form> '
+                                                        }else{
+                                                            html+='<form action="/userProfile/'+data[i]._id+'>" method="GET">'
+                                                                html+='<a class="nameLink">'
+                                                                    html+='<button type="submit">'
+                                                                        html += data[i].fullname    
+                                                                    html+='</button>'
+                                                                html+='</a>'
+                                                            html+='</form> '
+                                                        }
+                                                        html+='<p class="sug">Suggested for you'
+                                                        html+='</p>'
+                                                    html+='</div>'
+                                                    
+                                                    if(data[i].followers.length > 0){
+                                                        for(var j = 0 ; j< data[i].followers.length ; j++){
+                                                            if(data[i].followers[j].idFollower.toString() == idCurrent.toString()){
+                                                                html+='<button class="btn btnFollowed btn-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
+                                                                        html+='<a class="centerFollow clas-'+data[i]._id+'">Unfollow'
+                                                                        html+='</a>'
+                                                                html+='</button>'
+                                                            }
+                                                        }
+                                                    }else{
+                                                        html+=' <button class="btn btnFollow btn-'+data[i]._id+'"  onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
+                                                            html+='<a href=""  class="centerFollow clas-'+data[i]._id+'">Follow'
+                                                            html+='</a>'
+                                                        html+='</button>'  
+                                                    }
+                                            html+='</div>'
+                                        html+='</li>'
+                                    }
+                                }
+                            html+='</ul>'
+                        html+='</div>'
+                    html+='</div>'
+
+                    $("#scrollBar").html(html)
+                    }
+                    if(response.right == "right"){
+                        var html = ""
+                        var curUser = response.curUser
+                        html+='<div class="row rightInfor">'
+                            html+='<img class="imgUser" width="70" height="70" src="<%=image%>" alt="Card image cap" style="border-radius: 50% 50%;">'
+                            html+='<span class="card-title ">'
+                                html+='<a href="#" class="nameImg">'
+                                    html+= curUser.fullname
+                                html+='</a>'
+                            html+='</span>'
+                            html+='<small id="midName">'
+                                html+=curUser.name
+                            html+='</small>'
+                            html+='<a href="/myProfile" class="wordImg" style="margin-top:1rem;text-decoration: none;">Profile'
+                            html+='</a>'
+                        html+='</div>'
+
+
+                        html+='<div class="row rightInfor">'
+                            html+='<p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions For You'
+                            html+='</p>'
+                            html+='<a id="seeAll" href="/homePage/listFollow">See all'
+                            html+='</a>'
+                        html+='</div>'
+
+
+                        for(var i =0; i < data.length;i++){
+                            if(data[i]._id !=idCurrent){
+                                html+='<div class="row belowSuggest">'
+                                    html+='<img class="imgUserOther" width="50" height="50" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
+                                    html+='<span class="card-title ">'
+                                        if(data[i].name){
+                                            html+='<form action="/userProfile/'+data[i]._id+'" method="GET">'
+                                                html+='<a  class="nameOfUser">'
+                                                    html+='<button type="submit" style="border: none;background: none;font-weight: 600;">'
+                                                           html += data[i].name 
+                                                    html+='</button>'
+                                                html+='</a>'
+                                            html+='</form>'
+                                        }else{
+                                            html+='<form action="/userProfile/'+data[i]._id+'" method="GET">'
+                                                html+='<a  class="nameOfUser">'
+                                                    html+='<button type="submit" style="border: none;background: none;font-weight: 600;">'
+                                                        html += data[i].fullname  
+                                                    html+='</button>'
+                                                html+='</a>'
+                                            html+='</form>'
+                                        }
+                                    html+='</span>'
+                                    html+='<small class="midNameUser">Suggested for you'
+                                    html+='</small>'
+                                    
+                                    if(data[i].followers.length > 0){
+                                        for(var j = 0 ; j< data[i].followers.length ; j++){
+                                            if(data[i].followers[j].idFollower.toString() == idCurrent.toString()){
+                                                html+=' <a class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Unfollow'
+                                                html+='</a>'
+                                            }
+                                        }
+                                    }else{
+                                        html+=' <a  class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Follow'
+                                        html+='</a>'
+                                    }
+                                html+='</div>'
+                            }
+                        }
+
+
+
+                    html+='<div class="optionBelow">'
+                        html+='<ul class="listHelp">'
+                            html+=' <li>'
+                                html+='<a href="">About'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+='<a href="">Help'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+=' <a href="">Press'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+=' <a href="">Api'
+                                html+='  </a>'
+                            html+=' </li>'
+                            html+=' <li>'
+                                html+='<a href="">Jobs'
+                                html+='</a>'
+                            html+='</li>'
+                            html+='<li>'
+                                html+='<a href="">Privacy'
+                                html+='</a>'
+                            html+='</li>'
+                            html+='<li>'
+                                html+='<a href="">Terms'
+                                html+='</a>'
+                            html+='</li>'
+                            html+='<br>'
+                            html+='<li>'
+                                html+='<a href="">Locations'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li> '
+                                html+='<a href="">Top Accounts'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+='<a href="">Hashtags'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li> '
+                                html+='<a href="">Language'
+                                html+=' </a>'
+                            html+='</li>'
+                        html+=' </ul>'
+                    html+=' <p style="margin-left:2rem; color:#C7C7C7">© 2021 INSTAGRAM FROM FACEBOOK'
+                    html+='</p>'
+                    html+='</div> '
+                    $("#rightCard").html(html)
+                    }
+                   
+                    var len = $('#scrollBar').attr("data-len")
+                    var id= $('#scrollBar').attr("data-id")
+                    if(len<=3){
+                        $('#next-' + id).css("opacity", "0")
+                    }
+                }
+            }
+            ajax.send();
+        }
+    
+  
     </script>
 
 

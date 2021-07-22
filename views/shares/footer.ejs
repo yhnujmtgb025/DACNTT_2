@@ -1,21 +1,16 @@
     <!-- modal edit Card newfeed -->
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
+    <!-- <div id="myModal" class="modal">
         <div class="modal-content" id="modCon">
             <ul class="list-group listDot">
-                <li style="color:red; font-weight:500">Unfollow</li>
+                <li style="color:red; font-weight:500">Edit</li>
                 <hr class="hrList">
-                <li>Go to post</li>
-                <hr class="hrList">
-                <li>Edit</li>
-                <hr class="hrList">
-                <li>Delete</li>
+                <li onclick="deletePost()">Delete</li>
                 <hr class="hrList">
                 <li class="cancelList">Cancel</li>
             </ul>
         </div>
 
-    </div>
+    </div> -->
     <div id="display-modal-comment">
 
     </div>
@@ -441,8 +436,6 @@
             var modCon = document.getElementById("modCon");
             var nav = document.getElementById("navColor")
             var id = $(self).attr("data-id")
-            // var idMod = "mod-"+id
-            // var btn = document.getElementsById(idMod); // Get the button that opens the modal
             var span = document.getElementsByClassName("cancelList")[0]; // Get the <span> element that closes the modal
             var mode = document.getElementsByClassName("modal-content")[0]; 
             var mod = document.getElementsByClassName("modal")[0]; 
@@ -457,8 +450,6 @@
                 $('.card').css('z-index','-1')
                 $('body').addClass('stop-scrolling')
             }
-
-
             // When the user clicks on button cancle the modal
             span.onclick = function () {
                 modal.style.display = "none";
@@ -480,14 +471,27 @@
                 $('.sticky-top').css('z-index','1')
                 $('.card').css('z-index','0')
             }
-            navbar.onclick = function () {
-                modal.style.display = "none";
-                modCon.style.display = "none";
-                $('body').removeClass('stop-scrolling')
-                $('.sticky-top').css('z-index','1')
-                $('.card').css('z-index','0')
-            }
-        
+
+
+            // set id for button option
+
+        }
+
+        // delete post 
+        function deletePost(id){
+            $.ajax({
+                method: "POST",
+                url: "/deletePost",
+                data: {
+                    _id: id
+                },
+                cache: false,
+                success: function (responseText) {
+                    if(responseText.status=="success"){
+                        showNewsfeed();
+                    }
+                }
+            })
         }
 
         // display modal comment card newfeed
@@ -588,7 +592,19 @@
                                         html+= ' </div>'
 
                                         }
-                                    // frame comment
+               
+                                    if (data.image.length == 0 && data.video.length == 0) {
+                                        html+= '<div class="viewport-modal" >'
+                                            html+= '<ul class="list-modal" id="list-modal-'+ data._id +'" style="border-right:0.5px solid #EFEFEF">'
+                                                html+= '<li class="item-modal" >'
+                                                    html += '<img class="card-img-top" src="img/1.png" alt="Card image cap" style="border-radius: 0%; opacity:0">';
+                                                html+= '</li>'
+                                            html+= '</ul>'
+                                        html+= ' </div>'
+
+                                    }
+
+                                        // frame comment
                                     html+= '<div class="card-body" >'
                                         // infor user
                                         html += '<div class="row nameInfor img-cover-modal">';
@@ -608,10 +624,10 @@
                                         html += '<div class="view-comment-modal">'
                                             html += '<ul class="list-comment" id="list-comment-id">'
                                                 html += '<li class=" item-comment" id="item-comment">'
-                                                    html += '<img  src=" ' + data.user.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
-                                                    html += '<p  class="likePost">';
-
-                                                        if (data.caption != "" && data.image != "") {
+                                                
+                                                        if (data.caption != "" && data.image != "" || data.video != "" ) {
+                                                            html += '<img  src=" ' + data.user.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
+                                                            html += '<p  class="likePost">';
                                                             var cap = ""
                                                             for(var j = 0; j < 1; j ++){
                                                                 cap +=" "+ data.caption.split(" ")[j] 
@@ -629,7 +645,28 @@
                                                                 html += '</p>';
 
                                                         }
-                                                    html += '</p>';
+                                                            if (data.caption != "" && data.image == "" && data.video =="") {
+                                                                html += '<img  src=" ' + data.user.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
+                                                                html += '<p  class="likePost">';
+                                                                    var cap = ""
+                                                            for(var j = 0; j < 1; j ++){
+                                                                cap +=" "+ data.caption.split(" ")[j] 
+                                                            }
+                                                                html += ' <p class="card-text caption-text1" id="tag-cap" >';
+                                                                    html += data.user.fullname;
+                                                                        html += '<span class="cap">'
+                                                                            html +=  cap + '...'
+                                                                        html += '</span>'
+                                                                        html += '<span class="complete">'
+                                                                            html += data.caption
+                                                                        html += ' </span>'
+                                                                        html += '<span class="more" onclick="toggleComment(this)">more'
+                                                                        html += '</span>'
+                                                                html += '</p>';
+                                                            }
+                                                        
+                                                    
+                                                        html += '</p>';
                                                 html += '</li>'
                                                         
                   

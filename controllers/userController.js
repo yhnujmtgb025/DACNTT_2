@@ -9,12 +9,10 @@ const { JSDOM } = require( "jsdom" );
 const { window } = new JSDOM( "" );
 const $ = require( "jquery" )( window );
 const path = require('path');
-const session = require('express-session');
 const  {validationResult} = require('express-validator')
 const passport = require('passport');
 const nodemailer = require('nodemailer')
 const { google } = require("googleapis");
-const { rejects } = require('assert');
 const OAuth2 = google.auth.OAuth2;
 
 const multer  = require('multer');
@@ -37,24 +35,6 @@ const index = (req, res) => {
         return res.redirect('/login')
     }
     var user = req.session.user
-    if(user.fullname){
-        user = [].concat(req.session.user)
-        user=user[0]
-    }else{
-        for(var i = 0; i < user.length;i++){
-            if(user[i].followings.length > 0){
-                user = [].concat(user[i])
-                user = user[0]
-            }else{
-                user = [].concat(user[i])
-                user = user[0]
-            }
-        }
-    }
-    var name =""
-    if(user.name!=""){
-        name = user.name
-    }
     User.collection.find({
     })
     .limit(5)
@@ -63,7 +43,7 @@ const index = (req, res) => {
             userCurrent:"",
             image:user.profileImage,
             fullname:user.fullname,
-            name:name,
+            name:user.name,
             idCurrent:user._id,
             data:data,
             curUser:user,
@@ -72,6 +52,29 @@ const index = (req, res) => {
     })
 }
 
+// get follow scroll
+const get_Follow= (req, res) => {
+    if(!req.session.user){
+        req.flash('')
+        return res.redirect('/login')
+    }
+    var user = req.session.user
+    User.collection.find({
+    })
+    .limit(5)
+    .toArray(function(err,data){
+        res.json({
+            "status":"scroll",
+            "right":"right",
+            idCurrent:user._id,
+            data:data,
+            curUser:user,
+            plane:""
+        })
+    })
+}
+
+
 // user follow
 const user_follow = (req, res) => {
     if(!req.session.user){
@@ -79,29 +82,11 @@ const user_follow = (req, res) => {
         return res.redirect('/login')
     }
     var user = req.session.user
-    if(user.fullname){
-        user = [].concat(req.session.user)
-        user=user[0]
-    }else{
-        for(var i = 0; i < user.length;i++){
-            if(user[i].followings.length > 0){
-                user = [].concat(user[i])
-                user = user[0]
-            }else{
-                user = [].concat(user[i])
-                user = user[0]
-            }
-        }
-    }
-    var name =""
-    if(user.name!=""){
-        name = user.name
-    }
     User.collection.find({
     })
     .limit(5)
     .toArray(function(err,data){
-        res.render('homePage/listFollow',{userCurrent:"",image:user.profileImage,fullname:user.fullname,name:name,idCurrent:user._id,data:data,curUser:user, plane:""})
+        res.render('homePage/listFollow',{userCurrent:"",image:user.profileImage,fullname:user.fullname,name:user.name,idCurrent:user._id,data:data,curUser:user, plane:""})
     })
 }
 
@@ -481,12 +466,11 @@ const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
-    if(   req.session.user._id == undefined){
-        req.session.user._id = req.session.user[0]._id
-    }
- 
+  
     User.collection.find({_id:ObjectId(req.session.user._id)})
     .toArray( function(err,user){
+        var post_com = [];
+        var a = 0; 
         var lengthPost = 0;
         var like=0
         var post =[]
@@ -509,19 +493,32 @@ const profile_get = (req, res) => {
         if(like == ""){
             like = 0
         }
-        
-        res.render('profile/myProfile',{
-            image:image,
-            fullname:fullname,
-            bio:bio,
-            name:name,
-            post:post,
-            like:like,
-            following:following,
-            follower:follower,
-            userCurrent:"",
-            plane:""
+        Post.collection.find({"user._id":ObjectId(req.session.user._id)})
+        .toArray( function(err,post){
+            for(var i = 0; i < post.length ; i++){
+                for(var j = 0; j < post[i].comments.length; j++){
+                     a += post[i].comments[j].replies.length 
+                }
+                a+=post[i].comments.length
+                post_com.push(a)
+                a=0
+            }
+            res.render('profile/myProfile',{
+                image:image,
+                fullname:fullname,
+                bio:bio,
+                name:name,
+                post:post,
+                like:like,
+                following:following,
+                follower:follower,
+                post_com,
+                userCurrent:"",
+                plane:""
+            })
         })
+        
+        
     })
  
 
@@ -548,13 +545,7 @@ const profile_post = (req, res) => {
 // user profile
 const user_follow_post = (req, res) => {
     
-    var current_user =""
-    if(req.session.user.fullname){
-        current_user=req.session.user
-    }else{
-        req.session.user=req.session.user[0]
-        current_user=req.session.user
-    }
+    var current_user =req.session.user
   
     var id = req.body._id
     var id_follow_back = req.body.id_follow_back
@@ -653,17 +644,6 @@ const user_follow_post = (req, res) => {
                           }
                         }
                       },function(err,data){
-                        let result = req.session.user[0]
-                        if(result){
-                            for( var i = 0; i < req.session.user[0].followings.length; i++){ 
-                                if ( req.session.user[0].followings[i].idFollowing.toString() === user._id.toString()) { 
-                                    req.session.user[0].followings.splice(i, 1); 
-                                    i--; 
-                                }
-                            }
-                        }else{
-                            req.session.user.followings = []
-                        }
                         res.json({
                             "status": "unfollow"
                           });
@@ -735,18 +715,6 @@ const user_follow_post = (req, res) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
-                                    let product = {
-                                        "_id": ObjectId(),
-                                        "idFollowing":ObjectId(user._id),
-                                        "fullname": user.fullname,
-                                        "name": user.name,
-                                        "profileImage": user.profileImage,
-                                        "type": "following",
-                                        "createdAt": new Date().getTime()
-                                    }
-                                    var c =[].concat(req.session.user)
-                                    req.session.user = c
-                                    req.session.user[0].followings.push(product)
                                     res.json({
                                         "status": "follow"
                                     });
@@ -775,18 +743,6 @@ const user_follow_post = (req, res) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
-                                    let product = {
-                                        "_id": ObjectId(),
-                                        "idFollowing":ObjectId(user._id),
-                                        "fullname": user.fullname,
-                                        "name": user.name,
-                                        "profileImage": user.profileImage,
-                                        "type": "following",
-                                        "createdAt": new Date().getTime()
-                                    }
-                                    var c =[].concat(req.session.user)
-                                    req.session.user = c
-                                    req.session.user[0].followings.push(product)
                                     res.json({
                                         "status": "follow"
                                     });
@@ -816,18 +772,6 @@ const user_follow_post = (req, res) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
-                                    let product = {
-                                        "_id": ObjectId(),
-                                        "idFollowing":ObjectId(user._id),
-                                        "fullname": user.fullname,
-                                        "name": user.name,
-                                        "profileImage": user.profileImage,
-                                        "type": "following",
-                                        "createdAt": new Date().getTime()
-                                    }
-                                    var c =[].concat(req.session.user)
-                                    req.session.user = c
-                                    req.session.user[0].followings.push(product)
                                     res.json({
                                         "status": "follow"
                                     });
@@ -847,9 +791,6 @@ const user_profile_get = (req, res) => {
     var imgCurrent = ""
     if(!req.session.user){
         return res.redirect('/login')
-    }
-    if(   req.session.user._id == undefined){
-        req.session.user._id = req.session.user[0]._id
     }
     User.collection.find({_id:ObjectId(req.session.user._id)})
     .toArray( function(err,user){
@@ -905,11 +846,6 @@ const edit_profile_get = (req, res) => {
         return res.redirect('/login')
     }
     var userCurrent = req.session.user
-    if(userCurrent.fullname){
-        userCurrent =userCurrent
-    }else{
-        userCurrent = req.session.user[0]
-    }
     User.findOne({_id:userCurrent._id},function(err,user){
         res.render('profile/editProfile',{image:user.profileImage,fullname:user.fullname,bio:user.bio,name:user.name,userCurrent:userCurrent,imgCurrent:user.profileImage, plane:""})
     })
@@ -917,11 +853,6 @@ const edit_profile_get = (req, res) => {
 
 const edit_profile_post = (req, res) => {
     var user= req.session.user;
-    if(user.fullname){
-        user = user
-    }else{
-        user = req.session.user[0]
-    }
     var {fullname,bio,name} = req.body
     user.fullname = fullname
     user.name = name
@@ -1074,14 +1005,12 @@ const change_password_post = (req,res)=>{
     }
 }
 
-
-
-
-  
 module.exports = {
 
     index,
+    get_Follow,
     user_follow,
+
     login_get,
     login_post,
     logout_get,

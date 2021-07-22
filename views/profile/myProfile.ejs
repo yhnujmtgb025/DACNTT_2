@@ -189,15 +189,24 @@
                                 </iframe>
                             </li>
                         <%})%>
+                        <% if(pos.image == "" && pos.video == "") { %>
+                            <li class="item-gallery" style="border: 2px solid #EFEFEF ;">
+                                <p style="position: relative;top: 6rem ;left: 6rem;">
+                                    <%= pos.caption.split(" ")[0] +'...' %>
+                                </p>
+                            </li>
+                        <%}%>
                     </ul>
                     <div class="gallery-item-info">
                         <ul style="display: flex;">
                             <li class="gallery-item-likes">
                                 <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
                             </li>
+                          
                             <li class="gallery-item-comments">
-                                <i class="fas fa-comment"></i> <%=pos.comments.length%>
+                                <i class="fas fa-comment"></i><%=post_com[i]%>
                             </li>
+                            
                         </ul>
                     </div>
                     <div class="cover-btn-gallery" >

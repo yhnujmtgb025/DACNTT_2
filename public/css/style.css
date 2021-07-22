@@ -600,6 +600,7 @@ ul.listHelp li {
 
 .item-comment:first-child{
    padding: 0 0 3px 0;
+
 }
 
 .item-comment:not(:first-child){

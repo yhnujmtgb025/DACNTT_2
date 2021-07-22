@@ -11,6 +11,7 @@ const resetValidator = require('../validators/resetValidator')
 
 function route(app) {
     app.get('/',UserController.index );
+    app.post('/getFollow',UserController.get_Follow );
 
 
     // handle newfeed
@@ -27,7 +28,6 @@ function route(app) {
     app.post("/sendMessageFriends", PostController.post_sendMessage );
 
     app.post("/getInbox",PostController.get_Message)
-    app.post("/connectSocket",PostController.connect_socket)
     // notification
     app.post("/getNotice", PostController.get_Notice);
     app.post("/postNotice", PostController.post_Notice);
@@ -65,6 +65,9 @@ function route(app) {
     // handle password 
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );
     app.post('/myProfile/editProfile/changePassword',resetValidator,UserController.change_password_post  );
+
+    // handle post
+    app.post('/deletePost',PostController.post_deletePost);
 }
 
 
