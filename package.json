@@ -30,6 +30,7 @@
     "express-session": "^1.17.2",
     "express-validator": "^6.11.1",
     "flash": "^1.1.0",
+    "form-data": "^4.0.0",
     "formidable": "^1.2.2",
     "googleapis": "^76.0.0",
     "jquery": "^3.6.0",

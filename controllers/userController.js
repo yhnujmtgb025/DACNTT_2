@@ -938,13 +938,14 @@ const change_password_get = (req, res) => {
         return res.redirect('/login')
     }
     var email = req.session.user.email
+    var userCurrent = req.session.user
     const error = req.flash('error') || ''
     const password = req.flash('password') || ''
     const rePassword =   req.flash('rePassword') || ''
     const oldPass =   req.flash('oldPass') || ''
     const success = req.flash('success') || ''
     User.findOne({_id:req.session.user._id},function(err,user){
-        res.render('profile/changePass',{image:user.profileImage,error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email,fullname:user.fullname, plane:""})
+        res.render('profile/changePass',{userCurrent:userCurrent,imgCurrent:userCurrent.profileImage,image:user.profileImage,error:error,password:password,oldPass:oldPass,rePassword:rePassword,success,email:email,fullname:user.fullname, plane:""})
     })
 }
 

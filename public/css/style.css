@@ -40,6 +40,20 @@ body {
     opacity: 1;
 }
 
+#ptNew-modal {
+    float: right;
+    margin-top: -0.65rem;
+    margin-right: -3rem;
+    padding: 0.5px 5px;
+    border: 0.01px solid #0095F6;
+
+    opacity: 0.3;
+}
+
+#ptNew-modal:hover{
+    opacity: 1;
+}
+
 
 #textPost {
     margin-right: -0.25rem;
@@ -53,8 +67,7 @@ body {
 }
 
 .imagePost img {
-    padding: 5px 5px;
-
+    padding: 0px 5px;
 }
 
 
@@ -107,15 +120,24 @@ body {
     flex: 25%;
     overflow: hidden;
     cursor: pointer;
-  
+
     position: relative;
     top: 0;
     left: 0;
   }
 
+  #img-add{
+      border: 1px solid #EFEFEF;
+      
+  }
+  .gallery#img-add:hover{
+    cursor: pointer;
+  }
+
+
   .cover-remove{
     position: absolute;
-    top: 0.5rem;
+    top: 0.2rem;
     right: 0.5rem;
     background-color:#333;
     opacity: 0.7;
@@ -134,23 +156,46 @@ body {
         color: white;
         font-weight: bold;
    }
+
+   .cover-remove-video{
+    position: relative;
+    top: 28px;
+    right: 5px;
+    float: right;
+    background-color:#333;
+    opacity: 0.7;
+    width: 25px;
+    height: 25px;
+    border-radius: 50% 50%;
+   
+    }
+
+   .remove-vid{
+    position: absolute;
+    top: -2px;
+    right: -0.5px;
+    
+    font-size: 18px;
+    padding: 0 5px;
+    color: white;
+    font-weight: bold;
+}
   
   .gallery-section .image img{
- 
-
     width: 100%;
     height: 100%;
-    padding: 5px 5px;
     transition: 0.4s;
+    z-index: 1;
     border: none;
   }
 
   .gallery-section .image video{
     width: 100%;
     height: 100%;
-    padding: 5px 5px;
+    padding: 25px 5px;
     transition: 0.4s;
-    border: none;
+    z-index: -1;
+    border: 1px solid #efefef;
   }
   
 /* Card newfeed */
@@ -390,6 +435,18 @@ ul.listHelp li {
     width: 30%;
 }
 
+.modal-content-edit {
+    background-color: #fefefe;
+    margin:-4rem auto 0 auto;
+    padding: 20px 0 20px 0;
+    border: 1px solid #888;
+    border-radius: 16px 16px;
+    width: 50%;
+}
+
+.post-feed-edit{
+    margin-left: 20px;
+}
 /* show popup */
 
 .listDot li {
@@ -398,6 +455,14 @@ ul.listHelp li {
     font-size: 15px;
     cursor: pointer;
     line-height: 0.6rem;
+}
+
+#exit-edit{
+    float: right;
+    margin-top: -0.9rem;
+    margin-right: 0.3rem;
+    color: #ddd9d9;
+    cursor: pointer;
 }
 
 .listDot li:hover {
@@ -429,6 +494,10 @@ ul.listHelp li {
 }
 
 .stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+  }
+  .stop-scrolling-edit {
     height: 100%;
     overflow: hidden;
   }

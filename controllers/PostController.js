@@ -24,18 +24,18 @@ const upload = multer({ storage: storage })
 
 const post_Newfeed = function (req, res) {
   var user= req.session.user;
-  var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
+
+  var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }, { name: 'image-edit', maxCount: 10 }])
   uploader(req, res, next => {
     var { caption } = req.body
     var img = []
     var video = []
     var type = []
-    var createdAt = new Date().getTime();
-
+    var createdAt = new Date().getTime();  
+    console.log(req.files)
     var files = []
     files = files.concat(req.files)
     if (files[0].image != null && files[0].video != null) {
-      console.log("1")
       for (var x = 0; x < files[0].image.length; x++) {
         if (files[0].image[x].fieldname == 'image') {
           img.push(files[0].image[x])
@@ -50,7 +50,6 @@ const post_Newfeed = function (req, res) {
       }
 
     } else if (files[0].image != null && files[0].video == null) {
-      console.log("2")
       for (var x = 0; x < files[0].image.length; x++) {
         if (files[0].image[x].fieldname == 'image') {
           img.push(files[0].image[x])
@@ -58,7 +57,6 @@ const post_Newfeed = function (req, res) {
         }
       }
     } else if (files[0].image == null && files[0].video != null) {
-      console.log("3")
       for (var x = 0; x < files[0].video.length; x++) {
         if (files[0].video[x].fieldname == 'video') {
           video.push(files[0].video[x])
@@ -117,7 +115,7 @@ const post_Newfeed = function (req, res) {
           });
         });
       }
-  });
+     });
 })}
 // trang home
 

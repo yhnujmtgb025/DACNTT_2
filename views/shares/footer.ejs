@@ -11,6 +11,104 @@
         </div>
 
     </div> -->
+        <div id="modal-edit" class="modal">
+            <div class="modal-content-edit" id="modal-edit-content">
+                <!-- <i class="fas fa-times exit-edit" id="exit-edit" ></i> -->
+                <!-- <form style="margin: 0 20px;" id="post-new-feed" enctype="multipart/form-data" onsubmit="return doPost(this);">
+
+                    <div class="card nameCard" id="Newfeed">
+
+                        <div class="container textChat">
+
+                            <div class="comment">
+
+                                <div class="commenter">
+                                    <img id="img-text" width="60" height="60" src="<%=image%>" alt="Card image cap"
+                                        style="border-radius: 4% 4%;">
+                                </div>
+
+                                <div class="coverPost">
+
+                                    <div class="comment-text-area" id="textPost">
+                                        <textarea id="cmText" cols="60" rows="4" type="text" name="caption"
+                                            placeholder="Add comment ..."></textarea>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="imagePost">
+                                <div class="gallery-section">
+                                    <div class="inner-width">
+                                        <div class="gallery" id="gal">
+                                       
+                                        </div>
+                                        <div class="gallery" id="vid">
+                                       
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row iconCard " id="iconPost">
+
+
+                                <label class="fileContainer">
+                                    <svg id="_x31_" enable-background="new 0 0 24 24" height="24"
+                                        viewBox="0 0 24 24" width="24">
+                                        <g>
+                                            <path
+                                                d="m17.453 24c-.168 0-.34-.021-.51-.066l-15.463-4.141c-1.06-.292-1.692-1.39-1.414-2.45l1.951-7.272c.072-.267.346-.422.612-.354.267.071.425.346.354.612l-1.95 7.27c-.139.53.179 1.082.71 1.229l15.457 4.139c.531.14 1.079-.176 1.217-.704l.781-2.894c.072-.267.346-.426.613-.353.267.072.424.347.353.613l-.78 2.89c-.235.89-1.045 1.481-1.931 1.481z" />
+                                        </g>
+                                        <g>
+                                            <path
+                                                d="m22 18h-16c-1.103 0-2-.897-2-2v-12c0-1.103.897-2 2-2h16c1.103 0 2 .897 2 2v12c0 1.103-.897 2-2 2zm-16-15c-.551 0-1 .449-1 1v12c0 .551.449 1 1 1h16c.551 0 1-.449 1-1v-12c0-.551-.449-1-1-1z" />
+                                        </g>
+                                        <g>
+                                            <path
+                                                d="m9 9c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2zm0-3c-.551 0-1 .449-1 1s.449 1 1 1 1-.449 1-1-.449-1-1-1z" />
+                                        </g>
+                                        <g>
+                                            <path
+                                                d="m4.57 16.93c-.128 0-.256-.049-.354-.146-.195-.195-.195-.512 0-.707l4.723-4.723c.566-.566 1.555-.566 2.121 0l1.406 1.406 3.892-4.67c.283-.339.699-.536 1.142-.54h.011c.438 0 .853.19 1.139.523l5.23 6.102c.18.209.156.525-.054.705-.209.18-.524.157-.705-.054l-5.23-6.102c-.097-.112-.231-.174-.38-.174-.104-.009-.287.063-.384.18l-4.243 5.091c-.09.108-.221.173-.362.179-.142.01-.277-.046-.376-.146l-1.793-1.793c-.189-.188-.518-.188-.707 0l-4.723 4.723c-.097.097-.225.146-.353.146z" />
+                                        </g>
+                                    </svg>
+                                    <input type="file" name="image" accept="image/*" class=" upload-photo" id="file"
+                                        multiple onchange="previewPostImage()">
+                                </label>
+
+
+
+                                <label class="fileVideo">
+                                    <svg height="24" viewBox="0 -87 472 472" width="24">
+                                        <path
+                                            d="m467.101562 26.527344c-3.039062-1.800782-6.796874-1.871094-9.898437-.179688l-108.296875 59.132813v-35.480469c-.03125-27.601562-22.398438-49.96875-50-50h-248.90625c-27.601562.03125-49.96875 22.398438-50 50v197.421875c.03125 27.601563 22.398438 49.96875 50 50h248.90625c27.601562-.03125 49.96875-22.398437 50-50v-34.835937l108.300781 59.132812c3.097657 1.691406 6.859375 1.625 9.894531-.175781 3.039063-1.804688 4.898438-5.074219 4.898438-8.601563v-227.816406c0-3.53125-1.863281-6.796875-4.898438-8.597656zm-138.203124 220.898437c-.015626 16.5625-13.4375 29.980469-30 30h-248.898438c-16.5625-.019531-29.980469-13.4375-30-30v-197.425781c.019531-16.558594 13.4375-29.980469 30-30h248.90625c16.558594.019531 29.980469 13.441406 30 30zm123.101562-1.335937-103.09375-56.289063v-81.535156l103.09375-56.285156zm0 0" />
+                                    </svg>
+                                    <input type="file" name="video" accept="video/*" class="upload-photo"
+                                        id="fileVideo" multiple onchange="previewPostVideo()">
+                                </label>
+
+                                <button class="btn  btnComment btnOpacity post-opa" id="ptNew"
+                                    type="submit">Post</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>  -->
+            </div>
+        </div> 
+
     <div id="display-modal-comment">
 
     </div>
@@ -254,87 +352,101 @@
         }
 
         // preview image before post
+        var selDiv = "";
+	    var storedFiles = [];
+        var filesArr = ''
+        var html = ""
+        var temp=""
         function previewPostImage() {
-                var input = document.getElementById('file');
-                var output = document.getElementById('gal');
-                var html = "";
-                for (var i = 0; i < input.files.length; ++i) {
-                    (function (index) {
-
-                        if (input.files.length > 0) {
-
-                            var fileReader = new FileReader();
-                            fileReader.readAsDataURL(input.files.item(i));
-                            fileReader.onload = function (event) {
-
-                                html += '<div class="image" id="i-' + index + '">'
-                                html += '<div class="cover-remove">'
-                                html += '<span class="remove-image" id="span' + index + '" onclick="removeImage(' + index + ')">'
-                                html += `&#x2715`
-                                html += '</span>'
-                                html += '</div>'
-
-                                html += '<img src="' + event.target.result + '" id="img-' + index + '"  class="post-img-preview" name="imagePost" " alt="">'
-
-                                html += ' </div>'
-
-                                output.innerHTML = html;
-
-                            };
-
-
-
-                            $("#ptNew").css('opacity', "1");
-                        }
-                    })(i);
-
-                    // html += '<li>' + input.files.item(i).name + '</li>';
-                }
-
+            var input = document.getElementById('file');
+            var output = document.getElementById('gal');
+        
+            filesArr=  Array.prototype.slice.call(input.files); 
+           
+            if($(".check-image").hasClass("image-tag")){
+                html=''
+            }
+            for (var i = 0; i < filesArr.length; ++i) {
+                storedFiles.push(filesArr[i])
             }
 
-        function removeImage(n) {
-
-            document.getElementById("img-" + n).remove();
-            document.getElementById("i-" + n).value = "";
-            document.getElementById("i-" + n).remove();
+            for(var i = 0; i< storedFiles.length;i++){
+                (function (index) {
+                var fileReader = new FileReader();
+                        fileReader.onload = function (event) {
+                            html += '<div class="image image-tag check-image remove-'+index+'" id="i-' + index + '">'
+                                html += '<div class="cover-remove">'
+                                    html += '<span class="remove-image" id="span-' + index + '" " onclick="removeImage('+index+')">'
+                                    html += `&#x2715`
+                                    html += '</span>'
+                                html += '</div>'
+                                html += '<img src="' + event.target.result + '" id="img-' + index + '" name="imagePost" " alt="">'
+                            html += ' </div>'                        
+                            output.innerHTML = html; 
+                        };
+                        fileReader.readAsDataURL(storedFiles[i]);
+                        $("#ptNew").css('opacity', "1");
+                    })(i);
+                }
+            
         }
+           
+        function removeImage(n) {
+            $(".remove-"+n).removeAttr("id")
+            var regex = new RegExp(/<([^\s]+).*?id="i-([\d])".*?>(.*?)<\/div>/gi);
+            var matches = html.match(regex);
+            html = ''
+            html = matches.toString()
+            document.getElementsByClassName("remove-" + n)[0].remove();
+            storedFiles.splice(n,1);
+        }  
+         
 
         // preview video before post
+        var html_v = "";
+        var storedFiles_Video = [];
+        var filesArr_Video = ''
         function previewPostVideo() {
             var input = document.getElementById('fileVideo');
             var output = document.getElementById('vid');
-            var html = "";
-            for (var i = 0; i < input.files.length; ++i) {
+            filesArr_Video=  Array.prototype.slice.call(input.files); 
+            if($(".check-video").hasClass("video-tag")){
+                html_v=''
+            }
+            for (var i = 0; i < filesArr_Video.length; ++i) {
+                storedFiles_Video.push(filesArr_Video[i])
+            }
+            for (var i = 0; i < storedFiles_Video.length; ++i) {
                 (function (index) {
-                    if (input.files.length > 0) {
-                        var fileReader = new FileReader();
-                        fileReader.onload = function (event) {
-                            html += '<div class="image">'
-                            html += '<div class="cover-remove">'
-                            html += '<span class="remove-image" id="spa' + index + '" onclick="removeVideo(' + index + ')" >'
-                            html += `&#x2715`
-                            html += '</span>'
-                            html += '</div>'
-                            html += '<video  controls>'
-                            html += '<source src="' + event.target.result + '"  id="video-' + index + '" class="post-video-preview" name="videoPost"  alt="" type="video/mp4">'
-                            html += '</video>'
-                            html += ' </div>'
+                    var fileReader = new FileReader();
+                    fileReader.onload = function (event) {
+                        html_v += '<div class="image video-tag check-video remove-video-'+index+'""  id="v-'+index+'">'
+                            html_v += '<div class="cover-remove-video">'
+                                    html_v += '<span class="remove-vid" id="spa' + index + '" onclick="removeVideo(' + index + ')" >'
+                                        html_v += '&#x2715'
+                                    html_v += '</span>'
+                            html_v += '</div>'
+                            html_v += '<video  id="video-'+index+'" src="' + event.target.result + '"  id="post-video-preview" controls >'
+                            html_v += '</video>'
+                        html_v += '</div>'
+                        output.innerHTML = html_v;
+                    };
 
-                            output.innerHTML = html;
-                        };
-
-                        fileReader.readAsDataURL(input.files.item(i));
-                        $("#ptNew").css('opacity', "1");
-
-                    }
+                    fileReader.readAsDataURL(storedFiles_Video[i]);
+                    $("#ptNew").css('opacity', "1");
                 })(i);
             }
 
         }
 
-        function removeVideo(index) {
-
+        function removeVideo(n) {
+            $(".remove-video-"+n).removeAttr("id")
+            var regex = new RegExp(/<([^\s]+).*?id="v-([\d])".*?>(.*?)<\/div>/gi);
+            var matches = html_v.match(regex);
+            html_v = ''
+            html_v = matches.toString()
+            $(".remove-video-" + n).remove();
+            storedFiles_Video.splice(n,1);
         }
 
         // turnoff modal comment
@@ -373,8 +485,36 @@
 
             };
 
-            var formData = new FormData(form);
-            ajax.send(formData);
+            
+            var data = new FormData(form);
+            var input = document.getElementById("file")
+            if(input.files.length>storedFiles.length){   // da xoa anh
+                data.delete('image')
+                for(var i=0, len=storedFiles.length; i<len; i++) {
+                data.append('image', storedFiles[i],storedFiles[i].name);	
+                }
+            }
+            else{                                        // them file
+                data.delete('image')
+                for(var i=0, len=storedFiles.length; i<len; i++) {
+                    data.append('image', storedFiles[i],storedFiles[i].name);	
+                }
+            }
+            if(input.files.length>storedFiles_Video.length){   // da xoa video
+                data.delete('video')
+                for(var i=0, len=storedFiles_Video.length; i<len; i++) {
+                data.append('video', storedFiles_Video[i],storedFiles_Video[i].name);	
+                }
+            }
+            else{                                        // them video
+                data.delete('video')
+                for(var i=0, len=storedFiles_Video.length; i<len; i++) {
+                    data.append('video', storedFiles_Video[i],storedFiles_Video[i].name);	
+                }
+            }
+            html=''
+            html_v=''
+            ajax.send(data);
 
             return false;
 
@@ -444,14 +584,13 @@
                 // When the user clicks the button, open the modal card
                 modal.style.display = "block";
                 modCon.style.display = "block";
-                modal.style.opacity = "1";
+                // modal.style.opacity = "1";
                 $('.seeCard').css('z-index','-1')
                 $('.sticky-top').css('z-index','0')
                 $('.card').css('z-index','-1')
                 $('body').addClass('stop-scrolling')
-            }
-            // When the user clicks on button cancle the modal
-            span.onclick = function () {
+
+                span.onclick = function () {
                 modal.style.display = "none";
                 $('body').removeClass('stop-scrolling')
                 $('.sticky-top').css('z-index','1')
@@ -471,6 +610,9 @@
                 $('.sticky-top').css('z-index','1')
                 $('.card').css('z-index','0')
             }
+            }
+            // When the user clicks on button cancle the modal
+           
 
 
             // set id for button option
@@ -492,6 +634,188 @@
                     }
                 }
             })
+        }
+
+        // edit post
+        function editPost(id){
+            var span = document.getElementsByClassName("cancelList")[1]; // Get the <span> element that closes the modal
+            var mod = document.getElementsByClassName("modal")[1]; 
+            var input = document.getElementById('file-modal');
+            var output = document.getElementById('img-modal-edit');
+            var arrImage = []
+            var arrVideo = []
+            var html_img = ''
+            if(id){
+                $("#modal-edit").css("display","block")
+                $("#modal-edit-content").css("display","block")
+                $('body').addClass('stop-scrolling-edit')
+            }
+            $.ajax({
+                method: "POST",
+                url: "/getPost",
+                data: {
+                    _id: id
+                },
+                cache: false,
+                success: function (responseText) {
+                    if (responseText.status == "success") {
+                        for (var a = 0; a < responseText.data.length; a++) {
+                        var data = responseText.data[a];
+                        var user = responseText.user
+                        var id = responseText.id
+                        var html = ""
+                        // modal comment 
+                        html +='<i class="fas fa-times exit-edit" id="exit-edit" >'
+                        html +='</i>'
+                        html+='<form id="post-new-feed" class="post-feed-edit" enctype="multipart/form-data" onsubmit="return doPost(this);">'
+
+                            html+='<div class="card nameCard" id="Newfeed">'
+
+                                html+='<div class="container textChat">'
+
+                                    html+='<div class="comment">'
+
+                                        html+='<div class="commenter">'
+                                            html+='<img id="img-text" width="60" height="60" src="<%=image%>" alt="Card image cap" style="border-radius: 4% 4%;">'
+                                        html+='</div>'
+
+                                        html+='<div class="coverPost">'
+
+                                            html+='<div class="comment-text-area" id="textPost">'
+                                                html+='<textarea id="cmText" cols="60" rows="4" type="text" name="caption" placeholder="Add comment ...">' 
+                                                    if(data.caption){
+                                                        html+=data.caption
+                                                    }
+                                                html+='</textarea>'
+                                            html+='</div>'
+
+                                        html+='</div>'
+
+                                    html+='</div>'
+
+                                html+='</div>'
+
+                                html+='<div class="card-body">'
+
+                                    html+='<div class="imagePost">'
+                                        html+='<div class="gallery-section">'
+                                            html+='<div class="inner-width">'
+                                                html+='<div class="gallery" id="img-modal-edit">'
+                                                    if(data.image.length > 0){
+                                                        arrImage = data.image
+                                                        for(var i = 0; i< arrImage.length;i++){
+                                                            var image =  arrImage[i]
+                                                            var des = image.destination.split('./public/')[1] + '/'
+                                                            var name = image.originalname
+                                                            if(input.files.length > 0){
+                                                                var fileReader = new FileReader();
+                                                                fileReader.onload = function (event) {
+                                                                    html_img += '<div class="image image-tag check-image remove-'+i+'" id="i-' + i + '">'
+                                                                        html_img += '<div class="cover-remove">'
+                                                                            html_img += '<span class="remove-image" id="span-' + index + '" " onclick="removeImage('+index+')">'
+                                                                                html_img += `&#x2715`
+                                                                            html_img += '</span>'
+                                                                            html_img += '</div>'
+                                                                        html_img += '<img src="' + event.target.result + '" id="img-' + i + '" name="imagePost" " alt="">'
+                                                                    html_img += ' </div>'                        
+                                                                    output.innerHTML = html_img; 
+                                                                };
+                                                                fileReader.readAsDataURL(arrImage[i]);
+                                                                $("#ptNew-modal").css('opacity', "1");
+                                                            }
+                                                        }
+                                                            html += '<div class="image image-tag check-image remove-'+i+'" id="i-' + i + '">'
+                                                                html += '<div class="cover-remove">'
+                                                                    html += '<span class="remove-image" id="span-' + i + '" " onclick="removeImage('+i+')">'
+                                                                    html += `&#x2715`
+                                                                    html += '</span>'
+                                                                html += '</div>'
+                                                                html += '<img src="' + des+name + '" id="img-' + i + '" name="imagePost" " alt="">'
+                                                            html += ' </div>'
+                                                    }
+                                                html+='</div>'
+                                                html+='<div class="gallery" id="vid-modal-edit">'
+                                                    if(data.video.length > 0){
+                                                       for(var i = 0 ; i < data.video.length;i++){
+                                                           var video =  data.video[i]
+                                                            var des = video.destination.split('./public/')[1] + '/'
+                                                            var name = video.originalname
+                                                            html += '<div class="image video-tag check-video remove-video-'+i+'""  id="v-'+i+'">'
+                                                                html += '<div class="cover-remove-video">'
+                                                                        html += '<span class="remove-vid" id="spa' + i + '" onclick="removeVideo(' + i + ')" >'
+                                                                            html += '&#x2715'
+                                                                        html += '</span>'
+                                                                html += '</div>'
+                                                                
+                                                            html += '<video  id="video-'+i+'" src="'+des+name+'"  id="post-video-preview" controls >'
+                                                            html += '</video>'
+                                                            html += '</div>'
+                                                       }
+                                                        
+                                                    }
+                                                html+='</div>'
+                                            html+='</div>'
+                                        html+='</div>'
+                                    html+='</div>'
+
+
+
+                                    html+='<div class="row iconCard " id="iconPost">'
+
+
+                                        html+='<label class="fileContainer">'
+                                            html+='<svg id="_x31_" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">'
+                                                html+='<g>'
+                                                    html+='<path d="m17.453 24c-.168 0-.34-.021-.51-.066l-15.463-4.141c-1.06-.292-1.692-1.39-1.414-2.45l1.951-7.272c.072-.267.346-.422.612-.354.267.071.425.346.354.612l-1.95 7.27c-.139.53.179 1.082.71 1.229l15.457 4.139c.531.14 1.079-.176 1.217-.704l.781-2.894c.072-.267.346-.426.613-.353.267.072.424.347.353.613l-.78 2.89c-.235.89-1.045 1.481-1.931 1.481z" />'
+                                                html+='</g>'
+                                                html+='<g>'
+                                                    html+='<path d="m22 18h-16c-1.103 0-2-.897-2-2v-12c0-1.103.897-2 2-2h16c1.103 0 2 .897 2 2v12c0 1.103-.897 2-2 2zm-16-15c-.551 0-1 .449-1 1v12c0 .551.449 1 1 1h16c.551 0 1-.449 1-1v-12c0-.551-.449-1-1-1z" />'
+                                                html+='</g>'
+                                                html+='<g>'
+                                                html+='<path d="m9 9c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2zm0-3c-.551 0-1 .449-1 1s.449 1 1 1 1-.449 1-1-.449-1-1-1z" />'
+                                                html+='</g>'
+                                                html+='<g>'
+                                                    html+='<path d="m4.57 16.93c-.128 0-.256-.049-.354-.146-.195-.195-.195-.512 0-.707l4.723-4.723c.566-.566 1.555-.566 2.121 0l1.406 1.406 3.892-4.67c.283-.339.699-.536 1.142-.54h.011c.438 0 .853.19 1.139.523l5.23 6.102c.18.209.156.525-.054.705-.209.18-.524.157-.705-.054l-5.23-6.102c-.097-.112-.231-.174-.38-.174-.104-.009-.287.063-.384.18l-4.243 5.091c-.09.108-.221.173-.362.179-.142.01-.277-.046-.376-.146l-1.793-1.793c-.189-.188-.518-.188-.707 0l-4.723 4.723c-.097.097-.225.146-.353.146z" />'
+                                                html+='</g>'
+                                            html+='</svg>'
+                                            html+='<input type="file" name="image" accept="image/*" class=" upload-photo" id="file-modal" multiple onchange="previewPostImage()">'
+                                        html+='</label>'
+
+
+
+                                        html+='<label class="fileVideo">'
+                                            html+='<svg height="24" viewBox="0 -87 472 472" width="24">'
+                                                html+='<path d="m467.101562 26.527344c-3.039062-1.800782-6.796874-1.871094-9.898437-.179688l-108.296875 59.132813v-35.480469c-.03125-27.601562-22.398438-49.96875-50-50h-248.90625c-27.601562.03125-49.96875 22.398438-50 50v197.421875c.03125 27.601563 22.398438 49.96875 50 50h248.90625c27.601562-.03125 49.96875-22.398437 50-50v-34.835937l108.300781 59.132812c3.097657 1.691406 6.859375 1.625 9.894531-.175781 3.039063-1.804688 4.898438-5.074219 4.898438-8.601563v-227.816406c0-3.53125-1.863281-6.796875-4.898438-8.597656zm-138.203124 220.898437c-.015626 16.5625-13.4375 29.980469-30 30h-248.898438c-16.5625-.019531-29.980469-13.4375-30-30v-197.425781c.019531-16.558594 13.4375-29.980469 30-30h248.90625c16.558594.019531 29.980469 13.441406 30 30zm123.101562-1.335937-103.09375-56.289063v-81.535156l103.09375-56.285156zm0 0" />'
+                                            html+='</svg>'
+                                            html+='<input type="file" name="video" accept="video/*" class="upload-photo" id="fileVideo-modal" multiple onchange="previewPostVideo()">'
+                                        html+='</label>'
+
+                                        html+='<button class="btn  btnComment btnOpacity post-opa" id="ptNew-modal" type="submit">Post'
+                                        html+='</button>'
+
+                                    html+='</div>'
+
+                                html+='</div>'
+
+                            html+='</div>'
+
+                        html+='</form>'
+                        }
+                        $("#modal-edit-content").html(html)
+                         // When the user clicks on button cancle the modal
+                        document.getElementsByClassName("exit-edit")[0].addEventListener("click",function(){
+                            $("#modal-edit").css("display","none")
+                            $("#modal-edit-content").css("display","none")
+                            $('body').removeClass('stop-scrolling-edit')
+                        } );
+                }
+                
+                },
+                error: function (responseText) {
+                    alert(responseText)
+                }
+            });
+        
         }
 
         // display modal comment card newfeed
@@ -538,7 +862,7 @@
                                             }
                                             for (var j = 0; j < data.video.length; j++) {
                                                 html += ' <li class="item-image" id="1">'
-                                                    html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen>'
+                                                    html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen sandbox>'
                                                     html += '</iframe>'
                                                 html += ' </li>'
                                             }
@@ -840,12 +1164,6 @@
                     alert(responseText)
                 }
             });
-
-
-
-         
-         
-           
         }
         
         // display name in comment reply

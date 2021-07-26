@@ -5,7 +5,7 @@ const express = require('express');
 const path = require('path');
 const socketio = require('socket.io')
 const session = require('express-session');
-
+const FormData = require('form-data');
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken');
 const LocalStrategy = require('passport-local').Strategy

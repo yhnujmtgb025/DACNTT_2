@@ -42,12 +42,10 @@
                                                     <div class="cover-remove">
                                                         <span class="remove-image">&#x2715</span>
                                                     </div>
-                                                    
-                                                    <img class="post-img-preview" name="imagePost"  src="/img/1.png" alt="">
+                                                    <img class="post-img-preview" name="imagePost"  src="/img/2.png" alt="">
                                                 </div> -->
-                                                <!-- <div class="image">
-                                                    <video id="post-video-preview" controls style="display: none;"></video>
-                                                </div> -->
+                                                
+                                              
                                             </div>
                                             <div class="gallery" id="vid">
                                                 <!-- <div class="image">
@@ -57,8 +55,14 @@
                                                     
                                                     <img class="post-img-preview" name="imagePost"  src="/img/1.png" alt="">
                                                 </div> -->
-                                                <!-- <div class="image">
-                                                    <video id="post-video-preview" controls style="display: none;"></video>
+                                                <!-- <div class="image" >
+                                                        <div class="cover-remove-video">
+                                                            <span class="remove-video" >
+                                                                 &#x2715
+                                                             </span>
+                                                        </div>
+                                                    <video src="video/a.mp4" id="post-video-preview" controls >
+                                                    </video>
                                                 </div> -->
                                             </div>
                                         </div>
@@ -90,7 +94,7 @@
                                                     d="m4.57 16.93c-.128 0-.256-.049-.354-.146-.195-.195-.195-.512 0-.707l4.723-4.723c.566-.566 1.555-.566 2.121 0l1.406 1.406 3.892-4.67c.283-.339.699-.536 1.142-.54h.011c.438 0 .853.19 1.139.523l5.23 6.102c.18.209.156.525-.054.705-.209.18-.524.157-.705-.054l-5.23-6.102c-.097-.112-.231-.174-.38-.174-.104-.009-.287.063-.384.18l-4.243 5.091c-.09.108-.221.173-.362.179-.142.01-.277-.046-.376-.146l-1.793-1.793c-.189-.188-.518-.188-.707 0l-4.723 4.723c-.097.097-.225.146-.353.146z" />
                                             </g>
                                         </svg>
-                                        <input type="file" name="image" accept="image/*" class=" upload-photo" id="file"
+                                        <input type="file" name="image" accept="image/*" class="upload-photo" id="file"
                                             multiple onchange="previewPostImage()">
                                     </label>
 
@@ -441,7 +445,7 @@
                             }
                             for (var j = 0; j < data.video.length; j++) {
                                 html += ' <li class="item-image" id="1">'
-                                html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen>'
+                                html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen sandbox>'
                                 html += '</iframe>'
                                 html += ' </li>'
                             }
@@ -681,7 +685,7 @@
                         html += '<div id="myModal" class="modal">'
                             html += '<div class="modal-content" id="modCon">'
                                 html += '<ul class="list-group listDot">'
-                                    html += '<li style="color:red; font-weight:500">Edit'
+                                    html += '<li onclick="editPost('+"'"+data._id+"'"+')" style="color:red; font-weight:500">Edit'
                                     html += '</li>'
                                     html += '<hr class="hrList">'
                                     html += '<li onclick="deletePost('+"'"+data._id+"'"+')">Delete'
@@ -922,7 +926,9 @@
             ajax.send();
         }
     
-  
+   // var input = document.getElementById('file');
+               
+        
     </script>
 
 
