@@ -1,8 +1,8 @@
 <%- include ("../shares/header") %>
     <!-- New feed -->
-    <div class="container bodyNewfeed">`
+    <div class="container bodyNewfeed" >`
         <div class="row">
-            <div class=" col-lg-7 " id="idContain">
+            <div class=" col-lg-7 " id="idContain" >
                 <!-- Frame card post -->
                 <div class="cardNew">
                     <form id="post-new-feed" enctype="multipart/form-data" onsubmit="return doPost(this);">
@@ -222,7 +222,7 @@
                 </div>
 
                 <!-- List card horizontal scroll -->
-                <div class="viewport" id="scrollBar" data-id="<%=idCurrent%>" data-len="<%=data.length-1%>">
+                <!-- <div class="viewport" id="scrollBar" data-id="<%=idCurrent%>" data-len="<%=data.length-1%>"> -->
                     <!-- <p class="sugCard">Suggestions For You</p>
                     <a href="homePage/listFollow" class="seeCard">See All</a>
                     <i class="fas fa-chevron-circle-right next" id="next-<%=idCurrent%>" onclick="slide('right','<%=data.length%>','<%=idCurrent%>')"></i>
@@ -281,8 +281,9 @@
                             </ul>
                         </div>
                     </div> -->
+                <!-- </div> -->
+                <div class="loader">
                 </div>
-
             </div>
 
             <!-- Right bar -->
@@ -373,8 +374,6 @@
                     </div>  -->
                 
                 </div>
-
-
             </div>
 
         </div>
@@ -384,23 +383,30 @@
     <script>
         // show new feed 
         $(document).ready(function () {
-            showNewsfeed();
-            loadFollow();
+            var mode = "newload"
+            showNewsfeed(mode);
         })
-        function showNewsfeed() {
+        var id_posted=[]
+        var start = 0
+        var sumPost =0
+        var posted = 0;
+        function showNewsfeed(mode) {
             var ajax = new XMLHttpRequest();
             ajax.open("POST", "/getNewsfeed", true);
-
+         
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
                     var html = ""
-
+                    var dataUser = response.dataUser
+                    sumPost = response.sumPost
                     for (var a = 0; a < response.data.length; a++) {
+                        posted+=1;
                         var data = response.data[a];
+                        id_posted.push(data._id)
                         var user = response.user
                         var id = response.id
-                        html += '<div class="card nameCard" id="Newfeed-' + data._id + '">';
+                        html += '<div class="card nameCard" id="Newfeed-' + data._id + '" >';
 
                         html += '<div class="row nameInfor">';
 
@@ -438,19 +444,17 @@
                             html += ' <div class="list-image-newfeed" id="list-image-newfeed-' + data._id + '">'
 
                             html += ' <ul id="scroll-image-newfeed">'
-                            for (var j = 0; j < data.image.length; j++) {
-                                html += ' <li class="item-image" id="1">'
-                                html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
-                                html += ' </li>'
-                            }
-                            for (var j = 0; j < data.video.length; j++) {
-                                html += ' <li class="item-image" id="1">'
-                                html += ' <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen sandbox>'
-                                html += '</iframe>'
-                                html += ' </li>'
-                            }
-
-
+                                for (var j = 0; j < data.image.length; j++) {
+                                    html += ' <li class="item-image img-height" id="1">'
+                                        html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                    html += ' </li>'
+                                }
+                                for (var j = 0; j < data.video.length; j++) {
+                                    html += ' <li class="item-image contain-video" id="1">'
+                                        html += ' <iframe class="responsive-iframe" src="/demo/' + data.video[j].originalname + ' "   sandbox>'
+                                        html += '</iframe>'
+                                    html += ' </li>'
+                                }
                             html += ' </ul>'
 
                             html += ' </div>'
@@ -680,26 +684,23 @@
 
                         html += '</div>';
 
-                        html += '</div>';  
-
-                        html += '<div id="myModal" class="modal">'
-                            html += '<div class="modal-content" id="modCon">'
-                                html += '<ul class="list-group listDot">'
-                                    html += '<li onclick="editPost('+"'"+data._id+"'"+')" style="color:red; font-weight:500">Edit'
-                                    html += '</li>'
-                                    html += '<hr class="hrList">'
-                                    html += '<li onclick="deletePost('+"'"+data._id+"'"+')">Delete'
-                                    html += '</li>'
-                                    html += '<hr class="hrList">'
-                                    html += '<li class="cancelList">Cancel'
-                                    html += '</li>'
-                            html += '</ul>'
-                       html += '</div>'
-
-                       html += '</div>'
+                       
+                        
+                        html += '</div>';
+                        if(a==0){
+                            html += '<div class="card nameCard name-card-'+data._id+'">';
+                                html += '<div class="viewport" id="scrollBar" data-id="'+id+'" data-len="'+(dataUser.length-1)+'" >'
+                                html+='</div>'
+                            html+='</div>'
+                        }  
+                        
+                     
+                        
+                      
                     }
                     document.getElementById("cardShow").innerHTML = html;
-               
+                   
+                    loadFollow();
                     inputPost();
                     inputComment();
                     toggleLike();
@@ -710,223 +711,367 @@
                 }
             };
             var formData = new FormData();
+            if(mode == "newload"){
+                formData.append("mode",JSON.stringify(mode))
+            }else{
+                formData.append("mode",JSON.stringify(mode))
+            }
+            
             ajax.send(formData);
 
         }
 
-        function loadFollow(){
+        
+        var lastNext = ''
+        var s = ''
+        function loadNewfeed(arrPost,n){
             var ajax = new XMLHttpRequest();
-            ajax.open("POST", "/getFollow", true);
-
+            ajax.open("POST", "/getLoadNewfeed", true);
+         
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
-                    if(response.status == "scroll"){
-                        var html = ""
-                    var data = response.data
-                    var length_user = data.length - 1
- 
-                    var idCurrent = response.idCurrent
-                    html+='<p class="sugCard">Suggestions For You'
-                    html+='</p>'
-                    html+='<a href="homePage/listFollow" class="seeCard">See All'
-                    html+='</a>'
-                    html+='<i class="fas fa-chevron-circle-right next" id="next-'+idCurrent+'" onclick="slide('+"'"+"right"+"'"+","+"'"+length_user+"'"+","+"'"+idCurrent+"'"+')">'
-                    html+='</i>'
-                    html+='<i class="fas fa-chevron-circle-left prev" id="prev-'+idCurrent+'" onclick="slide('+"'"+"left"+"'"+","+"'"+length_user+"'"+","+"'"+idCurrent+"'"+')">'
-                    html+='</i>'
+                    var html = ""
+                    if( response.status == "success"){
+                        var dataUser = response.dataUser
+                        var lastPost = response.lastPost
+                        if(lastNext){
+                            lastPost = lastNext
+                        }
+                      
+                        for (var a = 0; a < response.data.length; a++) {
+                            posted+=1
+                            var data = response.data[a];
+                            id_posted.push(data._id)
+                            lastNext =id_posted[id_posted.length-1]
+                            var user = response.user
+                            var id = response.id
+                            html += '<div class="card nameCard" id="Newfeed-' + data._id + '" >';
 
-                    html+='<div class="coverList" id="co">'
-                        html+='<div class="list" id="list-'+idCurrent+'">'
-                            html+='<ul id="scroll" data-id="'+idCurrent+'">'
-                                for(var i =0; i < data.length;i++){
-                                    if(data[i]._id !=idCurrent){
-                                        html+=' <li class="item" id="1">'
-                                            html+='<div class="cardSug">'
-                                                html+='<span class="close">&times;'
-                                                html+='</span>'
-                                                html+='<img class="imgCardSug" width="65" height="65" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
-                                                    html+='<div class="nameBelow">'
-                                                        if(data[i].name){
-                                                            html+='<form action="/userProfile/'+data[i]._id+'>" method="GET">'
-                                                                html+='<a class="nameLink">'
-                                                                    html+='<button type="submit">'
-                                                                        html += data[i].name    
-                                                                    html+='</button>'
-                                                                html+='</a>'
-                                                            html+='</form> '
-                                                        }else{
-                                                            html+='<form action="/userProfile/'+data[i]._id+'>" method="GET">'
-                                                                html+='<a class="nameLink">'
-                                                                    html+='<button type="submit">'
-                                                                        html += data[i].fullname    
-                                                                    html+='</button>'
-                                                                html+='</a>'
-                                                            html+='</form> '
-                                                        }
-                                                        html+='<p class="sug">Suggested for you'
-                                                        html+='</p>'
-                                                    html+='</div>'
-                                                    
-                                                    if(data[i].followers.length > 0){
-                                                        for(var j = 0 ; j< data[i].followers.length ; j++){
-                                                            if(data[i].followers[j].idFollower.toString() == idCurrent.toString()){
-                                                                html+='<button class="btn btnFollowed btn-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
-                                                                        html+='<a class="centerFollow clas-'+data[i]._id+'">Unfollow'
-                                                                        html+='</a>'
-                                                                html+='</button>'
-                                                            }
-                                                        }
-                                                    }else{
-                                                        html+=' <button class="btn btnFollow btn-'+data[i]._id+'"  onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
-                                                            html+='<a href=""  class="centerFollow clas-'+data[i]._id+'">Follow'
-                                                            html+='</a>'
-                                                        html+='</button>'  
-                                                    }
-                                            html+='</div>'
-                                        html+='</li>'
+                            html += '<div class="row nameInfor">';
+
+                            html += ' <img class="iconUser" src=" ' + data.user.profileImage + ' " width="45" height="45" alt="Card image cap" style="border-radius: 50% 50%; ">';
+
+                            html += ' <span class="card-title ">';
+                            html += '<a href="' + '/user/' + data.user.fullname + '" class="nameOf">';
+                            html += data.user.fullname;
+                            html += '</a>';
+                            html += '</span>';
+                            
+                            if(data.user._id.toString() == id.toString()){
+                                html += '<i class="fas fa-ellipsis-h action-icon" id="mod-' + data._id + '" data-id="' + data._id + '" class="threeDot" onclick="modelCard(this)">';
+                                html += '</i>';
+                            }
+                        
+
+                            html += '</div>';
+
+                            if (data.image.length !== 0 && data.video.length !== 0) {
+
+                                var sumLength = data.video.length + data.image.length
+
+                                html += '<div class="viewport" id="scrollBar-' + data._id + '">'
+                                html += ' <div class="cover-next-prev">'
+
+                                html += ' <i class="fas fa-chevron-circle-right next-img" id="next-img-' + data._id + '" onclick="slideImage(' + "'" + "right" + "'" + "," + "'" + sumLength + "'" + "," + "'" + data._id + "'" + ')" >'
+                                html += ' </i>'
+                                html += ' <i class="fas fa-chevron-circle-left prev-img"  id="prev-img-' + data._id + '" onclick="slideImage(' + "'" + "left" + "'" + "," + "'" + sumLength + "'" + "," + "'" + data._id + "'" + ')">'
+                                html += ' </i>'
+
+                                html += '</div>'
+
+                                html += ' <div class="cover-list-image" id="co">'
+                                html += ' <div class="list-image-newfeed" id="list-image-newfeed-' + data._id + '">'
+
+                                html += ' <ul id="scroll-image-newfeed">'
+                                    for (var j = 0; j < data.image.length; j++) {
+                                        html += ' <li class="item-image img-height" id="1">'
+                                            html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                        html += ' </li>'
+                                    }
+                                    for (var j = 0; j < data.video.length; j++) {
+                                        html += ' <li class="item-image contain-video" id="1">'
+                                            html += ' <iframe class="responsive-iframe" src="/demo/' + data.video[j].originalname + ' "   sandbox>'
+                                            html += '</iframe>'
+                                        html += ' </li>'
+                                    }
+                                html += ' </ul>'
+
+                                html += ' </div>'
+                                html += ' </div>'
+
+                                html += '</div>'
+
+                            }
+
+                            if (data.image.length !== 0 && data.video.length == 0) {
+
+
+                                html += '<div class="viewport" id="scrollBar-' + data._id + '">'
+                                html += ' <div class="cover-next-prev">'
+
+                                if (data.image.length > 1) {
+                                    html += ' <i class="fas fa-chevron-circle-right next-img" id="next-img-' + data._id + '" onclick="slideImage(' + "'" + "right" + "'" + "," + "'" + data.image.length + "'" + "," + "'" + data._id + "'" + ')" >'
+                                    html += ' </i>'
+                                    html += ' <i class="fas fa-chevron-circle-left prev-img"  id="prev-img-' + data._id + '" onclick="slideImage(' + "'" + "left" + "'" + "," + "'" + data.image.length + "'" + "," + "'" + data._id + "'" + ')">'
+                                    html += ' </i>'
+                                }
+
+
+                                html += '</div>'
+
+                                html += ' <div class="cover-list-image" id="co">'
+                                html += ' <div class="list-image-newfeed" id="list-image-newfeed-' + data._id + '">'
+
+                                html += ' <ul id="scroll-image-newfeed">'
+
+                                for (var j = 0; j < data.image.length; j++) {
+                                    html += ' <li class="item-image" id="1">'
+                                    html += '<img class="card-img-top" src="/demo/' + data.image[j].originalname + ' " alt="Card image cap" style="border-radius: 0%;" >';
+                                    html += ' </li>'
+                                }
+                                html += ' </ul>'
+
+                                html += ' </div>'
+                                html += ' </div>'
+
+                                html += '</div>'
+
+                            }
+
+                            if (data.image.length == 0 && data.video.length !== 0) {
+
+
+                                html += '<div class="viewport" id="scrollBar-' + data._id + '">'
+                                html += ' <div class="cover-next-prev">'
+                                if (data.video.length > 1) {
+                                    html += ' <i class="fas fa-chevron-circle-right next-img" id="next-img-' + data._id + '" onclick="slideImage(' + "'" + "right" + "'" + "," + "'" + data.video.length + "'" + "," + "'" + data._id + "'" + ')" >'
+                                    html += ' </i>'
+                                    html += ' <i class="fas fa-chevron-circle-left prev-img"  id="prev-img-' + data._id + '" onclick="slideImage(' + "'" + "left" + "'" + "," + "'" + data.video.length + "'" + "," + "'" + data._id + "'" + ')">'
+                                    html += ' </i>'
+                                }
+
+
+                                html += '</div>'
+
+                                html += ' <div class="cover-list-image" id="co">'
+                                html += ' <div class="list-image-newfeed" id="list-image-newfeed-' + data._id + '">'
+
+                                html += ' <ul id="scroll-image-newfeed">'
+
+                                for (var j = 0; j < data.video.length; j++) {
+                                    html += ' <li class="item-image" id="1">'
+                                    html += '   <iframe width="590" height="586" src="/demo/' + data.video[j].originalname + ' " frameborder="0" allowfullscreen sandbox>'
+                                    html += '</iframe>'
+                                    html += ' </li>'
+                                }
+                                html += ' </ul>'
+
+                                html += ' </div>'
+                                html += ' </div>'
+
+                                html += '</div>'
+
+                            }
+
+                            html += '<div class="card-body">';
+                            if (data.caption != "" && data.image == "" && data.video =="") {
+                                html += '<p class="card-text caption-text0">';
+                                html += data.caption;
+                                html += '</p>';
+                            }
+
+                            var isLiked = false;
+                            var check = false;
+                            for (var b = 0; b < data.likers.length; b++) {
+                                var liker = data.likers[b];
+                                if (liker._id == id) {                      // id user so sanh voi liker
+                                    isLiked = true;
+                                    break;
+                                }
+                            }
+                            html += '<div class="row iconCard">';
+
+                            html += '<button class="btnHeart ani" data-id="' + data._id + '" onclick="toggleLike(this,' + a + ');" >';
+                            html += '<svg  aria-label="Like" fill="#262626" height="25" viewBox="0 0 48 48" width="25">';
+                                if (isLiked) {
+                                    html += '<path id="heart-' + a + '" fill="#ed4956"  d="M 34.6 3.1 c -4.5 0 -7.9 1.8 -10.6 5.6 c -2.7 -3.7 -6.1 -5.5 -10.6 -5.5 C 6 3.1 0 9.6 0 17.6 c 0 7.3 5.4 12 10.6 16.5 c 0.6 0.5 1.3 1.1 1.9 1.7 l 2.3 2 c 4.4 3.9 6.6 5.9 7.6 6.5 c 0.5 0.3 1.1 0.5 1.6 0.5 s 1.1 -0.2 1.6 -0.5 c 1 -0.6 2.8 -2.2 7.8 -6.8 l 2 -1.8 c 0.7 -0.6 1.3 -1.2 2 -1.7 C 42.7 29.6 48 25 48 17.6 c 0 -8 -6 -14.5 -13.4 -14.5 Z">';
+                                    html += '</path>';
+
+                                }
+                                else {
+                                    html += '<path id="heart-' + a + '" fill="#262626"  d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">';
+                                    html += '</path>';
+
+                                }
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '<button data-id="'+data._id+'" onclick="modalComment(this,'+"'"+data._id+"'"+","+"'"+data.likers.length+"'"+')" >'
+                            html += ' <svg aria-label="Comment" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            html += '<path clip-rule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fill-rule="evenodd">';
+                            html += '</path>';
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '<button >';
+                            html += '  <svg aria-label="Share Post" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            html += '<path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">';
+                            html += '</path>';
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '<button class="savePost">';
+                            html += '  <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
+                            html += '</path>';
+                            html += '</svg>';
+                            html += '</button>';
+
+                            html += '</div>';
+
+                            html += '<div class="view-like" style="margin-left:0.75rem">'
+                            html += '<small id="like-' + data._id + '" data-id="' + data.likers.length + '" style="font-weight:600">'
+
+                            if (data.likers.length == "" || data.likers.length == 0) {
+                                html += '0 like</small>'
+                            } else if (data.likers.length == 1) {
+                                html += data.likers.length
+                                html += ' like</small>'
+                            }
+                            else {
+                                html += data.likers.length
+                                html += ' likes</small>'
+                            }
+                            html += '</div>'
+
+                            html += '<p style="font-size: 15px; font-weight: 500; padding-left: 15px;" class="likePost">';
+                            if (data.caption != "" && data.image != "" || data.video != "") {
+                                var cap = ""
+                                for(var j = 0; j < 1; j ++){
+                                    cap +=" "+ data.caption.split(" ")[j] 
+                                }
+                                html += ' <p class="card-text caption-text1" >';
+                                html += data.user.fullname;
+                                    html += '<span class="cap">'
+                                        html +=  cap + '...'
+                                    html += '</span>'
+                                    html += '<span class="complete">'
+                                        html += data.caption
+                                    html += ' </span>'
+                                    html += '<span class="more" onclick="toggleComment(this)">more'
+                                    html += '</span>'
+                                
+                                html += '</p>';
+                            }
+                            html += '</p>';
+
+
+                            html += '<p class="view-comment" data-id="'+data._id+'" onclick="modalComment(this,'+"'"+data._id+"'"+","+"'"+data.likers.length+"'"+')">'
+                                html += 'View all'
+                                var leng_reply = 0;
+                                for(var j = 0; j< data.comments.length;j++){
+                                    var lengComment = data.comments[j]
+                                    if(lengComment.replies){
+                                        leng_reply += lengComment.replies.length
                                     }
                                 }
-                            html+='</ul>'
-                        html+='</div>'
-                    html+='</div>'
+                                if(leng_reply>0){
+                                    leng_reply+=data.comments.length
+                                }else{
+                                    leng_reply=data.comments.length
+                                }
+                                if(leng_reply == 0 || leng_reply == 1){
+                                    html +=' '+ leng_reply + ' comment' 
+                                }else{
+                                    html +=' '+ leng_reply + ' comments' 
+                                }
+                            html += '</p>'
+                            html += '<div >'
+                                for (var c = 0; c < data.comments.length; c++) {
+                                    var commenter = data.comments[c];               
+                                    html += '<div class="comment-post" id="comment-display">'
+                                        html += '<a style="font-weight:600">'
+                                            html += '' +  commenter.fullname
+                                        html += '</a>'
+                                        html += '<p style="padding-left:5px">'
+                                            html += ''+ commenter.content_comment
+                                        html += '</p>'
+                                    html+= '</div>'
+                                }
+                            html+= '</div>'
 
-                    $("#scrollBar").html(html)
-                    }
-                    if(response.right == "right"){
-                        var html = ""
-                        var curUser = response.curUser
-                        html+='<div class="row rightInfor">'
-                            html+='<img class="imgUser" width="70" height="70" src="<%=image%>" alt="Card image cap" style="border-radius: 50% 50%;">'
-                            html+='<span class="card-title ">'
-                                html+='<a href="#" class="nameImg">'
-                                    html+= curUser.fullname
-                                html+='</a>'
-                            html+='</span>'
-                            html+='<small id="midName">'
-                                html+=curUser.name
-                            html+='</small>'
-                            html+='<a href="/myProfile" class="wordImg" style="margin-top:1rem;text-decoration: none;">Profile'
-                            html+='</a>'
-                        html+='</div>'
+                            html += '<hr width="100%" style="margin-bottom: 0rem">';
 
+                            html += ' <div class="container textChat">';
+                                html += '<div class="comment">';
+                                    html += ' <div class="commenter">';
+                                        html += '<img src=" ' + user.profileImage + ' " class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
+                                    html += '</div>';
 
-                        html+='<div class="row rightInfor">'
-                            html+='<p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions For You'
-                            html+='</p>'
-                            html+='<a id="seeAll" href="/homePage/listFollow">See all'
-                            html+='</a>'
-                        html+='</div>'
+                                    html += '<form id="post-comment-new" onsubmit="return doPostComment(this)">'
+                                        html += '<div class="comment-text-area">';
+                                            html += '<input type="hidden" name="_id" value="'+data._id+'">'
+                                            html += '<textarea class="textinput  textComment" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
+                                            html += '</textarea>';
+                                            html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';
+                                            html += '</button>';
+                                        html += '</div>';
+                                    html += '</form>'
 
+                                html += '</div>';
+                            html += '</div>';
 
-                        for(var i =0; i < data.length;i++){
-                            if(data[i]._id !=idCurrent){
-                                html+='<div class="row belowSuggest">'
-                                    html+='<img class="imgUserOther" width="50" height="50" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
-                                    html+='<span class="card-title ">'
-                                        if(data[i].name){
-                                            html+='<form action="/userProfile/'+data[i]._id+'" method="GET">'
-                                                html+='<a  class="nameOfUser">'
-                                                    html+='<button type="submit" style="border: none;background: none;font-weight: 600;">'
-                                                           html += data[i].name 
-                                                    html+='</button>'
-                                                html+='</a>'
-                                            html+='</form>'
-                                        }else{
-                                            html+='<form action="/userProfile/'+data[i]._id+'" method="GET">'
-                                                html+='<a  class="nameOfUser">'
-                                                    html+='<button type="submit" style="border: none;background: none;font-weight: 600;">'
-                                                        html += data[i].fullname  
-                                                    html+='</button>'
-                                                html+='</a>'
-                                            html+='</form>'
-                                        }
-                                    html+='</span>'
-                                    html+='<small class="midNameUser">Suggested for you'
-                                    html+='</small>'
-                                    
-                                    if(data[i].followers.length > 0){
-                                        for(var j = 0 ; j< data[i].followers.length ; j++){
-                                            if(data[i].followers[j].idFollower.toString() == idCurrent.toString()){
-                                                html+=' <a class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Unfollow'
-                                                html+='</a>'
-                                            }
-                                        }
-                                    }else{
-                                        html+=' <a  class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Follow'
-                                        html+='</a>'
-                                    }
-                                html+='</div>'
-                            }
+                            html += '</div>';
+
+                        
+                            
+                            html += '</div>';
+                        }
+                        
+                      
+                        if($(".nameCard").hasClass(("name-card-"+lastPost))){
+                            $(".name-card-"+lastPost).after(html);
+                            $(".nameCard").removeClass("name-card-"+lastPost)
+                        }else{
+                            $("#Newfeed-"+lastPost).after(html);
                         }
 
-
-
-                    html+='<div class="optionBelow">'
-                        html+='<ul class="listHelp">'
-                            html+=' <li>'
-                                html+='<a href="">About'
-                                html+='</a>'
-                            html+='</li>'
-                            html+=' <li>'
-                                html+='<a href="">Help'
-                                html+='</a>'
-                            html+='</li>'
-                            html+=' <li>'
-                                html+=' <a href="">Press'
-                                html+='</a>'
-                            html+='</li>'
-                            html+=' <li>'
-                                html+=' <a href="">Api'
-                                html+='  </a>'
-                            html+=' </li>'
-                            html+=' <li>'
-                                html+='<a href="">Jobs'
-                                html+='</a>'
-                            html+='</li>'
-                            html+='<li>'
-                                html+='<a href="">Privacy'
-                                html+='</a>'
-                            html+='</li>'
-                            html+='<li>'
-                                html+='<a href="">Terms'
-                                html+='</a>'
-                            html+='</li>'
-                            html+='<br>'
-                            html+='<li>'
-                                html+='<a href="">Locations'
-                                html+='</a>'
-                            html+='</li>'
-                            html+=' <li> '
-                                html+='<a href="">Top Accounts'
-                                html+='</a>'
-                            html+='</li>'
-                            html+=' <li>'
-                                html+='<a href="">Hashtags'
-                                html+='</a>'
-                            html+='</li>'
-                            html+=' <li> '
-                                html+='<a href="">Language'
-                                html+=' </a>'
-                            html+='</li>'
-                        html+=' </ul>'
-                    html+=' <p style="margin-left:2rem; color:#C7C7C7">© 2021 INSTAGRAM FROM FACEBOOK'
-                    html+='</p>'
-                    html+='</div> '
-                    $("#rightCard").html(html)
+             
+                        
                     }
-                   
-                    var len = $('#scrollBar').attr("data-len")
-                    var id= $('#scrollBar').attr("data-id")
-                    if(len<=3){
-                        $('#next-' + id).css("opacity", "0")
+                    else{
+                        $(".loader").css("display","none")
                     }
+                    loadFollow();
+                    inputPost();
+                    inputComment();
+                    toggleLike();
+                    dropSave();
+                    modelCard();
+                    slideImage();
+                    slideImageModal();
                 }
-            }
-            ajax.send();
+               
+            };
+            var formData = new FormData();
+            formData.append("id_post",JSON.stringify(arrPost))
+            formData.append("posted",parseInt(n))
+            
+            ajax.send(formData);
+
         }
-    
-   // var input = document.getElementById('file');
+
+        $(window).scroll(function() {
+            var d = $(document).height() - $(window).height()
+            if($(window).scrollTop() == d && (sumPost-posted)>0) {
+                loadNewfeed(id_posted,sumPost-posted)
+                id_posted=[]
+            }else{
+                $(".loader").css("display","block")
+            }
+        });
+  
                
         
     </script>

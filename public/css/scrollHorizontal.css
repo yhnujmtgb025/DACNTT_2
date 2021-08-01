@@ -120,13 +120,13 @@
 .coverList{
   position: relative;
   top: 0;
-  left: 2.25rem;
+  left: 0;
 
-  border: 0.5px solid #DBDBDB;
+  /* border: 0.5px solid red; */
   background-color:#FFFFFF ;
   border-radius: 4px;
 
-  margin-right: 2.15rem;
+
 }
 
 .list{
@@ -207,7 +207,7 @@
 .sugCard{
   position: absolute;
   top:1rem;
-  left: 3.25rem;
+  left: 1.5rem;
   z-index: 1;
 
   font-size: 14px;
@@ -295,15 +295,8 @@
 }
 
 @media screen and (max-width: 375px)  {
-  .coverList{
-    position: relative;
-    top: 0;
-    left: 0.25rem;
-    
-    width: 360px;
-  }
   .sugCard{
     position: absolute;
-    left: 1.5rem;
+    left: -1.25rem;
   }
 }

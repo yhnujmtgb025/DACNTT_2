@@ -1,17 +1,12 @@
     <!-- modal edit Card newfeed -->
-    <!-- <div id="myModal" class="modal">
+    <div id="myModal" class="modal">
         <div class="modal-content" id="modCon">
-            <ul class="list-group listDot">
-                <li style="color:red; font-weight:500">Edit</li>
-                <hr class="hrList">
-                <li onclick="deletePost()">Delete</li>
-                <hr class="hrList">
-                <li class="cancelList">Cancel</li>
-            </ul>
         </div>
 
-    </div> -->
-        <div id="modal-edit" class="modal">
+    </div>
+        
+    
+    <div id="modal-edit" class="modal">
             <div class="modal-content-edit" id="modal-edit-content">
                 <!-- <i class="fas fa-times exit-edit" id="exit-edit" ></i> -->
                 <!-- <form style="margin: 0 20px;" id="post-new-feed" enctype="multipart/form-data" onsubmit="return doPost(this);">
@@ -116,6 +111,7 @@
 </body>
 
 <script>
+     
     // When the user clicks on button cancle the modal
         //  Show notifications liked
         function showNoticeLiked(self) {
@@ -320,7 +316,7 @@
                             $("#btFollow-"+id).css('border','0.5px solid #DBDBDB')
                             $("#lis-"+id).css('border','0.5px solid #DBDBDB')
                             $(".btn-" + id).css("border", "0.5px solid #DBDBDB")
-                           
+                     
                         }
                     }
                     if (responseText.status == "unfollow") {
@@ -341,6 +337,7 @@
                             $("#btFollow-"+id).css('background-color','#0095F6')
                             $(".btn-" + id).css("background-color", "#0095F6")
                             $(".clas-" + id).css("background-color", "#0095F6")
+                          
                         }
                     
                     }
@@ -351,8 +348,231 @@
             });
         }
 
+        // load follow
+        function loadFollow(){
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/getFollow", true);
+            
+            var userCur = []
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    var userCur= response.userCur
+                    if(response.status == "scroll"){
+                        var html = ""
+                    var data = response.data
+                    var length_user = data.length - 1
+ 
+                    var idCurrent = response.idCurrent
+                    html+='<p class="sugCard">Suggestions For You'
+                    html+='</p>'
+                    html+='<a href="homePage/listFollow" class="seeCard">See All'
+                    html+='</a>'
+                    html+='<i class="fas fa-chevron-circle-right next" id="next-'+idCurrent+'" onclick="slide('+"'"+"right"+"'"+","+"'"+length_user+"'"+","+"'"+idCurrent+"'"+')">'
+                    html+='</i>'
+                    html+='<i class="fas fa-chevron-circle-left prev" id="prev-'+idCurrent+'" onclick="slide('+"'"+"left"+"'"+","+"'"+length_user+"'"+","+"'"+idCurrent+"'"+')">'
+                    html+='</i>'
+
+                    html+='<div class="coverList" id="co">'
+                        html+='<div class="list" id="list-'+idCurrent+'">'
+                            html+='<ul id="scroll" data-id="'+idCurrent+'">'
+                                for(var i =0; i < data.length;i++){
+                                    if(data[i]._id !=idCurrent){
+                                        html+=' <li class="item" id="1">'
+                                            html+='<div class="cardSug">'
+                                                html+='<span class="close">&times;'
+                                                html+='</span>'
+                                                html+='<img class="imgCardSug" width="65" height="65" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
+                                                    html+='<div class="nameBelow">'
+                                                        if(data[i].name){
+                                                            html+='<form action="/userProfile/'+data[i]._id+'>" method="GET">'
+                                                                html+='<a class="nameLink">'
+                                                                    html+='<button type="submit">'
+                                                                        html += data[i].name    
+                                                                    html+='</button>'
+                                                                html+='</a>'
+                                                            html+='</form> '
+                                                        }else{
+                                                            html+='<form action="/userProfile/'+data[i]._id+'>" method="GET">'
+                                                                html+='<a class="nameLink">'
+                                                                    html+='<button type="submit">'
+                                                                        html += data[i].fullname    
+                                                                    html+='</button>'
+                                                                html+='</a>'
+                                                            html+='</form> '
+                                                        }
+                                                        html+='<p class="sug">Suggested for you'
+                                                        html+='</p>'
+                                                    html+='</div>'
+                                                    
+                                                    if(userCur[0].followings.length > 0){
+                                                        for(var j = 0 ; j< userCur[0].followings.length ; j++){
+                                                            if(userCur[0].followings[j].idFollowing.toString() == idCurrent.toString()){
+                                                                html+='<button class="btn btnFollowed btn-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
+                                                                        html+='<a class="centerFollow clas-'+data[i]._id+'">Unfollow'
+                                                                        html+='</a>'
+                                                                html+='</button>'
+                                                            }else{
+                                                                html+=' <button class="btn btnFollow btn-'+data[i]._id+'"  onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
+                                                                    html+='<a href=""  class="centerFollow clas-'+data[i]._id+'">Follow'
+                                                                    html+='</a>'
+                                                                html+='</button>' 
+                                                            }
+                                                        }
+                                                    }else{
+                                                        html+=' <button class="btn btnFollow btn-'+data[i]._id+'"  onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
+                                                            html+='<a href=""  class="centerFollow clas-'+data[i]._id+'">Follow'
+                                                            html+='</a>'
+                                                        html+='</button>'  
+                                                    }
+                                            html+='</div>'
+                                        html+='</li>'
+                                    }
+                                }
+                            html+='</ul>'
+                        html+='</div>'
+                    html+='</div>'
+
+                    $("#scrollBar").html(html)
+                    }
+                    if(response.right == "right"){
+                        var html = ""
+                        var curUser = response.curUser
+                        html+='<div class="row rightInfor">'
+                            html+='<img class="imgUser" width="70" height="70" src="<%=image%>" alt="Card image cap" style="border-radius: 50% 50%;">'
+                            html+='<span class="card-title ">'
+                                html+='<a href="#" class="nameImg">'
+                                    html+= curUser.fullname
+                                html+='</a>'
+                            html+='</span>'
+                            html+='<small id="midName">'
+                                html+=curUser.name
+                            html+='</small>'
+                            html+='<a href="/myProfile" class="wordImg" style="margin-top:1rem;text-decoration: none;">Profile'
+                            html+='</a>'
+                        html+='</div>'
+
+
+                        html+='<div class="row rightInfor">'
+                            html+='<p style="margin:7px 0 0 10px; font-size: 15px; font-weight: 500; color: #8E8E8E;">Suggestions For You'
+                            html+='</p>'
+                            html+='<a id="seeAll" href="/homePage/listFollow">See all'
+                            html+='</a>'
+                        html+='</div>'
+
+                        for(var i =0; i < data.length;i++){
+                            if(data[i]._id !=idCurrent){
+                            
+                                html+='<div class="row belowSuggest">'
+                                    html+='<img class="imgUserOther" width="50" height="50" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
+                                    html+='<span class="card-title ">'
+                                        if(data[i].name){
+                                            html+='<form action="/userProfile/'+data[i]._id+'" method="GET">'
+                                                html+='<a  class="nameOfUser">'
+                                                    html+='<button type="submit" style="border: none;background: none;font-weight: 600;">'
+                                                           html += data[i].name 
+                                                    html+='</button>'
+                                                html+='</a>'
+                                            html+='</form>'
+                                        }else{
+                                            html+='<form action="/userProfile/'+data[i]._id+'" method="GET">'
+                                                html+='<a  class="nameOfUser">'
+                                                    html+='<button type="submit" style="border: none;background: none;font-weight: 600;">'
+                                                        html += data[i].fullname  
+                                                    html+='</button>'
+                                                html+='</a>'
+                                            html+='</form>'
+                                        }
+                                    html+='</span>'
+                                    html+='<small class="midNameUser">Suggested for you'
+                                    html+='</small>'
+                                    
+                                    if(userCur[0].followings.length > 0){
+                                        for(var j = 0 ; j< userCur[0].followings.length ; j++){
+                                            if(userCur[0].followings[j].idFollowing.toString() == data[i]._id.toString()){      
+                                                html+=' <a class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Unfollow'
+                                                html+='</a>'
+                                            }else{
+                                                html+=' <a  class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Follow'
+                                                html+='</a>'
+                                            }
+                                        }
+                                    }else{
+                                        html+=' <a  class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Follow'
+                                        html+='</a>'
+                                    }
+                                html+='</div>'
+                            }
+                        }
+
+
+
+                    html+='<div class="optionBelow">'
+                        html+='<ul class="listHelp">'
+                            html+=' <li>'
+                                html+='<a href="">About'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+='<a href="">Help'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+=' <a href="">Press'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+=' <a href="">Api'
+                                html+='  </a>'
+                            html+=' </li>'
+                            html+=' <li>'
+                                html+='<a href="">Jobs'
+                                html+='</a>'
+                            html+='</li>'
+                            html+='<li>'
+                                html+='<a href="">Privacy'
+                                html+='</a>'
+                            html+='</li>'
+                            html+='<li>'
+                                html+='<a href="">Terms'
+                                html+='</a>'
+                            html+='</li>'
+                            html+='<br>'
+                            html+='<li>'
+                                html+='<a href="">Locations'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li> '
+                                html+='<a href="">Top Accounts'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li>'
+                                html+='<a href="">Hashtags'
+                                html+='</a>'
+                            html+='</li>'
+                            html+=' <li> '
+                                html+='<a href="">Language'
+                                html+=' </a>'
+                            html+='</li>'
+                        html+=' </ul>'
+                    html+=' <p style="margin-left:2rem; color:#C7C7C7">© 2021 INSTAGRAM FROM FACEBOOK'
+                    html+='</p>'
+                    html+='</div> '
+                    $("#rightCard").html(html)
+                    }
+                   
+                    var len = $('#scrollBar').attr("data-len")
+                    var id= $('#scrollBar').attr("data-id")
+                    if(len<=3){
+                        $('#next-' + id).css("opacity", "0")
+                    }
+                }
+            }
+            ajax.send();
+        }
+    
+
         // preview image before post
-        var selDiv = "";
 	    var storedFiles = [];
         var filesArr = ''
         var html = ""
@@ -388,16 +608,10 @@
                         $("#ptNew").css('opacity', "1");
                     })(i);
                 }
-            
         }
            
         function removeImage(n) {
-            $(".remove-"+n).removeAttr("id")
-            var regex = new RegExp(/<([^\s]+).*?id="i-([\d])".*?>(.*?)<\/div>/gi);
-            var matches = html.match(regex);
-            html = ''
-            html = matches.toString()
-            document.getElementsByClassName("remove-" + n)[0].remove();
+            $(".remove-" + n).remove();
             storedFiles.splice(n,1);
         }  
          
@@ -440,11 +654,6 @@
         }
 
         function removeVideo(n) {
-            $(".remove-video-"+n).removeAttr("id")
-            var regex = new RegExp(/<([^\s]+).*?id="v-([\d])".*?>(.*?)<\/div>/gi);
-            var matches = html_v.match(regex);
-            html_v = ''
-            html_v = matches.toString()
             $(".remove-video-" + n).remove();
             storedFiles_Video.splice(n,1);
         }
@@ -452,13 +661,13 @@
         // turnoff modal comment
         function returnNewfeed(){
             var span = document.getElementsByClassName("exit-modal-comment")[0]; // Get the <span> element that closes the modal 
-            span.addEventListener('contextmenu', function(ev) {
+            span.addEventListener('click', function(ev) {
                 ev.preventDefault();
                 $('.modal-com-new').css('display','none')
                 $('.sticky-top').css('z-index','1')
                 $('.card.nameCard').css('z-index','0')
                 $('body').removeClass('stop-scrolling')
-                showNewsfeed();
+                showNewsfeed("return");
             }, false);
 
         }
@@ -474,7 +683,8 @@
                     if (response.status == "success") {
                         $(".image").css('display', 'none')
                         document.getElementById("post-new-feed").querySelector("textarea[name='caption']").value = "";
-                        showNewsfeed();
+                        resetVarPost();
+                        showNewsfeed("add");
                         form.reset();
                     }
                     else {
@@ -487,8 +697,9 @@
 
             
             var data = new FormData(form);
-            var input = document.getElementById("file")
-            if(input.files.length>storedFiles.length){   // da xoa anh
+            var input_image = document.getElementById("file")
+            var input_video = document.getElementById("fileVideo")
+            if(input_image.files.length>storedFiles.length){   // da xoa anh
                 data.delete('image')
                 for(var i=0, len=storedFiles.length; i<len; i++) {
                 data.append('image', storedFiles[i],storedFiles[i].name);	
@@ -500,26 +711,34 @@
                     data.append('image', storedFiles[i],storedFiles[i].name);	
                 }
             }
-            if(input.files.length>storedFiles_Video.length){   // da xoa video
+            if(input_video.files.length>storedFiles_Video.length){   // da xoa video
                 data.delete('video')
                 for(var i=0, len=storedFiles_Video.length; i<len; i++) {
-                data.append('video', storedFiles_Video[i],storedFiles_Video[i].name);	
+                    data.append('video', storedFiles_Video[i]);	
                 }
             }
             else{                                        // them video
                 data.delete('video')
                 for(var i=0, len=storedFiles_Video.length; i<len; i++) {
-                    data.append('video', storedFiles_Video[i],storedFiles_Video[i].name);	
+                    data.append('video', storedFiles_Video[i]);	
                 }
             }
-            html=''
-            html_v=''
             ajax.send(data);
 
             return false;
 
         }
 
+        // reset variable form post new feed
+        function resetVarPost(){
+            html_v = "";
+            storedFiles_Video = [];
+            filesArr_Video = ''
+            storedFiles = [];
+            filesArr = ''
+            html = ""
+            temp=""
+        }
         // post comment card 
         function doPostComment(form,id){
             var ajax = new XMLHttpRequest();
@@ -531,7 +750,7 @@
                     if (response.status == "success") {
                         var html = ""
                         document.getElementById("post-comment-new").querySelector("textarea[name='commentPost']").value = "";
-                        showNewsfeed();
+                        showNewsfeed("comment");
                         form.reset();
                     }
                     else {
@@ -582,43 +801,49 @@
             var navbar= document.getElementsByClassName("navbar")[0]; 
             if (id) {
                 // When the user clicks the button, open the modal card
+                var ml = ''
+                ml += '<ul class="list-group listDot">'
+                    ml += '<li onclick="editPost('+"'"+id+"'"+')" style="color:red; font-weight:500">Edit'
+                    ml += '</li>'
+                    ml += '<hr class="hrList">'
+                    ml += '<li onclick="deletePost('+"'"+id+"'"+')">Delete'
+                    ml += '</li>'
+                    ml += '<hr class="hrList">'
+                    ml += '<li class="cancelList">Cancel'
+                    ml += '</li>'
+                ml += '</ul>'
+                $("#modCon").html(ml)
                 modal.style.display = "block";
                 modCon.style.display = "block";
-                // modal.style.opacity = "1";
-                $('.seeCard').css('z-index','-1')
                 $('.sticky-top').css('z-index','0')
                 $('.card').css('z-index','-1')
                 $('body').addClass('stop-scrolling')
 
-                span.onclick = function () {
-                modal.style.display = "none";
-                $('body').removeClass('stop-scrolling')
-                $('.sticky-top').css('z-index','1')
-                $('.card').css('z-index','0')
+                document.getElementsByClassName("cancelList")[0].addEventListener('click',function(){
+                    modal.style.display = "none";
+                    $('body').removeClass('stop-scrolling')
+                    $('.sticky-top').css('z-index','1')
+                    $('.card').css('z-index','0')
+                }) 
+                
             }
-            mode.onclick = function () {
-                modal.style.display = "none";
-                modCon.style.display = "none";
-                $('body').removeClass('stop-scrolling')
-                $('.sticky-top').css('z-index','1')
-                $('.card').css('z-index','0')
-            }
-            mod.onclick = function () {
-                modal.style.display = "none";
-                modCon.style.display = "none";
-                $('body').removeClass('stop-scrolling')
-                $('.sticky-top').css('z-index','1')
-                $('.card').css('z-index','0')
-            }
-            }
-            // When the user clicks on button cancle the modal
-           
-
-
-            // set id for button option
-
+                mode.onclick = function () {
+                    modal.style.display = "none";
+                    modCon.style.display = "none";
+                    $('body').removeClass('stop-scrolling')
+                    $('.sticky-top').css('z-index','1')
+                    $('.card').css('z-index','0')
+                }
+                mod.onclick = function () {
+                    modal.style.display = "none";
+                    modCon.style.display = "none";
+                    $('body').removeClass('stop-scrolling')
+                    $('.sticky-top').css('z-index','1')
+                    $('.card').css('z-index','0')
+                }
         }
-
+            // When the user clicks on button cancle the modal
+    
         // delete post 
         function deletePost(id){
             $.ajax({
@@ -630,31 +855,92 @@
                 cache: false,
                 success: function (responseText) {
                     if(responseText.status=="success"){
-                        showNewsfeed();
+                        showNewsfeed("delete");
                     }
                 }
             })
         }
 
+        // post edit new feed
+        var arrImg=[]
+        var arrVid=[]
+        function doPost_Modal(form,id) {
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/updatePost", true);
+
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response.status == "success") {
+                        $("#modal-edit").css("display","none")
+                        $("#modal-edit-content").css("display","none")
+                        $('body').removeClass('stop-scrolling-edit')
+                        resetVar();
+                        showNewsfeed("update");
+                        form.reset(); 
+                    }
+                    else {
+                        resetVar();
+                        form.reset(); 
+                        alert(response.error)
+                    }
+
+                }
+
+            };
+
+            var data = new FormData(form);
+            // case : them anh moi
+            if(storedFiles_Img.length>0){   // da xoa anh
+                data.delete('image')
+                for(var i=0, len=storedFiles_Img.length; i<len; i++) {
+                    data.append('image', storedFiles_Img[i]);	
+                }
+            }
+            //  // case : them video moi
+            if(storedFiles_Video.length>0){   // da xoa video
+                data.delete('video')
+                for(var i=0, len=storedFiles_Video.length; i<len; i++) {
+                    data.append('video', storedFiles_Video[i]);	
+                }
+            }
+            // case : xoa anh, sua caption (or ko thay doi j)=> ko them anh
+            for(var i=0;i<arrImg.length; i++) {
+                data.append("image", JSON.stringify(arrImg[i]));	
+            }
+            // case : xoa video, sua caption (or ko thay doi j)=> ko them video
+            console.log(arrVid.length)
+              for(var i=0;i<arrVid.length; i++) {
+                data.append("video", JSON.stringify(arrVid[i]));	
+            }
+            data.append("_id",id)
+            ajax.send(data);
+
+            return false;
+
+        }
+     
         // edit post
-        function editPost(id){
+        var html_img =""
+        var html_vid =""
+        var gan = ""
+        var vid = ""
+        var len_img = []
+        var len_vid = []
+        function editPost(id_post){
             var span = document.getElementsByClassName("cancelList")[1]; // Get the <span> element that closes the modal
-            var mod = document.getElementsByClassName("modal")[1]; 
-            var input = document.getElementById('file-modal');
-            var output = document.getElementById('img-modal-edit');
-            var arrImage = []
-            var arrVideo = []
-            var html_img = ''
-            if(id){
+            var mod = document.getElementsByClassName("modal")[1];
+            var j=0
+            if(id_post){
                 $("#modal-edit").css("display","block")
                 $("#modal-edit-content").css("display","block")
                 $('body').addClass('stop-scrolling-edit')
             }
             $.ajax({
                 method: "POST",
-                url: "/getPost",
+                url: "/getPostModal",
                 data: {
-                    _id: id
+                    _id: id_post
                 },
                 cache: false,
                 success: function (responseText) {
@@ -667,7 +953,7 @@
                         // modal comment 
                         html +='<i class="fas fa-times exit-edit" id="exit-edit" >'
                         html +='</i>'
-                        html+='<form id="post-new-feed" class="post-feed-edit" enctype="multipart/form-data" onsubmit="return doPost(this);">'
+                        html+='<form id="post-new-feed-modal" class="post-feed-edit" enctype="multipart/form-data" onsubmit="return doPost_Modal(this,'+"'"+id_post+"'"+');">'
 
                             html+='<div class="card nameCard" id="Newfeed">'
 
@@ -682,7 +968,7 @@
                                         html+='<div class="coverPost">'
 
                                             html+='<div class="comment-text-area" id="textPost">'
-                                                html+='<textarea id="cmText" cols="60" rows="4" type="text" name="caption" placeholder="Add comment ...">' 
+                                                html+='<textarea id="cmText" cols="60" rows="4" type="text" name="caption1" placeholder="Add comment ...">' 
                                                     if(data.caption){
                                                         html+=data.caption
                                                     }
@@ -702,47 +988,40 @@
                                             html+='<div class="inner-width">'
                                                 html+='<div class="gallery" id="img-modal-edit">'
                                                     if(data.image.length > 0){
-                                                        arrImage = data.image
-                                                        for(var i = 0; i< arrImage.length;i++){
-                                                            var image =  arrImage[i]
+                                                        len_img=data.image
+                                                        for(var i = 0; i< len_img.length;i++){
+                                                            var j = 11+i
+                                                          
+                                                            arrImg.push(data.image[i])
+                                                            var image =  data.image[i]
                                                             var des = image.destination.split('./public/')[1] + '/'
                                                             var name = image.originalname
-                                                            if(input.files.length > 0){
-                                                                var fileReader = new FileReader();
-                                                                fileReader.onload = function (event) {
-                                                                    html_img += '<div class="image image-tag check-image remove-'+i+'" id="i-' + i + '">'
-                                                                        html_img += '<div class="cover-remove">'
-                                                                            html_img += '<span class="remove-image" id="span-' + index + '" " onclick="removeImage('+index+')">'
-                                                                                html_img += `&#x2715`
-                                                                            html_img += '</span>'
-                                                                            html_img += '</div>'
-                                                                        html_img += '<img src="' + event.target.result + '" id="img-' + i + '" name="imagePost" " alt="">'
-                                                                    html_img += ' </div>'                        
-                                                                    output.innerHTML = html_img; 
-                                                                };
-                                                                fileReader.readAsDataURL(arrImage[i]);
-                                                                $("#ptNew-modal").css('opacity', "1");
-                                                            }
-                                                        }
-                                                            html += '<div class="image image-tag check-image remove-'+i+'" id="i-' + i + '">'
+                                                        
+                                                            html += '<div class="image image-modal clone-img remove-mod-'+j+'" id="md-'+j+'">'
                                                                 html += '<div class="cover-remove">'
-                                                                    html += '<span class="remove-image" id="span-' + i + '" " onclick="removeImage('+i+')">'
-                                                                    html += `&#x2715`
+                                                                    html += '<span class="remove-image" id="'+i+'" data-name="'+name+'" onclick="removeImage_Load(this,'+j+')">'
+                                                                        html += `&#x2715`
                                                                     html += '</span>'
                                                                 html += '</div>'
-                                                                html += '<img src="' + des+name + '" id="img-' + i + '" name="imagePost" " alt="">'
-                                                            html += ' </div>'
+                                                                html += '<img src="' + des+name + '"  >'
+                                                            html+= ' </div>'
+                                                           
+                                                         
+                                                        }
                                                     }
                                                 html+='</div>'
                                                 html+='<div class="gallery" id="vid-modal-edit">'
                                                     if(data.video.length > 0){
-                                                       for(var i = 0 ; i < data.video.length;i++){
+                                                        len_vid=data.video
+                                                       for(var i = 0 ; i < len_vid.length;i++){
+                                                           var j = 20+i
+                                                           arrVid.push(data.video[i])
                                                            var video =  data.video[i]
                                                             var des = video.destination.split('./public/')[1] + '/'
                                                             var name = video.originalname
-                                                            html += '<div class="image video-tag check-video remove-video-'+i+'""  id="v-'+i+'">'
+                                                            html += '<div  class="image clone-vid remove-vid-'+j+'" id="vd-'+j+'">'
                                                                 html += '<div class="cover-remove-video">'
-                                                                        html += '<span class="remove-vid" id="spa' + i + '" onclick="removeVideo(' + i + ')" >'
+                                                                        html += '<span class="remove-vid" id="'+i+'" data-name="'+name+'" onclick="removeVideo_Load(this,'+j+')" >'
                                                                             html += '&#x2715'
                                                                         html += '</span>'
                                                                 html += '</div>'
@@ -778,7 +1057,7 @@
                                                     html+='<path d="m4.57 16.93c-.128 0-.256-.049-.354-.146-.195-.195-.195-.512 0-.707l4.723-4.723c.566-.566 1.555-.566 2.121 0l1.406 1.406 3.892-4.67c.283-.339.699-.536 1.142-.54h.011c.438 0 .853.19 1.139.523l5.23 6.102c.18.209.156.525-.054.705-.209.18-.524.157-.705-.054l-5.23-6.102c-.097-.112-.231-.174-.38-.174-.104-.009-.287.063-.384.18l-4.243 5.091c-.09.108-.221.173-.362.179-.142.01-.277-.046-.376-.146l-1.793-1.793c-.189-.188-.518-.188-.707 0l-4.723 4.723c-.097.097-.225.146-.353.146z" />'
                                                 html+='</g>'
                                             html+='</svg>'
-                                            html+='<input type="file" name="image" accept="image/*" class=" upload-photo" id="file-modal" multiple onchange="previewPostImage()">'
+                                            html+='<input type="file" name="image" accept="image/*" class=" upload-photo" id="fileImage-modal" multiple onchange="previewPostImage_Modal()">'
                                         html+='</label>'
 
 
@@ -787,7 +1066,7 @@
                                             html+='<svg height="24" viewBox="0 -87 472 472" width="24">'
                                                 html+='<path d="m467.101562 26.527344c-3.039062-1.800782-6.796874-1.871094-9.898437-.179688l-108.296875 59.132813v-35.480469c-.03125-27.601562-22.398438-49.96875-50-50h-248.90625c-27.601562.03125-49.96875 22.398438-50 50v197.421875c.03125 27.601563 22.398438 49.96875 50 50h248.90625c27.601562-.03125 49.96875-22.398437 50-50v-34.835937l108.300781 59.132812c3.097657 1.691406 6.859375 1.625 9.894531-.175781 3.039063-1.804688 4.898438-5.074219 4.898438-8.601563v-227.816406c0-3.53125-1.863281-6.796875-4.898438-8.597656zm-138.203124 220.898437c-.015626 16.5625-13.4375 29.980469-30 30h-248.898438c-16.5625-.019531-29.980469-13.4375-30-30v-197.425781c.019531-16.558594 13.4375-29.980469 30-30h248.90625c16.558594.019531 29.980469 13.441406 30 30zm123.101562-1.335937-103.09375-56.289063v-81.535156l103.09375-56.285156zm0 0" />'
                                             html+='</svg>'
-                                            html+='<input type="file" name="video" accept="video/*" class="upload-photo" id="fileVideo-modal" multiple onchange="previewPostVideo()">'
+                                            html+='<input type="file" name="video" accept="video/*" class="upload-photo" id="fileVideo-modal" multiple onchange="previewPostVideo_Modal()">'
                                         html+='</label>'
 
                                         html+='<button class="btn  btnComment btnOpacity post-opa" id="ptNew-modal" type="submit">Post'
@@ -800,16 +1079,25 @@
                             html+='</div>'
 
                         html+='</form>'
-                        }
+                    }
                         $("#modal-edit-content").html(html)
                          // When the user clicks on button cancle the modal
                         document.getElementsByClassName("exit-edit")[0].addEventListener("click",function(){
                             $("#modal-edit").css("display","none")
                             $("#modal-edit-content").css("display","none")
                             $('body').removeClass('stop-scrolling-edit')
+                            resetVar();
                         } );
+                        gan =$(".clone-img").clone()
+                        vid =$(".clone-vid").clone()    
+                        for(var a=0;a<len_img.length;a++){
+                            html_img+=gan[a].outerHTML
+                        }
+                        for(var b=0;b<len_vid.length;b++){
+                            html_vid+=vid[b].outerHTML
+                        }
+                        $("#ptNew-modal").css("opacity","1")
                 }
-                
                 },
                 error: function (responseText) {
                     alert(responseText)
@@ -817,7 +1105,146 @@
             });
         
         }
+         
+        // preview image before post
+	    var storedFiles_Img = [];
+        var filesArr_Img = ''
+        var html_pre = ''
+        function previewPostImage_Modal() {
+            var input = document.getElementById('fileImage-modal');
+            var output = document.getElementById('img-modal-edit');
+            filesArr_Img=  Array.prototype.slice.call(input.files); 
+            if($(".image").hasClass("clone-img")){
+                html_pre=''
+                html_pre=html_img
+            }
+            if($(".check-modal").hasClass("image-modal")){
+                html_pre=''
+                html_pre=html_img
+            }
+            for (var i = 0; i < filesArr_Img.length; ++i) {
+                storedFiles_Img.push(filesArr_Img[i])
+            }
+            for(var i = 0; i< storedFiles_Img.length;i++){
+                (function (index) {
+                var fileReader = new FileReader();
+                        fileReader.onload = function (event) {
+                            html_pre += '<div class="image image-modal check-modal remove-modal-'+index+'" id="m-' + index + '">'
+                                html_pre += '<div class="cover-remove">'
+                                    html_pre += '<span class="remove-image" id="span-' + index  + '"  onclick="removeImage_Modal('+index +')">'
+                                    html_pre += `&#x2715`
+                                    html_pre += '</span>'
+                                html_pre += '</div>'
+                                html_pre += '<img src="' + event.target.result + '" id="img-' + index  + '" name="imagePost" alt="">'
+                            html_pre += ' </div>'                        
+                            output.innerHTML = html_pre; 
+                        };
+                        fileReader.readAsDataURL(storedFiles_Img[i]); 
+                        $("#ptNew-modal").css('opacity', "1");
+                    })(i);
+                }
+           
+        }
+        
+        function removeImage_Load(self,n) {
+            var name = $(self).attr("data-name")
+            $("#md-"+n).remove()
+            for(var i=0;i<arrImg.length;i++){
+                if(name.toString() == arrImg[i].originalname){
+                    arrImg.splice(i,1)
+                }
+            }
+            html_img=''
+            gan =$(".clone-img").clone()
+            for(var a=0;a<arrImg.length;a++){
+                html_img+=gan[a].outerHTML
+            }
+        } 
+       
+        function removeImage_Modal(n) {
+            $(".remove-modal-" + n).remove();
+            storedFiles_Img.splice(n,1);
+        }  
+         
+        // preview video before post
+        var storedFiles_Video = [];
+        var filesArr_Video = ''
+        var html_aft = ''
+        function previewPostVideo_Modal() {
+            var input = document.getElementById('fileVideo-modal');
+            var output = document.getElementById('vid-modal-edit');
+            filesArr_Video=  Array.prototype.slice.call(input.files); 
+            if($(".clone-vid").hasClass("image")){
+                html_aft=''
+                html_aft=html_vid
+            }
+            if($(".check-vid").hasClass("vid-tag")){
+                html_aft=''
+                html_aft=html_vid
+            }
+            for (var i = 0; i < filesArr_Video.length; ++i) {
+                storedFiles_Video.push(filesArr_Video[i])
+            }
+            for (var i = 0; i < storedFiles_Video.length; ++i) {
+                (function (index) {
+                    var fileReader = new FileReader();
+                    fileReader.onload = function (event) {
+                        html_aft += '<div class="image vid-tag check-vid remove-vid-'+index+'""  id="vdo-'+index+'">'
+                            html_aft += '<div class="cover-remove-video">'
+                                    html_aft += '<span class="remove-vid" id="spa' + index + '" onclick="removeVideo_Modal(' + index + ')" >'
+                                        html_aft += '&#x2715'
+                                    html_aft += '</span>'
+                            html_aft += '</div>'
+                            html_aft += '<video  id="video-'+index+'" src="' + event.target.result + '"  id="post-video-preview" controls >'
+                            html_aft += '</video>'
+                        html_aft += '</div>'
+                        output.innerHTML = html_aft;
+                    };
+                    fileReader.readAsDataURL(storedFiles_Video[i]);
+                    $("#ptNew-modal").css('opacity', "1");
+                })(i);
+            }
 
+        }
+
+        function removeVideo_Load(self,n) {
+            var name = $(self).attr("data-name")
+            $("#vd-"+n).remove()
+            for(var i=0;i<arrVid.length;i++){
+                if(name.toString() == arrVid[i].originalname){
+                    arrVid.splice(i,1)
+                }
+            }
+            html_vid=''
+            vid =$(".clone-vid").clone()
+            for(var a=0;a<arrVid.length;a++){
+                html_vid+=vid[a].outerHTML
+            }  
+        } 
+       
+        function removeVideo_Modal(n) {
+            $(".remove-vid-" + n).remove();
+            storedFiles_Video.splice(n,1);
+        }
+
+        // reset variable
+        function resetVar(){
+            html_img =""
+            html_vid =""
+            gan = ""
+            vid = ""
+            len_img = []
+            len_vid = []
+            storedFiles_Img = [];
+            filesArr_Img = ''
+            html_pre = ''
+            storedFiles_Video = [];
+            filesArr_Video = ''
+            html_aft = ''
+            arrImg=[]
+            arrVid=[]
+        }
+       
         // display modal comment card newfeed
         function modalComment(self,id_post_current) {
             $.ajax({
@@ -1291,7 +1718,7 @@
                         if (c == "#262626") {
                             $(self).toggleClass("anime")
                             $(self).toggleClass("ani")
-                            showNewsfeed()
+                            showNewsfeed("like")
                         }
 
                     }
@@ -1303,7 +1730,7 @@
                             } else {
                                 $(self).toggleClass("anime")
                             }
-                            showNewsfeed()
+                            showNewsfeed("unlike")
                         }
                     }
                 },
@@ -1381,46 +1808,54 @@
         }
 
         // silde image Card
+        var t = 0
         function slideImage(direction, size, id) {
             var container = document.getElementById('list-image-newfeed-' + id);
             var x;
             var x1;
             var temp;
+         
             scrollCompleted = 0;
             var slideVar = setInterval(function () {
                 if (size > 1) {
                     if (direction == "right") {
+                        t+=1;
                         container.scrollLeft += 59;
-                        x = container.scrollLeft
-                        if (x == (size * 590) - 590) {
+                        if (t>=(size-1)*10) {
                             $('#next-img-' + id).css("opacity", "0")
+                            $('#prev-img-' + id).css("opacity", "0.8")
                         } else {
                             $('#prev-img-' + id).css("opacity", "0.8")
                             $('#next-img-' + id).css("opacity", "0.8")
                         }
+                        console.log(t)
                     }
+
                     if (direction == "left") {
-                        container.scrollLeft -= 59;
-                        x1 = container.scrollLeft
-                        if (x1 == 0) {
+                        t-=1;
+                        container.scrollLeft -= 59;            
+                        if (t<10) {
                             $('#prev-img-' + id).css("opacity", "0")
+                            $('#next-img-' + id).css("opacity", "0.8")
                         } else {
                             $('#prev-img-' + id).css("opacity", "0.8")
                             $('#next-img-' + id).css("opacity", "0.8")
                         }
-
+                        console.log(t)
                     }
                     scrollCompleted += 10;
                     if (scrollCompleted >= 100) {
                         window.clearInterval(slideVar);
                     }
+                  
                 }
 
             }, 45);
-        
+    
         }
 
          // silde image card modal
+         var ax = 0
          function slideImageModal(direction, size, id) {
             var container = document.getElementById('list-modal-' + id);
             var x;
@@ -1430,26 +1865,28 @@
             var slideVar = setInterval(function () {
                 if (size > 1) {
                     if (direction == "right") {
+                        ax+=1;
                         container.scrollLeft += 58;
-                        x = container.scrollLeft
-                        console.log("x\n"+x)
-                        if (x == (size * 580) - 580) {
+                        if (ax>=(size-1)*10) {
                             $('#next-img-modal-' + id).css("opacity", "0")
+                            $('#prev-img-modal-' + id).css("opacity", "0.8")
                         } else {
                             $('#prev-img-modal-' + id).css("opacity", "0.8")
                             $('#next-img-modal-' + id).css("opacity", "0.8")
                         }
+                        console.log(ax)
                     }
                     if (direction == "left") {
+                        ax-=1;
                         container.scrollLeft -= 58;
-                        x1 = container.scrollLeft
-                        if (x1 == 0) {
+                        if (ax < 10) {
                             $('#prev-img-modal-' + id).css("opacity", "0")
+                            $('#next-img-modal-' + id).css("opacity", "0.8")
                         } else {
                             $('#prev-img-modal-' + id).css("opacity", "0.8")
                             $('#next-img-modal-' + id).css("opacity", "0.8")
                         }
-
+                        console.log(ax)
                     }
                     scrollCompleted += 10;
                     if (scrollCompleted >= 100) {

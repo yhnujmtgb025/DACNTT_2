@@ -63,12 +63,19 @@ const get_Follow= (req, res) => {
     })
     .limit(5)
     .toArray(function(err,data){
+        var userCur=[]
+        for(var i =0; i < data.length;i++){   
+            if(data[i]._id == user._id.toString()){
+                userCur.push(data[i])
+            }
+        }
         res.json({
             "status":"scroll",
             "right":"right",
             idCurrent:user._id,
             data:data,
             curUser:user,
+            userCur:userCur,
             plane:""
         })
     })
@@ -474,7 +481,8 @@ const profile_get = (req, res) => {
         var lengthPost = 0;
         var like=0
         var post =[]
-      
+        var following='' 
+        var follower='' 
         for(var i = 0;i<user.length;i++){
             image=user[i].profileImage
             fullname=user[i].fullname

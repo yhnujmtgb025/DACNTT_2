@@ -1,4 +1,7 @@
 <%- include ("../shares/header") %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
 
     <!-- List user not follow -->
 
@@ -60,6 +63,85 @@
                       <p>Your message</p>
                   </div>
 
+                  <div class="cover-receiver">
+                    <div class="gallery-section">
+                      <div class="inner-width">
+                        <div class="edit-img-msg" style="border: 1px solid red;">
+                          <!-- <i class="fas fa-ellipsis-h edit-img"></i> -->
+                          <div class="gallery stack-img" >
+                              <a href="img/1.png" class="image img-one">
+                                <img src="img/1.png" alt="">
+                              </a>
+                              <!-- <a href="img/2.png" class="image img-a">
+                                <img src="img/2.png" alt="">
+                              </a>
+                              <a href="img/2.png" class="image img-a">
+                                <img src="img/2.png" alt="">
+                              </a>
+                              <a href="img/2.png" class="image img-a">
+                                <img src="img/2.png" alt="">
+                              </a>
+                              <a href="img/2.png" class="image img-a">
+                                <img src="img/2.png" alt="">
+                              </a> -->
+                          </div>
+                        </div>
+                        <div class="edit-vid-msg" style="border: 1px solid yellow; flex-wrap: wrap-reverse;">
+                          <div class="gallery stack-img stack-vid" >
+                            <video controls>
+                              <source src="video/a.mp4" type="video/mp4" >
+                            </video>
+                            <i class="fas fa-ellipsis-h edit-video">
+                            </i> 
+                             
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="receiver">
+                          hehehehe
+                    </div>
+                  </div>
+                 
+                 
+                  <!-- <div class="cover-sender">
+                    <div class="sender">
+                        hehehehe
+                    </div>
+                
+                    <div class="gallery-section">
+                      <div class="inner-width">
+                        <div class="gallery stack-img-send stack-vid">
+                          <iframe src="video/a.mp4"  frameborder="0" sandbox></iframe>
+                        </div>
+                        <div class="gallery stack-img-send">
+                         
+                          <a href="img/1.png" class="image img-a">
+                            <img src="img/1.png" alt="">
+                          </a>
+                
+                         <a href="img/2.png" class="image img-a">
+                            <img src="img/2.png" alt="">
+                          </a>
+                
+                          <a href="img/3.png" class="image img-a">
+                            <img src="img/3.png" alt="">
+                          </a>
+                
+                          <a href="img/4.png" class="image img-a">
+                            <img src="img/4.png" alt="">
+                          </a>
+                
+                          <a href="img/5.png" class="image img-a">
+                            <img src="img/5.png" alt="">
+                          </a>
+                        </div>
+                      
+                      </div>
+                    </div>
+                  </div> -->
+
+                
                 </div>
             
             
@@ -69,7 +151,39 @@
               <div class="inputFlex ">
                
                 <div class="input-msg">
+                  <div class="gallery-section">
+                    <div class="inner-width">
+                      <!-- <div class="gallery pre-img">
+
+                          <a href="img/1.png" class="image ">
+                            <img src="img/1.png" alt="">
+                          </a>
+                
+                          <a href="img/2.png" class="image ">
+                            <img src="img/2.png" alt="">
+                          </a>
+                
+                          <a href="img/3.png" class="image ">
+                            <img src="img/3.png" alt="">
+                          </a>
+                
+                          <a href="img/4.png" class="image ">
+                            <img src="img/4.png" alt="">
+                          </a>
+                
+                          <a href="img/5.png" class="image ">
+                            <img src="img/5.png" alt="">
+                          </a>
+                      </div>
+                      <div class="gallery pre-vid">
+                        <iframe src="video/a.mp4" frameborder="0" sandbox></iframe>
+                      </div> -->
+                    </div>
+                  </div>
+
+
                   <form id="post-message" onsubmit="return sendMessageFriends(this)">
+                    
                       <button class="btnSmile" type="button" >
                         <div class="btnCover" >
                           <svg aria-label="Emoji" class="faSmile" fill="#262626" height="25" viewBox="0 0 48 48" width="25">
@@ -81,16 +195,52 @@
 
                       <input type="hidden" id="id-follow" name="id_follow" value="">
                      <input type="hidden" id="_id" name="_id" value="">
-                     <input type="text" name="message" class="send-input" placeholder="Message..." onfocus="this.value=''"/>
                     
-                      <a href="#" >
-                          <button type="submit" >
-                          <svg aria-label="Direct" class="_8-yf5 "  height="30" viewBox="0 0 48 48" width="30">
+                     <input type="text" name="message" class="send-input" id="msg-enter" placeholder="Message..." autocomplete="off" onfocus="this.value=''"/>
+
+                    
+                     
+                      <a href="#" style=" cursor: pointer; display: flex;">
+                          <button type="submit">
+                          </button>
+                            <label class="fileContainer" style=" cursor: pointer;">
+                              <svg id="_x31_" enable-background="new 0 0 24 24" height="24"
+                                  viewBox="0 0 24 24" width="24">
+                                  <g>
+                                      <path
+                                          d="m17.453 24c-.168 0-.34-.021-.51-.066l-15.463-4.141c-1.06-.292-1.692-1.39-1.414-2.45l1.951-7.272c.072-.267.346-.422.612-.354.267.071.425.346.354.612l-1.95 7.27c-.139.53.179 1.082.71 1.229l15.457 4.139c.531.14 1.079-.176 1.217-.704l.781-2.894c.072-.267.346-.426.613-.353.267.072.424.347.353.613l-.78 2.89c-.235.89-1.045 1.481-1.931 1.481z" />
+                                  </g>
+                                  <g>
+                                      <path
+                                          d="m22 18h-16c-1.103 0-2-.897-2-2v-12c0-1.103.897-2 2-2h16c1.103 0 2 .897 2 2v12c0 1.103-.897 2-2 2zm-16-15c-.551 0-1 .449-1 1v12c0 .551.449 1 1 1h16c.551 0 1-.449 1-1v-12c0-.551-.449-1-1-1z" />
+                                  </g>
+                                  <g>
+                                      <path
+                                          d="m9 9c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2zm0-3c-.551 0-1 .449-1 1s.449 1 1 1 1-.449 1-1-.449-1-1-1z" />
+                                  </g>
+                                  <g>
+                                      <path
+                                          d="m4.57 16.93c-.128 0-.256-.049-.354-.146-.195-.195-.195-.512 0-.707l4.723-4.723c.566-.566 1.555-.566 2.121 0l1.406 1.406 3.892-4.67c.283-.339.699-.536 1.142-.54h.011c.438 0 .853.19 1.139.523l5.23 6.102c.18.209.156.525-.054.705-.209.18-.524.157-.705-.054l-5.23-6.102c-.097-.112-.231-.174-.38-.174-.104-.009-.287.063-.384.18l-4.243 5.091c-.09.108-.221.173-.362.179-.142.01-.277-.046-.376-.146l-1.793-1.793c-.189-.188-.518-.188-.707 0l-4.723 4.723c-.097.097-.225.146-.353.146z" />
+                                  </g>
+                              </svg>
+                              <input type="file" name="image" accept="image/*" class="upload-photo" id="file"
+                                  multiple onchange="previewPostImage()">
+                          </label>
+                          
+                          <label class="fileVideo" style="margin-left: 0.5rem;cursor: pointer;">
+                            <svg height="24" viewBox="0 -87 472 472" width="24">
+                                <path
+                                    d="m467.101562 26.527344c-3.039062-1.800782-6.796874-1.871094-9.898437-.179688l-108.296875 59.132813v-35.480469c-.03125-27.601562-22.398438-49.96875-50-50h-248.90625c-27.601562.03125-49.96875 22.398438-50 50v197.421875c.03125 27.601563 22.398438 49.96875 50 50h248.90625c27.601562-.03125 49.96875-22.398437 50-50v-34.835937l108.300781 59.132812c3.097657 1.691406 6.859375 1.625 9.894531-.175781 3.039063-1.804688 4.898438-5.074219 4.898438-8.601563v-227.816406c0-3.53125-1.863281-6.796875-4.898438-8.597656zm-138.203124 220.898437c-.015626 16.5625-13.4375 29.980469-30 30h-248.898438c-16.5625-.019531-29.980469-13.4375-30-30v-197.425781c.019531-16.558594 13.4375-29.980469 30-30h248.90625c16.558594.019531 29.980469 13.441406 30 30zm123.101562-1.335937-103.09375-56.289063v-81.535156l103.09375-56.285156zm0 0" />
+                            </svg>
+                            <input type="file" name="video" accept="video/*" class="upload-photo"
+                                id="fileVideo" multiple onchange="previewPostVideo()">
+                        </label>
+                          <!-- <svg aria-label="Direct" class="_8-yf5 "  height="30" viewBox="0 0 48 48" width="30">
                               <path
                               id="#" d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">
                               </path>
-                          </svg>
-                        </button>
+                          </svg> -->
+                       
                       </a>
                     </form>
               </div>
@@ -108,6 +258,17 @@
   var socket= io();
   var sender = ''
   $(".inputFlex").css('display','none')
+  
+
+ 
+    $(".cover-sender").magnificPopup({
+      delegate: 'a',
+      type: 'image',
+      gallery:{
+        enabled: true
+      }
+    });
+
   function directPerson(self,id,id_follow,image,name,name_current){
       $("img.pic").attr("src",image)
       $("#name-selected").text(name)
@@ -139,12 +300,16 @@
                               var inbox = follow.inbox[j]
                               if(inbox.from.toString() ==  responseText.id.toString()){
                                 sender =  responseText.id.toString()
-                                html += '<div class="receiver">'
-                                  html += inbox.message
+                                html += '<div class="cover-receiver">'
+                                  html += '<div class="receiver">'
+                                    html += inbox.message
+                                  html += '</div>'
                                 html += '</div>'
                               }else{
-                                html += '<div class="sender">'
-                                  html += inbox.message
+                                html += '<div class="cover-sender">'
+                                  html += '<div class="sender">'
+                                    html += inbox.message
+                                  html += '</div>'
                                 html += '</div>'
                                 // html += '<div class="heart">❤️'
                                 // html += '</div>'
@@ -164,13 +329,17 @@
   socket.on("messageReceived",(msg)=>{
     var html = ""
       if(msg.from){
-        html += '<div class="receiver">'
-          html += msg.message
+        html += '<div class="cover-receiver">'
+          html += '<div class="receiver">'
+            html += msg.message
+          html += '</div>'
         html += '</div>'
       }
       if(msg.to){
-        html += '<div class="sender">'
-        html += msg.message
+        html += '<div class="cover-sender">'
+            html += '<div class="sender">'
+              html += msg.message
+            html += '</div>'
         html += '</div>'
       }
       var chat = $(".frame-chat")

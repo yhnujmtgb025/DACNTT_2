@@ -17,7 +17,10 @@ function route(app) {
     // handle newfeed
     app.post('/addPost',PostController.post_Newfeed );
     app.post("/getNewsfeed", PostController.get_Newfeed);
+    app.post("/getLoadNewfeed", PostController.get_Newfeed_Loadmore);
+    app.post("/updatePost", PostController.post_UpdateNewFeed);
     app.post("/getPost", PostController.get_PostModal);
+    app.post("/getPostModal", PostController.get_PostModal);
 
     // handle interaction
     app.post("/toggleLike",PostController.post_ToggleLike);

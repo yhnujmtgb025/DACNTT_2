@@ -22,17 +22,16 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
+// post new feed
 const post_Newfeed = function (req, res) {
   var user= req.session.user;
-
-  var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }, { name: 'image-edit', maxCount: 10 }])
+  var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
   uploader(req, res, next => {
     var { caption } = req.body
     var img = []
     var video = []
     var type = []
     var createdAt = new Date().getTime();  
-    console.log(req.files)
     var files = []
     files = files.concat(req.files)
     if (files[0].image != null && files[0].video != null) {
@@ -102,6 +101,7 @@ const post_Newfeed = function (req, res) {
                 "video": video,
                 "type": type,
                 "createdAt": createdAt,
+                "editedAt":"",
                 "likers": [],
                 "comments": [],
                 "shares": []
@@ -116,60 +116,343 @@ const post_Newfeed = function (req, res) {
         });
       }
      });
-})}
-// trang home
-
-const get_Newfeed = function (req, res) {
-      var id = req.session.user._id;
-      User.collection.findOne({
-        "_id":ObjectId(id)
-      },function(err,user){
-        if(err){
-          res.json({"error":err})
-        }
-        if(user == null){
-          res.redirect("/login")
-        }else{
-         var ids = [];
-
-        //  bài post thằng mình đang follow
-         if(user.followings.length > 0){
-           for(var i =0 ;i < user.followings.length; i++){
-              var follow = user.followings[i]
-              ids.push(follow.idFollowing);
-           }
-         }
-       
-        //  bai post của mình
-         if(user.posts){
-            for(var i =0 ;i < user.posts.length; i++){
-              var post = user.posts[i]
-              ids.push(post.myPost);
-            }
-         }
-      
-          Post.collection.find({
-            "user._id": {
-                $in: ids
-              }
-          })
-          .sort({
-            "createdAt": -1
-          })
-          .toArray(function (error, data) {
-            res.json({
-              "status": "success",
-              "message": "Record has been fetched",
-              "data": data,
-              "id":id,
-              "user":user
-            });
-          });
-        }
-        })
+  })
 
 }
 
+// get new feed
+const get_Newfeed = function (req, res) {
+      var id = req.session.user._id;
+      var dataUser=''
+      var sumPost =0
+      var idCurrent=''
+      var uploader = upload.any()
+      uploader(req, res, next => {
+        var {mode} = req.body
+        mode = JSON.parse(mode)
+        
+        User.collection.findOne({
+          "_id":ObjectId(id)
+        },function(err,user){
+          if(err){
+            res.json({"error":err})
+          }
+          if(user == null){
+            res.redirect("/login")
+          }else{
+           var ids = [];
+  
+          //  bài post thằng mình đang follow
+           if(user.followings.length > 0){
+             for(var i =0 ;i < user.followings.length; i++){
+                var follow = user.followings[i]
+                ids.push(follow.idFollowing);
+             }
+           }
+         
+          //  bai post của mình
+          var post = ''
+           if(user.posts){
+             for(var i =0 ;i < user.posts.length;i++){
+              post = user.posts[i].myPost
+             }
+             
+           }
+           if(post){
+            ids.push(post);
+           }
+      
+           User.collection.find({
+           })
+           .toArray(function(err,data){
+                dataUser=data
+           })
+  
+           Post.collection.find({
+            "user._id": {
+                $in: ids
+              }
+            }).toArray(function (error, data) {
+                sumPost=data.length
+            });
+            
+            if(mode == "newload"){
+            
+                Post.collection.find({
+                  "user._id": {
+                      $in: ids
+                    }
+                })
+                .sort({
+                  "createdAt": -1
+                })
+                .limit(1)
+                .toArray(function (error, data) {
+                  res.json({
+                    "status": "success",
+                    "message": "Record has been fetched",
+                    "data": data,
+                    "dataUser":dataUser,
+                    "idCurrent":user._id,
+                    "id":id,
+                    "user":user,
+                    "sumPost":sumPost
+                  });
+                });
+            }
+            else{
+            
+              Post.collection.find({
+                  "user._id": {
+                    $in: ids
+                  }
+              })
+              .sort({
+                "createdAt": -1
+              })
+              .toArray(function (error, data) {
+                res.json({
+                  "status": "success",
+                  "message": "Record has been fetched",
+                  "data": data,
+                  "dataUser":dataUser,
+                  "idCurrent":user._id,
+                  "id":id,
+                  "user":user,
+                  "sumPost":sumPost
+                });
+              });
+            }
+            
+         
+          }
+          
+        })
+
+
+      })
+}
+
+// get new feed load more
+const get_Newfeed_Loadmore = function (req, res) {
+  var id = req.session.user._id;
+  var dataUser=''
+  var idCurrent=''
+  var uploader = upload.any()
+  uploader(req, res, next => {
+    var {id_post, posted} = req.body
+    var post_load = []
+    var pos =  JSON.parse(id_post)
+    posted = JSON.parse(posted)
+    var lastPost = ''
+    for(var i =0; i< pos.length;i++){
+      post_load.push(pos[i])
+    }
+    if(post_load.length > 0){
+      lastPost=post_load[post_load.length-1]
+    }
+
+    User.collection.findOne({
+    "_id":ObjectId(id)
+    },function(err,user){
+    if(err){
+      res.json({"error":err})
+    }
+    if(user == null){
+      res.redirect("/login")
+    }else{
+    var ids = [];
+
+    //  bài post thằng mình đang follow
+    if(user.followings.length > 0){
+      for(var i =0 ;i < user.followings.length; i++){
+          var follow = user.followings[i]
+          ids.push(follow.idFollowing);
+      }
+    }
+
+  //  bai post của mình
+    var post=''
+    if(user.posts){
+      for(var i =0 ;i < user.posts.length;i++){
+        post = user.posts[i].myPost
+      }
+    }
+    if(post){
+      ids.push(post)
+    }
+
+    User.collection.find({
+    })
+    .toArray(function(err,data){
+          dataUser=data
+    })
+
+
+    // van con bai post chua dc post
+    if(posted > 0){
+        Post.collection.find({
+          "user._id":{
+            $in:ids
+          }
+        })
+        .toArray(function (error, data) {
+          var start = []
+          start.push(data[posted-1])
+          res.json({
+            "status": "success",
+            "message": "Record has been fetched",
+            "data": start,
+            "dataUser":dataUser,
+            "idCurrent":user._id,
+            "id":id,
+            "user":user,
+            "lastPost":lastPost
+         
+          });
+        });
+    }
+    else{
+      res.json({
+        "status": "unload",
+        "dataUser":dataUser,
+        "idCurrent":user._id,
+        "id":id,
+        "user":user
+      });
+    }
+   
+
+}
+
+
+    })
+  
+})
+}
+
+// update post
+const post_UpdateNewFeed = function (req, res) {
+  var id = req.session.user._id;
+  var uploader = upload.fields([{ name: 'image', maxCount: 10 }, { name: 'video', maxCount: 3 }])
+  uploader(req, res, next => {
+    var { _id,caption1,image,video } = req.body
+    var img = []
+    var vid = []
+    var type = []
+    var editedAt = new Date().getTime();  
+    // update image original (delete or keep stable), not add new image 
+    if(image!=undefined){
+      var file = []
+      file=file.concat(image)
+      for (var x = 0; x < file.length; x++) {
+        var tem = JSON.parse(file[x])
+        img.push(tem)
+        type.push(path.extname(tem.filename))
+      }
+    }
+    console.log(video)
+    if(video!=undefined){
+      var file = []
+      file=file.concat(video)
+      for (var x = 0; x < file.length; x++) {
+        var tem = JSON.parse(file[x])
+        vid.push(tem)
+        type.push(path.extname(tem.filename))
+      }
+    }
+    // add new image
+    var files = []
+    files = files.concat(req.files)
+    if (files[0].image != null && files[0].video != null) {
+      for (var x = 0; x < files[0].image.length; x++) {
+        if (files[0].image[x].fieldname == 'image') {
+          img.push(files[0].image[x])
+          type.push(path.extname(img[x].filename))
+        }
+      }
+      for (var x = 0; x < files[0].video.length; x++) {
+        if (files[0].video[x].fieldname == 'video') {
+          vid.push(files[0].video[x])
+          type.push(path.extname(vid[x].filename))
+        }
+      }
+    } 
+    else if (files[0].image != null && files[0].video == null) {
+      for (var x = 0; x < files[0].image.length; x++) {
+        if (files[0].image[x].fieldname == 'image') {
+          img.push(files[0].image[x])
+          type.push(path.extname(img[x].filename))
+        }
+      }
+    } else if (files[0].image == null && files[0].video != null) {
+      for (var x = 0; x < files[0].video.length; x++) {
+        if (files[0].video[x].fieldname == 'video') {
+          vid.push(files[0].video[x])
+          type.push(path.extname(vid[x].filename))
+        }
+      }
+    } else if ((caption1 == "" && image == undefined && video == undefined)) {
+      return res.json({
+        error: "Vui lòng nhập caption "
+      })
+    }
+    User.collection.findOne(
+    { 
+      _id: ObjectId(id) 
+    },function(err,user){
+        if(err){
+          return res.json({error:err})
+        }
+        if(user==null){
+          return res.redirect("/login")
+        }
+        else{
+          Post.collection.findOne({
+            "_id":ObjectId(_id)
+          },function(err,post){
+              Post.collection.updateOne({
+                "_id":ObjectId(post._id)
+              },{
+                  "$set":{
+                    "caption": caption1,
+                    "image": img,
+                    "video": vid,
+                    "type": type,
+                    "editedAt": editedAt,
+                  }
+              },function(err,data){
+                User.collection.updateOne({
+                  $and:[
+                      { 
+                        "_id":ObjectId(user._id)
+                      },{
+                        "posts._id":ObjectId(post._id)
+                      }
+                  ]
+                },{
+                    "$set":{
+                      "caption": caption1,
+                      "image": img,
+                      "video": vid,
+                      "type": type,
+                      "editedAt": editedAt,
+                    }
+                })
+              })
+            res.json({
+              "status":"success"
+            })
+          })
+        }
+    })
+    
+  })
+
+
+}
+
+// get modal post
 const get_PostModal = function (req, res) {
   var id = req.session.user._id;
   var id_post_current = req.body._id
@@ -198,6 +481,7 @@ const get_PostModal = function (req, res) {
 
 }
 
+// get notice 
 const get_Notice = function (req, res) {
   var id=req.session.user._id
    
@@ -219,6 +503,7 @@ const get_Notice = function (req, res) {
 
 }
 
+// read notice
 const post_Notice = function (req, res) {
   var id = req.session.user._id;
   var idPost = req.body.idPost
@@ -261,6 +546,7 @@ const post_Notice = function (req, res) {
 
 }
 
+//  like post
 const post_ToggleLike = function (req, res) {
   var user= req.session.user;
   var _id = req.body._id
@@ -393,6 +679,7 @@ const post_ToggleLike = function (req, res) {
   })
 }
 
+// comment post
 const post_Comment = function (req,res){
   var user= req.session.user;
   var uploader = upload.none()
@@ -628,6 +915,7 @@ const get_Message = (req,res)=>{
   })
 }
 
+// send mes
 const post_sendMessage = (req,res)=>{
   if(!req.session.user){
       return res.redirect('/login')
@@ -636,6 +924,11 @@ const post_sendMessage = (req,res)=>{
   var uploader = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }])
   uploader(req, res, next => {
     var { _id,id_follow,message } = req.body
+    if(!message){
+      return res.json({
+        "error":"Vui lòng nhập message"
+      })
+    }
     User.collection.findOne({
       "_id":ObjectId(id_follow)
     },function(err,user){
@@ -802,6 +1095,8 @@ const post_deletePost = (req,res)=>{
 module.exports = {
   post_Newfeed, 
   get_Newfeed, 
+  get_Newfeed_Loadmore,
+  post_UpdateNewFeed,
   post_ToggleLike, 
   post_Comment,
   get_Notice, 

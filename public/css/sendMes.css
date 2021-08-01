@@ -71,10 +71,9 @@ main {
 
 .image-message{
   position: absolute;
-  top: 7rem;
-  left: 11rem;
-
-  display: block;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .image-message svg{
@@ -167,8 +166,8 @@ main {
 }
 .sender{
   display:inline-block;
-  padding: 10px 10px 10px 10px;
-  margin: 0.8em;
+  padding: 10px 10px;
+  margin: 0.8em 0 0.8em 2em;
 
   text-align: center;
   font-size: 14px;
@@ -176,20 +175,138 @@ main {
   background-color: #fff;
   border: 1px solid #EFEFEF;
   transition: all .2s ease;
-
+  width: -moz-fit-content;
+  width: fit-content;
 }
+
+.sender{
+  clear:both; 
+}
+
+.gallery-section .stack-img-send{
+  overflow:unset;
+  flex-wrap:unset;
+}
+
+.gallery-section .stack-img-send .img-a:first-child{
+  flex: unset;
+  border-radius: 12px 0 0 12px;
+}
+.gallery-section  .stack-img-send .img-a:last-child{
+  flex: unset;
+  border-radius: 0 12px 12px 0;
+}
+
+.stack-img-send .image img{
+  width: 100px;
+  height: 100px;
+}
+
+
 .receiver {
   display:inline-block;
   margin: 0.8em 1em 0 0;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 10px;
 
   text-align: center;
   font-size: 14px;
   border-radius: 30px;
   background-color: #EFEFEF;
-  /* background-color: red; */
 
+  width: -moz-fit-content;
+  width: fit-content;
+} 
+
+.edit-img-msg{
+    position: relative;
 }
+
+.edit-img-msg .edit-img{
+  /* display: none; */
+  position: absolute;
+  left: 65%;
+  top: 45%;
+  font-size: 15px;
+  color: #8E8E8E;
+  transform: translate(-50%, -50%);
+}
+
+.edit-vid-msg{
+  position: relative;
+}
+
+
+
+.edit-vid-msg .edit-video{
+  /* display: none; */
+  position: absolute;
+  left: 60%;
+  top: 45%;
+  margin-right: 1rem;
+  font-size: 15px;
+  color: #8E8E8E;
+  transform: translate(-50%, -50%);
+}
+
+
+.gallery-section .stack-img{
+    overflow:unset;
+    flex-wrap:unset;
+}
+
+.gallery-section .stack-img .img-one{
+  border-radius: 12px 12px 12px 12px;
+}
+
+.gallery-section .stack-img .img-a:first-child{
+  flex: unset;
+  border-radius: 12px 0 0 12px;
+}
+.gallery-section .stack-img .img-a:last-child{
+  flex: unset;
+  border-radius: 0 12px 12px 0;
+}
+
+.stack-img .image img{
+    width: 100px;
+    height: 100px;
+}
+
+.stack-img video{
+  margin-top: 0.5rem;
+  width: 170px;
+  height: 120px;
+  border-radius: 12px;
+}
+
+.stack-img-send iframe{
+  margin-bottom: 0.5rem;
+  width: 170px;
+  height: 120px;
+  border-radius: 12px;
+}
+
+.pre-img .image img{
+    width: 100px;
+    height: 100px;
+}
+
+.pre-vid iframe{
+  width: 300px;
+  height: 200px;
+}
+
+.gallery-section .pre-img{
+  overflow:unset;
+  flex-wrap:unset;
+}
+
+.gallery-section .pre-vid{
+  margin-top: 0.5rem;
+  overflow:unset;
+  flex-wrap:unset;
+}
+
 .sender:hover {
   cursor: pointer;
 }
@@ -209,6 +326,10 @@ main {
     height: auto;
 }
 
+.input-msg{
+  border-top: 1px solid var(--medium-grey);
+}
+
 .input-msg form {
     position: relative;
     top: 0;
@@ -224,7 +345,7 @@ main {
   width: 100%;
   padding-top: 10px;
 
-  border-top: 1px solid var(--medium-grey);
+
 
 }
 
@@ -273,7 +394,7 @@ main {
   height: 40px;
   border-radius: 20px;
   border: 1px solid #dbdbdb;
-  width: 100%;
+  width: 90%;
 }
 
 .send-input:focus{
@@ -291,23 +412,49 @@ main {
         margin-top: 1rem;
       
     }
+    .stack-img{
+      margin-left: 30vh !important;
+    }
+    .receiver {
+      position: fixed;
+      right: 45px;
+    }
 }
 
-@media screen and (min-width: 900px)
+@media screen and (min-width: 50px)
 {
-  .receiver, .user-input {
-    margin-left: 28vw;
+  .stack-img-send{
+    margin-right: 27vw;
+  }
+  .stack-img{
+    margin-left: 27vw;
+  }
+
+  .stack-vid{
+    margin-left: 27vw;
+  }
+
+  .receiver {
+    margin-left: 35vw;
   }
   .sender, .receiver, .user-input {
-    min-width: 140px;
     width: auto;
   }
 }
+
+@media only screen and (max-width: 575px) {
+  main {
+    margin-left: 2rem !important;
+  }
+}
+
 @media screen and (max-width: 600px)
 {
+ 
   main {
     height: 100vh;
-    width: 100vw;
+    width: 90vw;
+   
   }
 }
 @media only screen and (max-width: 768px) {
@@ -324,7 +471,25 @@ main {
 
   }
 
-  .receiver, .user-input {
-    margin-left: 70vw;
+
+  .stack-img{
+    margin-left: 45vh;
+  }
+  .receiver{
+    margin-left: 72vw;
+  }
+
+ 
+}
+
+@media screen and (min-width:768px) {
+  .receiver{
+    margin-left: 32vw;
+  }
+  .edit-img-msg{
+    margin-right: 1.5rem;
+  }
+  .stack-vid{
+    margin-right: 2rem;
   }
 }
