@@ -550,7 +550,7 @@ const profile_post = (req, res) => {
     })
 }
 
-// user profile
+// user follow 
 const user_follow_post = (req, res) => {
     
     var current_user =req.session.user
@@ -574,6 +574,8 @@ const user_follow_post = (req, res) => {
             var box_message = []
             var idfollow = ''
             var idNotice = id_notice
+            var check_send_msg = false
+            // check follow 
             for(var i = 0;i < user.followers.length;i++){
                 var follower = user.followers[i]
                 if(follower.idFollower.toString() == current_user._id.toString()){
@@ -587,22 +589,16 @@ const user_follow_post = (req, res) => {
                 if(following.idFollowing.toString() == current_user._id.toString()){
                     isFollowing = true
                     break;
+                   
                 } 
             }
              if( isFollowing ){
                 for(var i = 0;i < user.followings.length;i++){
                     var following = user.followings[i]
                     if(following.idFollowing.toString() == current_user._id.toString()){
-                        for(var j = 0;j<following.inbox.length;j++)
-                        {
-                            var inb = following.inbox[j]
-                            inbox._id=inb._id,
-                            inbox.message=inb.message,
-                            inbox.from= inb._id,
-                            inbox.to= inb._id
-                            box_message.push(inb)
+                        if(following.inbox.length > 0){
+                            check_send_msg = true
                         }
- 
                     } 
                 }
               
@@ -618,7 +614,7 @@ const user_follow_post = (req, res) => {
                         { 
                             "$set": 
                             { 
-                                "notifications.$[com].content": current_user.fullname + " sent you a message follow to see it !",
+                                "notifications.$[com].content": user.fullname + " sent you a message follow to see it !",
                                 "notifications.$[com].type": "received_message"
                             } 
                         },
@@ -687,18 +683,13 @@ const user_follow_post = (req, res) => {
                 },function (error, data) {
                     // follow back to read message
                     if(user.followings.length > 0 && user_follow_back != "" && user_follow_back != undefined){
-                        var msg = {}
                         var inbox_msg=[]
                         for(var i = 0 ; i< user.followings.length;i++){
                             var follow = user.followings[i]
                             if(follow.idFollowing.toString() == user_follow_back.toString()){
                                 for(var j = 0; j<follow.inbox.length;j++ ){
                                     var inbox = follow.inbox[j]
-                                    msg.id=inbox._id,
-                                    msg.message=inbox.message,
-                                    msg.from = inbox.from,
-                                    msg.to = inbox.to
-                                    inbox_msg.push(msg)
+                                    inbox_msg.push(inbox)
                                 }
                             }
                         }
@@ -729,7 +720,20 @@ const user_follow_post = (req, res) => {
                                 }
                             }
                         )
-                    }else if(isFollowing && box_message.length > 0){
+                    }
+                    // 2 thang do da follow va gio 1 trong 2 unfollow va follow lai
+                    else if(isFollowing && check_send_msg){
+                        var inbox_msg=[]
+                        for(var i = 0 ; i< user.followings.length;i++){
+                            var follow = user.followings[i]
+                            if(follow.idFollowing.toString() == current_user._id.toString()){
+                                for(var j = 0; j<follow.inbox.length;j++ ){
+                                    var inbox = follow.inbox[j]
+                                    inbox_msg.push(inbox)
+                                }
+                               
+                            }
+                        }
                         User.collection.updateOne(
                             { 
                               "_id": ObjectId(current_user._id)
@@ -743,7 +747,7 @@ const user_follow_post = (req, res) => {
                                       "name": user.name,
                                       "profileImage": user.profileImage,
                                       "type": "following",
-                                      "inbox":box_message,
+                                      "inbox": inbox_msg,
                                       "createdAt": new Date().getTime()
                                     }
                                   } 
@@ -758,7 +762,8 @@ const user_follow_post = (req, res) => {
                             }
                         )
                     }
-                    else{
+                    // update following of current user
+                    else{   
                         User.collection.updateOne(
                             { 
                               "_id": ObjectId(current_user._id)

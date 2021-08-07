@@ -19,10 +19,9 @@
                                             <span class="card-title "><a href="#" class="nameOfUser1"><%=user.fullname%></a></span>
                                         <%}%>
                                         <small class="midNameUser1">Instagram recommended</small>
-                                        <% if(curUser.followings !="" || curUser.followings.length > 0){%>               
-                                            <% curUser.followings.forEach(function(cur,index) {%>         
-                                                <% if(curUser.followings[index]){%>
-                                                    <% if(curUser.followings[index].idFollowing==user._id){%>
+                                        <% if( user.followers.length > 0){%>               
+                                            <% user.followers.forEach(function(cur) {%>      
+                                                    <% if(cur.idFollower == idCurrent){%>   
                                                         <a class="btn btn-primary wordImg1" style="background-color: #fff;color: #333;border: 0.5px solid #DBDBDB;" id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
                                                             Unfollow
                                                         </a>
@@ -31,7 +30,6 @@
                                                             Follow
                                                         </a>
                                                     <%}%>
-                                                <%}%>
                                             <%})%>
                                         <%}else{%>
                                             <a class="btn btn-primary wordImg1" id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">

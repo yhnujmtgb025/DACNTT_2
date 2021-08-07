@@ -13,7 +13,10 @@ var Socket = {
 var chat= []
 io.on("connection", function (socket) {
     socket.on('message', (data) => {
-        chat[data.username]=socket.id
+        // console.log(data.id_current)
+        // chat[data.id_follow]=socket.id
+        chat[data.id_current]=socket.id
+        // console.log("chat : ",chat)
     });
 });
 

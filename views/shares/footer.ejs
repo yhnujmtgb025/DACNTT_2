@@ -111,7 +111,7 @@
 </body>
 
 <script>
-     
+    
     // When the user clicks on button cancle the modal
         //  Show notifications liked
         function showNoticeLiked(self) {
@@ -359,7 +359,7 @@
                     var response = JSON.parse(this.responseText);
                     var userCur= response.userCur
                     if(response.status == "scroll"){
-                        var html = ""
+                    var html = ""
                     var data = response.data
                     var length_user = data.length - 1
  
@@ -407,7 +407,7 @@
                                                     
                                                     if(userCur[0].followings.length > 0){
                                                         for(var j = 0 ; j< userCur[0].followings.length ; j++){
-                                                            if(userCur[0].followings[j].idFollowing.toString() == idCurrent.toString()){
+                                                            if(userCur[0].followings[j].idFollowing.toString() == data[i]._id.toString()){
                                                                 html+='<button class="btn btnFollowed btn-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
                                                                         html+='<a class="centerFollow clas-'+data[i]._id+'">Unfollow'
                                                                         html+='</a>'
@@ -596,7 +596,7 @@
                         fileReader.onload = function (event) {
                             html += '<div class="image image-tag check-image remove-'+index+'" id="i-' + index + '">'
                                 html += '<div class="cover-remove">'
-                                    html += '<span class="remove-image" id="span-' + index + '" " onclick="removeImage('+index+')">'
+                                    html += '<span class="remove-image" id="span-' + index + '"  onclick="removeImage('+index+')">'
                                     html += `&#x2715`
                                     html += '</span>'
                                 html += '</div>'
@@ -640,7 +640,8 @@
                                         html_v += '&#x2715'
                                     html_v += '</span>'
                             html_v += '</div>'
-                            html_v += '<video  id="video-'+index+'" src="' + event.target.result + '"  id="post-video-preview" controls >'
+                            html_v += '<video  id="video-'+index+'"  id="post-video-preview" controls >'
+                                html_v += '<source src="' + event.target.result + '" type="video/mp4">'
                             html_v += '</video>'
                         html_v += '</div>'
                         output.innerHTML = html_v;
@@ -711,6 +712,7 @@
                     data.append('image', storedFiles[i],storedFiles[i].name);	
                 }
             }
+            
             if(input_video.files.length>storedFiles_Video.length){   // da xoa video
                 data.delete('video')
                 for(var i=0, len=storedFiles_Video.length; i<len; i++) {

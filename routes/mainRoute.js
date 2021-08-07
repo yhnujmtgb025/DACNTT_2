@@ -31,6 +31,10 @@ function route(app) {
     app.post("/sendMessageFriends", PostController.post_sendMessage );
 
     app.post("/getInbox",PostController.get_Message)
+
+    // interact chat friends
+    app.post("/likeChat",PostController.post_likeChat)
+
     // notification
     app.post("/getNotice", PostController.get_Notice);
     app.post("/postNotice", PostController.post_Notice);

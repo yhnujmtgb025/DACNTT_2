@@ -351,7 +351,6 @@ const post_UpdateNewFeed = function (req, res) {
         type.push(path.extname(tem.filename))
       }
     }
-    console.log(video)
     if(video!=undefined){
       var file = []
       file=file.concat(video)
@@ -411,6 +410,7 @@ const post_UpdateNewFeed = function (req, res) {
           Post.collection.findOne({
             "_id":ObjectId(_id)
           },function(err,post){
+              console.log(post._id)
               Post.collection.updateOne({
                 "_id":ObjectId(post._id)
               },{
@@ -432,13 +432,19 @@ const post_UpdateNewFeed = function (req, res) {
                   ]
                 },{
                     "$set":{
-                      "caption": caption1,
-                      "image": img,
-                      "video": vid,
-                      "type": type,
-                      "editedAt": editedAt,
+                      "posts.$[pos].caption": caption1,
+                      "posts.$[pos].image": img,
+                      "posts.$[pos].video": vid,
+                      "posts.$[pos].type": type,
+                      "posts.$[pos].editedAt": editedAt
                     }
-                })
+                },{ 
+                  "arrayFilters": [ 
+                    { 
+                        "pos._id": ObjectId(post._id)
+                    }
+                  ]
+            })
               })
             res.json({
               "status":"success"
@@ -863,6 +869,7 @@ const get_sendMessage = (req,res)=>{
       var following =[]
       var follower =[]
       for(var i = 0;i<user.length;i++){
+          id_current = user[i]._id
           image=user[i].profileImage
           fullname=user[i].fullname
           bio = user[i].bio
@@ -877,6 +884,7 @@ const get_sendMessage = (req,res)=>{
       
       res.render('homePage/sendMessage',{
           image:image,
+          id_current: id_current,
           fullname:fullname,
           bio:bio,
           name:name,
@@ -897,7 +905,6 @@ const get_Message = (req,res)=>{
   }
   var id = req.body._id  // id following
 
-
   User.collection.find({
     $and: [{
       "_id":ObjectId(req.session.user._id)
@@ -906,7 +913,6 @@ const get_Message = (req,res)=>{
     }]
   })
   .toArray( function(err,user){
-
       res.json({
           "status":"success",
           "user":user,
@@ -921,12 +927,43 @@ const post_sendMessage = (req,res)=>{
       return res.redirect('/login')
   }
   var user_current = req.session.user
-  var uploader = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }])
+  var uploader = upload.fields([{ name: 'image', maxCount: 4}, { name: 'video', maxCount: 1 }])
   uploader(req, res, next => {
     var { _id,id_follow,message } = req.body
-    if(!message){
+    // var like_img={}
+    var img = [[],[]]
+    var video = [[],[]]
+    var createdAt = new Date().getTime();  
+    var files = []
+    files = files.concat(req.files)
+ 
+    if (files[0].image != null && files[0].video != null) {
+      for (var x = 0; x < files[0].image.length; x++) {
+        if (files[0].image[x].fieldname == 'image') {
+          img[1].push(files[0].image[x])
+        }
+      }
+      for (var x = 0; x < files[0].video.length; x++) {
+        if (files[0].video[x].fieldname == 'video') {
+          video[1].push(files[0].video[x])
+        }
+      }
+
+    } else if (files[0].image != null && files[0].video == null) {
+      for (var x = 0; x < files[0].image.length; x++) {
+        if (files[0].image[x].fieldname == 'image') {
+          img[1].push(files[0].image[x])
+        }
+      }
+    } else if (files[0].image == null && files[0].video != null) {
+      for (var x = 0; x < files[0].video.length; x++) {
+        if (files[0].video[x].fieldname == 'video') {
+          video[1].push(files[0].video[x])
+        }
+      }
+    } else if (message == "") {
       return res.json({
-        "error":"Vui lòng nhập message"
+        error: "Vui lòng nhập message "
       })
     }
     User.collection.findOne({
@@ -964,7 +1001,11 @@ const post_sendMessage = (req,res)=>{
                         "_id":ObjectId(),
                         "message":message,
                         "from": user_current._id,
-                        "to": user._id
+                        "to": user._id,
+                        "likes":[],
+                        "image":img,
+                        "video":video,
+                        "createdAt":createdAt.toString()
                     }
                 }
               },function(err,data){
@@ -982,20 +1023,30 @@ const post_sendMessage = (req,res)=>{
                           "_id":ObjectId(),
                           "message":message,
                           "from": user_current._id,
-                          "to":user._id
+                          "to":user._id,
+                          "likes":[],
+                          "image":img,
+                          "video":video,
+                          "createdAt":createdAt.toString()
                       }
                   }
                 })
-                if ( chat[user.fullname]) {
-                  res.io.to(chat[user.fullname]).emit("messageReceived",{ 
+                if ( chat[user._id]) {
+                  res.io.to(chat[user._id]).emit("messageReceiver",{ 
                         "message":message,
-                        "to":user._id
+                        "to":user._id,
+                        "image":img[1],
+                        "video":video[1],
+                        "createdAt":createdAt.toString()
                   })
                 }
-                if ( chat[user_current.fullname]) {
-                  res.io.to(chat[user_current.fullname]).emit("messageReceived",{ 
+                if ( chat[user_current._id]) {
+                  res.io.to(chat[user_current._id]).emit("messageReceiver",{ 
                     "message":message,
-                    "from":user_current._id
+                    "from":user_current._id,
+                    "image":img[1],
+                    "video":video[1],
+                    "createdAt":createdAt.toString()
                 })
               }
               
@@ -1006,13 +1057,13 @@ const post_sendMessage = (req,res)=>{
               })
           }
           else{
+            console.log("else")
             User.collection.updateOne({
               $and: [{
                 "_id":ObjectId(user_current._id)
               }, {
                 "followings.idFollowing": ObjectId(user._id)
               }]
-          
             },{
               $push : 
               {
@@ -1021,10 +1072,14 @@ const post_sendMessage = (req,res)=>{
                       "_id":ObjectId(),
                       "message":message,
                       "from": user_current._id,
-                      "to":user._id
+                      "to":user._id,
+                      "image":img,
+                      "video":video,
+                      "createdAt":createdAt.toString()
                   }
               }
             },function(err,data){
+
               User.collection.updateOne(
                 { $and: [{
                   "_id":ObjectId(user._id)
@@ -1049,11 +1104,15 @@ const post_sendMessage = (req,res)=>{
             })
             res.io.emit('messageReceived', {
               "message":message,
-              "from":user_current._id
+              "from":user_current._id,
+              "image":img[1],
+              "video":video[1],
+              "createdAt":createdAt.toString()
             });
             res.json({
               "status":"success",
               "id":id_follow
+              
           })
           }
       }
@@ -1062,6 +1121,443 @@ const post_sendMessage = (req,res)=>{
   })
   
 
+}
+
+// like message chat
+const post_likeChat = (req,res)=>{
+  if(!req.session.user){
+    return res.redirect('/login')
+  }
+  var userCurrent = req.session.user
+  var {format,id_mes,id_follow,id_createdAt,id_created}=req.body
+  console.log("id_created "+id_created)
+  var createdAt = new Date().getTime();  
+  User.collection.findOne({
+    "_id":ObjectId(req.session.user._id)
+  },function(err,user){
+    if(err){
+      return res.json({error:err})
+    }
+    if(user==null){
+      return res.redirect("/login")
+    }else{
+      if(format=="message"){
+          var like = false
+          for(var i =0;i<user.followings.length;i++){
+            if(user.followings[i].idFollowing.toString() == id_follow.toString()){
+                for(var j=0;j<user.followings[i].inbox.length;j++){
+                  var inbox = user.followings[i].inbox[j]
+                  if(inbox._id.toString() == id_mes.toString()){
+                    for(var k = 0; k < inbox.likes.length; k++){
+                        var liker =  inbox.likes[k]
+                        if(liker.from.toString()==userCurrent._id.toString()){
+                          like= true
+                          break;
+                        }
+                    }
+                  }
+                }
+            }
+          }
+          if(like){
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(user._id)
+                },
+                {
+                  "followings.idFollowing":ObjectId(id_follow)
+                }
+              ]
+            },{
+              $pull:{
+                "followings.$[follow].inbox.$[inbox].likes": {
+                  "createdAt": id_created
+                }
+              }
+            },
+            {
+              "arrayFilters":[
+                {
+                  "follow.idFollowing":ObjectId(id_follow)
+                },
+                {
+                  "inbox._id":ObjectId(id_mes)
+                }
+              ]
+            }
+            ,function(err,data){
+              User.collection.updateOne({
+                $and:[
+                  {
+                    "_id":ObjectId(id_follow)
+                  },
+                  {
+                    "followings.idFollowing":ObjectId(user._id)
+                  }
+                ]
+              },{
+                $pull:{
+                  "followings.$[follow].inbox.$[inbox].likes": {
+                    "createdAt": id_created
+                  }
+                }
+              },
+              {
+                "arrayFilters":[
+                  {
+                    "follow.idFollowing":ObjectId(user._id)
+                  },
+                  {
+                    "inbox.createdAt":id_createdAt
+                  }
+                ]
+              })
+              res.json({
+                "status":"success"
+              })
+            })
+          }else{
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(user._id)
+                },
+                {
+                  "followings.idFollowing":ObjectId(id_follow)
+                }
+              ]
+            },{
+              $push:{
+                "followings.$[fol].inbox.$[inb].likes": {
+                  "from": user._id,
+                  "createdAt":createdAt.toString()
+                }
+              }
+            },{ 
+              "arrayFilters": [ 
+                { 
+                  "fol.idFollowing":ObjectId(id_follow)
+                },
+                {
+                  "inb._id": ObjectId(id_mes)
+                }
+              ]
+            }
+            ,function(err,data){
+              User.collection.updateOne({
+                $and:[
+                  {
+                    "_id":ObjectId(id_follow)
+                  },
+                  {
+                    "followings.idFollowing":ObjectId(user._id)
+                  }
+                ]
+              },{
+                $push:{
+                    "followings.$[fol].inbox.$[inb].likes":{
+                      "from": user._id,
+                      "createdAt":createdAt.toString()
+                    }
+                }
+              },{ 
+                "arrayFilters": [ 
+                  { 
+                    "fol.idFollowing":ObjectId(user._id)
+                  },
+                  {
+                    "inb.createdAt": id_createdAt
+                  }
+                ]
+              })
+              res.json({
+                "status":"success"
+              })
+            })
+          }
+      }
+      else if(format=="image"){
+          var like = false
+          for(var i =0;i<user.followings.length;i++){
+            if(user.followings[i].idFollowing.toString() == id_follow.toString()){
+                for(var j=0;j<user.followings[i].inbox.length;j++){
+                  var inbox = user.followings[i].inbox[j]
+                  if(inbox._id.toString() == id_mes.toString()){
+                    for(var k = 0; k < inbox.image[0].length; k++){
+                        var liker =  inbox.image[0]
+                        if(liker[k].from.toString()==userCurrent._id.toString()){
+                          like= true
+                          break;
+                        }
+                    }
+                  }
+                }
+            }
+          }
+          if(like){
+           
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(user._id)
+                },
+                {
+                  "followings.idFollowing":ObjectId(id_follow)
+                }
+              ]
+            },{
+              $pull:{
+                "followings.$[follow].inbox.$[inbox].image.0": {
+                  "createdAt": id_created
+                }
+              }
+            },
+            {
+              "arrayFilters":[
+                {
+                  "follow.idFollowing":ObjectId(id_follow)
+                },
+                {
+                  "inbox._id":ObjectId(id_mes)
+                }
+              ]
+            }
+            ,function(err,data){
+              User.collection.updateOne({
+                $and:[
+                  {
+                    "_id":ObjectId(id_follow)
+                  },
+                  {
+                    "followings.idFollowing":ObjectId(user._id)
+                  }
+                ]
+              },{
+                $pull:{
+                  "followings.$[follow].inbox.$[inbox].image.0": {
+                    "createdAt": id_created
+                  }
+                }
+              },
+              {
+                "arrayFilters":[
+                  {
+                    "follow.idFollowing":ObjectId(user._id)
+                  },
+                  {
+                    "inbox.createdAt":id_createdAt
+                  }
+                ]
+              })
+              res.json({
+                "status":"success"
+              })
+            })
+          }else{
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(user._id)
+                },
+                {
+                  "followings.idFollowing":ObjectId(id_follow)
+                }
+              ]
+            },{
+              $push:{
+                "followings.$[fol].inbox.$[inb].image.0": {
+                  "from": user._id,
+                  "createdAt":createdAt.toString()
+                }
+              }
+            },{ 
+              "arrayFilters": [ 
+                { 
+                  "fol.idFollowing":ObjectId(id_follow)
+                },
+                {
+                  "inb._id": ObjectId(id_mes)
+                }
+              ]
+            }
+            ,function(err,data){
+              User.collection.updateOne({
+                $and:[
+                  {
+                    "_id":ObjectId(id_follow)
+                  },
+                  {
+                    "followings.idFollowing":ObjectId(user._id)
+                  }
+                ]
+              },{
+                $push:{
+                    "followings.$[fol].inbox.$[inb].image.0":{
+                      "from": user._id,
+                      "createdAt":createdAt.toString()
+                    }
+                }
+              },{ 
+                "arrayFilters": [ 
+                  { 
+                    "fol.idFollowing":ObjectId(user._id)
+                  },
+                  {
+                    "inb.createdAt": id_createdAt
+                  }
+                ]
+              })
+              res.json({
+                "status":"success"
+              })
+            })
+          }
+      
+      }
+      else{
+        var like = false
+        for(var i =0;i<user.followings.length;i++){
+          if(user.followings[i].idFollowing.toString() == id_follow.toString()){
+              for(var j=0;j<user.followings[i].inbox.length;j++){
+                var inbox = user.followings[i].inbox[j]
+                if(inbox._id.toString() == id_mes.toString()){
+                  for(var k = 0; k < inbox.video[0].length; k++){
+                      var liker =  inbox.video[0]
+                      if(liker[k].from.toString()==userCurrent._id.toString()){
+                        like= true
+                        break;
+                      }
+                  }
+                }
+              }
+          }
+        }
+        console.log("like ", like)
+        if(like){
+         
+          User.collection.updateOne({
+            $and:[
+              {
+                "_id":ObjectId(user._id)
+              },
+              {
+                "followings.idFollowing":ObjectId(id_follow)
+              }
+            ]
+          },{
+            $pull:{
+              "followings.$[follow].inbox.$[inbox].video.0": {
+                "createdAt": id_created
+              }
+            }
+          },
+          {
+            "arrayFilters":[
+              {
+                "follow.idFollowing":ObjectId(id_follow)
+              },
+              {
+                "inbox._id":ObjectId(id_mes)
+              }
+            ]
+          }
+          ,function(err,data){
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(id_follow)
+                },
+                {
+                  "followings.idFollowing":ObjectId(user._id)
+                }
+              ]
+            },{
+              $pull:{
+                "followings.$[follow].inbox.$[inbox].video.0": {
+                  "createdAt": id_created
+                }
+              }
+            },
+            {
+              "arrayFilters":[
+                {
+                  "follow.idFollowing":ObjectId(user._id)
+                },
+                {
+                  "inbox.createdAt":id_createdAt
+                }
+              ]
+            })
+            res.json({
+              "status":"success"
+            })
+          })
+        }else{
+          User.collection.updateOne({
+            $and:[
+              {
+                "_id":ObjectId(user._id)
+              },
+              {
+                "followings.idFollowing":ObjectId(id_follow)
+              }
+            ]
+          },{
+            $push:{
+              "followings.$[fol].inbox.$[inb].video.0": {
+                "from": user._id,
+                "createdAt":createdAt.toString()
+              }
+            }
+          },{ 
+            "arrayFilters": [ 
+              { 
+                "fol.idFollowing":ObjectId(id_follow)
+              },
+              {
+                "inb._id": ObjectId(id_mes)
+              }
+            ]
+          }
+          ,function(err,data){
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(id_follow)
+                },
+                {
+                  "followings.idFollowing":ObjectId(user._id)
+                }
+              ]
+            },{
+              $push:{
+                  "followings.$[fol].inbox.$[inb].video.0":{
+                    "from": user._id,
+                    "createdAt":createdAt.toString()
+                  }
+              }
+            },{ 
+              "arrayFilters": [ 
+                { 
+                  "fol.idFollowing":ObjectId(user._id)
+                },
+                {
+                  "inb.createdAt": id_createdAt
+                }
+              ]
+            })
+            res.json({
+              "status":"success"
+            })
+          })
+        }
+      }
+     
+    }
+  })
+  
+    
 }
 
 // delete post
@@ -1105,6 +1601,7 @@ module.exports = {
   get_sendMessage, 
   post_sendMessage,
   get_Message,
+  post_likeChat,
   post_deletePost
 };
 
