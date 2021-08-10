@@ -1,6 +1,6 @@
 const checkAdmin = require('../auth/CheckAdmin')
 const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
-
+var multer  = require('multer')
 const UserController = require('../controllers/UserController')
 const PostController = require('../controllers/PostController')
 
@@ -13,6 +13,9 @@ function route(app) {
     app.get('/',UserController.index );
     app.post('/getFollow',UserController.get_Follow );
 
+    // update infor of user different
+    app.post('/updateInforUser',UserController.get_UpdateInforUser );
+    app.post('/updateInfor',UserController.post_UpdateInfor );
 
     // handle newfeed
     app.post('/addPost',PostController.post_Newfeed );
@@ -28,12 +31,13 @@ function route(app) {
 
     // send message
     app.get("/sendMessage", PostController.get_sendMessage );
-    app.post("/sendMessageFriends", PostController.post_sendMessage );
+    app.post("/sendMessageFriends",PostController.post_sendMessage );
 
     app.post("/getInbox",PostController.get_Message)
 
     // interact chat friends
     app.post("/likeChat",PostController.post_likeChat)
+    app.post("/unsendChat",PostController.post_unsendChat)
 
     // notification
     app.post("/getNotice", PostController.get_Notice);
@@ -68,6 +72,7 @@ function route(app) {
     
     // list follow
     app.get('/homePage/listFollow',UserController.user_follow);
+    app.get('/homePage/listUser',UserController.user_All);
 
     // handle password 
     app.get('/myProfile/editProfile/changePassword',UserController.change_password_get  );

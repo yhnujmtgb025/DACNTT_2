@@ -41,6 +41,7 @@ const index = (req, res) => {
     .toArray(function(err,data){
         res.render('homePage/home',{
             userCurrent:"",
+            role:user.role,
             image:user.profileImage,
             fullname:user.fullname,
             name:user.name,
@@ -81,7 +82,6 @@ const get_Follow= (req, res) => {
     })
 }
 
-
 // user follow
 const user_follow = (req, res) => {
     if(!req.session.user){
@@ -89,11 +89,28 @@ const user_follow = (req, res) => {
         return res.redirect('/login')
     }
     var user = req.session.user
+
     User.collection.find({
     })
-    .limit(5)
+    .limit(10)
     .toArray(function(err,data){
-        res.render('homePage/listFollow',{userCurrent:"",image:user.profileImage,fullname:user.fullname,name:user.name,idCurrent:user._id,data:data,curUser:user, plane:""})
+        res.render('homePage/listFollow',{userCurrent:"",role:user.role,image:user.profileImage,fullname:user.fullname,name:user.name,idCurrent:user._id,data:data,curUser:user, plane:""})
+    })
+}
+
+// list user 
+const user_All = (req, res) => {
+    if(!req.session.user){
+        req.flash('')
+        return res.redirect('/login')
+    }
+    var user = req.session.user
+
+    User.collection.find({
+    })
+    .limit(10)
+    .toArray(function(err,data){
+        res.render('homePage/admin.ejs',{userCurrent:"",role:user.role,image:user.profileImage,fullname:user.fullname,name:user.name,idCurrent:user._id,data:data,curUser:user, plane:""})
     })
 }
 
@@ -106,8 +123,7 @@ const login_get = (req, res) => {
     const password = req.flash('password','') || ''
     const email = req.flash('email') || ''
     res.render('handleLogin/login',{error,password, email})
-  }
-
+}
 
 // post login
 const login_post = (req, res,next) => {
@@ -143,13 +159,11 @@ const login_post = (req, res,next) => {
 
 }
 
-
 //logout
 const logout_get = (req, res) => {
    req.session.destroy();
    res.redirect('/login'); 
 }
-
 
 // trang đăng kí
 const register_get = (req, res) => {
@@ -473,10 +487,12 @@ const profile_get = (req, res) => {
     if(!req.session.user){
         return res.redirect('/login')
     }
-  
+    var saved_post = []
     User.collection.find({_id:ObjectId(req.session.user._id)})
     .toArray( function(err,user){
         var post_com = [];
+       
+        var post_saved = ''
         var a = 0; 
         var lengthPost = 0;
         var like=0
@@ -484,6 +500,7 @@ const profile_get = (req, res) => {
         var following='' 
         var follower='' 
         for(var i = 0;i<user.length;i++){
+            role=user[i].role
             image=user[i].profileImage
             fullname=user[i].fullname
             bio = user[i].bio
@@ -497,34 +514,54 @@ const profile_get = (req, res) => {
                     follower =  user[i].followers
                 }
             }
-        }        
+           
+        }    
         if(like == ""){
             like = 0
         }
-        Post.collection.find({"user._id":ObjectId(req.session.user._id)})
-        .toArray( function(err,post){
+        var save = []
+        Post.collection.find({
+        })
+        .toArray(function(err,post){
             for(var i = 0; i < post.length ; i++){
-                for(var j = 0; j < post[i].comments.length; j++){
-                     a += post[i].comments[j].replies.length 
+                var pos = post[i]._id
+                if(user[0].savePost){
+                    for(var j =0 ; j < user[0].savePost.length;j++){
+                        if(pos ==  user[0].savePost[j]._id){
+                            saved_post.push(post[i])
+                        }
+                    }
                 }
-                a+=post[i].comments.length
-                post_com.push(a)
-                a=0
             }
-            res.render('profile/myProfile',{
-                image:image,
-                fullname:fullname,
-                bio:bio,
-                name:name,
-                post:post,
-                like:like,
-                following:following,
-                follower:follower,
-                post_com,
-                userCurrent:"",
-                plane:""
+            Post.collection.find({"user._id":ObjectId(req.session.user._id)})
+            .toArray( function(err,post){
+                for(var i = 0; i < post.length ; i++){
+                    for(var j = 0; j < post[i].comments.length; j++){
+                         a += post[i].comments[j].replies.length 
+                    }
+                    a+=post[i].comments.length
+                    post_com.push(a)
+                    a=0
+                }
+                res.render('profile/myProfile',{
+                    role:role,
+                    image:image,
+                    fullname:fullname,
+                    bio:bio,
+                    name:name,
+                    post:post,
+                    saved_post,
+                    like:like,
+                    following:following,
+                    follower:follower,
+                    post_com,
+                    userCurrent:"",
+                    plane:""
+                })
             })
         })
+
+     
         
         
     })
@@ -535,15 +572,74 @@ const profile_get = (req, res) => {
 // change photo
 const profile_post = (req, res) => {
     var id= req.session.user._id;
+    var user = req.session.user
     let uploader = upload.single('file-')
     uploader(req,res,err=>{
     req.session.user.profileImage = '/demo/'+req.file.filename
+    var _idPost = {}
+    var id_post = []
+    for(var i= 0 ; i< user.posts.length;i++){
+        var post = user.posts[i]
+       _idPost.id=post._id
+       var list = [_idPost]
+        $.each(list, function(index, value){
+            //  ko tim thay gia tri trong mang thi push
+            if(id_post.indexOf(value.id) === -1){
+                id_post.push(value.id);
+            }
+        });
+    }
+    var obj = Object.assign({}, id_post);
     User.updateOne({ _id: id}, {$set:{'profileImage':'/demo/'+req.file.filename}},function (err, result) {
         if (err) {
             return res.send("Loi");
         }
-        Post.collection.updateMany({'user._id':ObjectId(id)}, {$set: { "user.profileImage" :'/demo/'+req.file.filename }})
-        return res.json({data: '/demo/'+req.file.filename})
+        Post.collection.updateMany({
+            'user._id':ObjectId(id)
+        }, {
+            $set: { 
+                "user.profileImage" :'/demo/'+req.file.filename 
+            }
+        },function(err,data){
+            Post.collection.updateMany(
+                { "user._id": ObjectId(user._id)},
+                { 
+                    "$set": 
+                    { 
+                        "comments.$[elem].profileImage":'/demo/'+req.file.filename 
+                    } 
+                },
+                { "arrayFilters": [ 
+                    { 
+                        "elem.idComment": ObjectId(user._id)
+                    }
+                ], "multi": true 
+            },function(err,data){
+                Object.entries(obj).map(([key, value]) =>
+                    Post.collection.updateMany(
+                    {"user._id": ObjectId(user._id) },
+                    { 
+                        "$set": 
+                        { 
+                            "comments.$[com].replies.$[rep].fullname": fullname
+                        } 
+                    },
+                    { "arrayFilters": [ 
+                        { 
+                            "com.id_post": ObjectId(value)
+                        },
+                        { 
+                            "rep.user_comment": ObjectId(user._id)
+                        }
+                    ]
+                    })
+                )
+             return res.json({data: '/demo/'+req.file.filename})
+               
+            })
+        })
+       
+        
         
     })
     
@@ -802,6 +898,8 @@ const user_profile_get = (req, res) => {
     var id = req.params.id
     var userCurrent = req.session.user
     var imgCurrent = ""
+    var a = 0; 
+    var post_com = [];
     if(!req.session.user){
         return res.redirect('/login')
     }
@@ -811,6 +909,18 @@ const user_profile_get = (req, res) => {
             imgCurrent=user[i].profileImage
         }
     })
+    Post.collection.find({"user._id":ObjectId(id)})
+    .toArray( function(err,post){
+    for(var i = 0; i < post.length ; i++){
+        for(var j = 0; j < post[i].comments.length; j++){
+                a += post[i].comments[j].replies.length 
+        }
+        a+=post[i].comments.length
+        post_com.push(a)
+        a=0
+        }
+    })
+
     User.collection.find({_id:ObjectId(id)})
     .toArray( function(err,user){
         var lengthPost = 0;
@@ -838,12 +948,15 @@ const user_profile_get = (req, res) => {
         
         res.render('profile/myProfile',{
             per:per,
+            role:per.role,
             image:per.image,
             fullname:per.fullname,
             bio:per.bio,
             name:per.name,
             post:post,
+            post_com,
             like:like,
+            saved_post:[],
             following:following,
             follower:follower,
             userCurrent:userCurrent,
@@ -865,10 +978,11 @@ const edit_profile_get = (req, res) => {
 }
 
 const edit_profile_post = (req, res) => {
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
     var user= req.session.user;
     var {fullname,bio,name} = req.body
-    user.fullname = fullname
-    user.name = name
     var _idPost = {}
     var id_post = []
     for(var i= 0 ; i< user.posts.length;i++){
@@ -876,6 +990,7 @@ const edit_profile_post = (req, res) => {
        _idPost.id=post._id
        var list = [_idPost]
         $.each(list, function(index, value){
+            //  ko tim thay gia tri trong mang thi push
             if(id_post.indexOf(value.id) === -1){
                 id_post.push(value.id);
             }
@@ -887,58 +1002,229 @@ const edit_profile_post = (req, res) => {
         if (err) {
             res.end("Lỗi hệ thống!")
         } else {
-            Post.collection.updateMany(
-                { "user._id": ObjectId(user._id)},
-                { 
-                    "$set": 
-                    { 
-                        "comments.$[elem].fullname": fullname
-                    } 
-                },
-                { "arrayFilters": [ 
-                    { 
-                        "elem.idComment": ObjectId(user._id)
-                    }
-                ], "multi": true 
-            },function(err,data){
-                 Post.collection.updateMany({'user._id':ObjectId(user._id)}, 
-                 {
-                    $set: 
-                    { 
-                        "user.name" :name,
-                        "user.fullname": fullname,
-                    }
-                },function(err,data){
-                    Object.entries(obj).map(([key, value]) =>
-                       Post.collection.updateMany(
-                        {"user._id": ObjectId(user._id) },
-                        { 
-                            "$set": 
-                            { 
-                                "comments.$[com].replies.$[rep].fullname": fullname
-                            } 
-                        },
-                        { "arrayFilters": [ 
-                            { 
-                                "com.id_post": ObjectId(value)
-                            },
-                            { 
-                                "rep.user_comment": ObjectId(user._id)
+            // update infor on notifications, includes (notice of follow, comment, like, replies)
+            User.collection.find({})
+            .toArray(function(err,data){
+                for(var i= 0; i < data.length;i++){
+                    if(data[i].notifications.length>0){
+                        for(var j = 0; j < data[i].notifications.length;j++){
+                            var noti =  data[i].notifications[j]
+                            if(noti.idCommented){
+                                if(noti.idCommented == user._id){
+                                    User.collection.updateMany({
+                                        "_id":ObjectId(data[i]._id)  
+                                    },{
+                                        $set: 
+                                        { 
+                                            "notifications.$[noti].content" :fullname + ' has commented your post'
+                                        }
+                                    },{
+                                        "arrayFilters":[
+                                            {
+                                               "noti.idCommented":ObjectId(user._id) 
+                                            }
+                                        ]
+                                    })
+                                }
                             }
-                        ]
-                    })
-                    )
-                    return res.json({
-                        data: {
-                            name:name,
-                            fullname:fullname,
-                            bio:bio
+                            else if(noti.idLiked){
+                                if(noti.idLiked == user._id){
+                                    User.collection.updateMany({
+                                        "_id":ObjectId(data[i]._id)  
+                                    },{
+                                        $set: 
+                                        { 
+                                            "notifications.$[noti].content" :fullname + ' has liked your post'
+                                        }
+                                    },{
+                                        "arrayFilters":[
+                                            {
+                                               "noti.idLiked":ObjectId(user._id) 
+                                            }
+                                        ]
+                                    })
+                                }
+                            }
+                            else if(noti.id_reply_comment){
+                                if(noti.id_reply_comment == user._id){
+                                    User.collection.updateMany({
+                                        "_id":ObjectId(data[i]._id)  
+                                    },{
+                                        $set: 
+                                        { 
+                                            "notifications.$[noti].content" :fullname + ' has commented your comment'
+                                        }
+                                    },{
+                                        "arrayFilters":[
+                                            {
+                                               "noti.id_reply_comment":ObjectId(user._id) 
+                                            }
+                                        ]
+                                    })
+                                }
+                            }
+                            else if(noti.idFollowed){
+                                if(noti.idFollowed == user._id){
+                                    User.collection.updateMany({ 
+                                        "_id":ObjectId(data[i]._id)                                      
+                                    },{
+                                        $set: 
+                                        { 
+                                            "notifications.$[noti].content" :fullname + ' has followed your!'
+                                        }
+                                    },{
+                                        "arrayFilters":[
+                                            {
+                                               "noti.idFollowed":ObjectId(user._id) 
+                                            }
+                                        ]
+                                    }
+                                    )
+                                }
+                            }
                         }
-                    });
-              
-                })
-               
+                    }
+                }
             })
+
+            // update user of my post
+            Post.collection.updateMany({'user._id':ObjectId(user._id)}, 
+            {
+               $set: 
+               { 
+                   "user.name" :name,
+                   "user.fullname": fullname
+               }
+            })
+
+            Post.collection.find({})
+            .toArray(function(err,post){
+                for(var i = 0; i < post.length;i++){
+                    for(var j = 0; j < post[i].comments.length;j++){
+                        var com = post[i].comments[j]
+                        if(com.idComment.toString() == user._id.toString() && com.replies.length > 0 ){
+                            for(var d = 0 ; d<com.replies.length; d++ ){
+                                var id_replied = com.replies[d].id_replied
+                                if(id_replied.toString() == com._id.toString()){
+                                    Post.collection.updateMany({
+                                        $and:[
+                                            {
+                                                "_id":ObjectId(post[i]._id)
+                                            },
+                                            {
+                                                "comments.idComment":ObjectId(user._id)
+                                            }
+                                        ]
+                                        
+                                    },{
+                                        "$set":{
+                                            "comments.$[com].replies.$[rep].name_comment": "@"+fullname
+                                        }
+                                    },{
+                                        "arrayFilters":[
+                                            {
+                                                "com._id":ObjectId(com._id)
+                                            },
+                                            {
+                                                "rep._id":ObjectId(com.replies[d]._id)
+                                            }
+                                        ]
+                                    })
+                                }
+                            }
+                        }else{
+                            if(com.replies.length > 0){
+                                for(var k=0;k<com.replies.length;k++){
+                                    var rep = com.replies[k]
+                                    if(rep.user_comment.toString() == user._id.toString()){
+                                        Post.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(post[i]._id)
+                                                },
+                                                {
+                                                    "comments._id":ObjectId(com._id)
+                                                }
+                                            ]
+                                            
+                                        },{
+                                            "$set":{
+                                                "comments.$[com].replies.$[rep].fullname": fullname
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                    "com._id":ObjectId(com._id)
+                                                },
+                                                {
+                                                    "rep._id":ObjectId(rep._id)
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            // update post contain comment, replies of user
+            User.collection.find({})
+            .toArray(function(err,data){
+                for(var i =0 ; i< data.length;i++){
+                    if(data[i].post_comment){
+                        for(var j = 0;j < data[i].post_comment.length;j++){
+                            var post_id = data[i].post_comment[j]._id
+                            Post.collection.updateMany({
+                                "_id":ObjectId(post_id)
+                            },{
+                                $set:{
+                                    "comments.$[com].fullname":fullname
+                                }
+                            },{
+                                "arrayFilters":[
+                                    {
+                                        "com.idComment":ObjectId(user._id)
+                                    }
+                                ]
+                            })
+                        }
+                    }
+                    else if(data[i].post_replies){
+                        for(var j = 0;j < data[i].post_replies.length;j++){
+                            var post_id = data[i].post_replies[j].id_post
+                            var com_id = data[i].post_replies[j].id_comment
+                            var rep_id = data[i].post_replies[j].id_rep
+                            Post.collection.updateMany({
+                                "_id":ObjectId(post_id)
+                            },{
+                                $set:{
+                                    "comments.$[com].replies.$[rep].fullname":fullname
+                                }
+                            },{
+                                "arrayFilters":[
+                                    {
+                                        "com.idComment":ObjectId(com_id)
+                                    },
+                                    {
+                                        "rep.createdAt":rep_id
+                                    }
+                                ]
+                            })
+                        }
+                    }
+                }
+            })
+
+            req.session.user.fullname = fullname
+            req.session.user.name = name
+            return res.json({
+                data: {
+                    name:name,
+                    fullname:fullname,
+                    bio:bio
+                }
+            });
         }
                 
       
@@ -1019,11 +1305,115 @@ const change_password_post = (req,res)=>{
     }
 }
 
+// update infor user different
+const get_UpdateInforUser = (req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+
+    var {_id} =  req.body
+    User.collection.findOne({
+        "_id":ObjectId(_id)
+    },function(err,user){
+        if(err){
+            return res.json({
+                "error":err
+            })
+        }
+        if(user==null){
+            return res.redirect("/")
+        }else{
+            res.json({
+                "status":"success",
+                "user":user
+            })
+        }
+      
+    })
+}
+
+const post_UpdateInfor = (req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    var user= req.session.user;
+    var uploader = upload.single("image")
+    uploader(req, res, next => {
+        var {fullname,bio,name,id_user} = req.body
+        var image = req.file.filename
+        var _idPost = {}
+        var id_post = []
+        for(var i= 0 ; i< user.posts.length;i++){
+            var post = user.posts[i]
+           _idPost.id=post._id
+           var list = [_idPost]
+            $.each(list, function(index, value){
+                //  ko tim thay gia tri trong mang thi push
+                if(id_post.indexOf(value.id) === -1){
+                    id_post.push(value.id);
+                }
+            });
+        }
+        var obj = Object.assign({}, id_post);
+        User.findByIdAndUpdate({ _id: ObjectId(id_user)}, {fullname:fullname,bio:bio,name:name,profileImage:'/demo/'+image},function (err, result) {
+            if (err) {
+                res.end("Lỗi hệ thống!")
+            } else {
+                Post.collection.updateMany(
+                    { "user._id": ObjectId(id_user)},
+                    { 
+                        "$set": 
+                        { 
+                            "comments.$[elem].fullname": fullname
+                        } 
+                    },
+                    { "arrayFilters": [ 
+                        { 
+                            "elem.idComment": ObjectId(id_user)
+                        }
+                    ], "multi": true 
+                },function(err,data){
+                    Object.entries(obj).map(([key, value]) =>
+                    Post.collection.updateMany(
+                     {"user._id": ObjectId(id_user) },
+                     { 
+                         "$set": 
+                         { 
+                             "comments.$[com].replies.$[rep].fullname": fullname
+                         } 
+                     },
+                     { "arrayFilters": [ 
+                         { 
+                             "com.id_post": ObjectId(value)
+                         },
+                         { 
+                             "rep.user_comment": ObjectId(id_user)
+                         }
+                     ]
+                 })
+                 )
+                 return res.json({
+                    data: {
+                        name:name,
+                        fullname:fullname,
+                        bio:bio
+                    }
+                });
+                })
+            }
+                    
+          
+        })
+
+    })
+
+}
 module.exports = {
 
     index,
     get_Follow,
     user_follow,
+    user_All,
 
     login_get,
     login_post,
@@ -1049,7 +1439,10 @@ module.exports = {
     edit_profile_post,
 
     change_password_get,
-    change_password_post
+    change_password_post,
+
+    get_UpdateInforUser,
+    post_UpdateInfor
 }
 
 

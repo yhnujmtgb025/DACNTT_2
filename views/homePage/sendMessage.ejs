@@ -645,91 +645,228 @@
           stored_vid.splice(n,1);
       }  
          
-
-
-  function directPerson(self,id,id_follow,image,name,id_current){
-      $("img.pic").attr("src",image)
-      $("#name-selected").text(name)
-      $("#_id").val(id)
-      $("#id-follow").val(id_follow)
-      $(".inputFlex").css('display','block')
-      $(".framechat").css('display','none')
-      socket.emit("message",{id_current:id_current})
-      getMessage(id_follow);
-  }
-  var id_hover = ''
-  function getMessage(id){
-    $.ajax({
-            method: "POST",
-            url: "/getInbox",
-            data: {
-                _id: id   // id following
-            },
-            cache: false,
-            success: function (responseText) {
-                if (responseText.status == "success") {  
-                    var html =""
-                    user = responseText.user[0]
-                    for(var i= 0;i < user.followings.length;i++){
-                      var follow = user.followings[i]
-                      if(follow.idFollowing.toString() == id.toString()){
-                          for(var j = 0; j < follow.inbox.length ; j++){
-                              var inbox = follow.inbox[j]
-                              if(inbox.from.toString() ==  responseText.id.toString())
-                              {
-                                  html += '<div class="receiver" id="receiver-'+inbox._id+'">'
-                                    html += '<div class="box-msg">'
-                                        if(inbox.image[1].length > 0){
-                                              html += '<div class="attach-img">'
-                                                  html += '<div class="edit-img">'
-                                                    html += '<div class="img-msg">'
-                                                        html += '<div class="inner-width">'
-                                                            html += '<div class="gallery">'
-                                                                for(var n =0 ; n < inbox.image[1].length; n++){
-                                                                    var image = inbox.image[1]
-                                                                    html += '<a href="/demo/' + image[n].originalname + ' " class="image">'
-                                                                      html += '<img src="/demo/' + image[n].originalname + ' " alt="">'
-                                                                    html += '</a>'
-                                                                  }                                                       
+      function directPerson(self,id,id_follow,image,name,id_current){
+          if($(".user-following").hasClass("active-chat")){
+            $(".user-following").removeClass("active-chat")
+            $("#user-following-"+id).addClass("active-chat")
+          }else{
+            $("#user-following-"+id).addClass("active-chat")
+          }
+         
+          $("img.pic").attr("src",image)
+          $("#name-selected").text(name)
+          $("#_id").val(id)
+          $("#id-follow").val(id_follow)
+          $(".inputFlex").css('display','block')
+          $(".framechat").css('display','none')
+          socket.emit("message",{id_current:id_current})
+          getMessage(id_follow);
+      }
+      
+      var id_hover = ''
+      function getMessage(id){
+        $.ajax({
+                method: "POST",
+                url: "/getInbox",
+                data: {
+                    _id: id   // id following
+                },
+                cache: false,
+                success: function (responseText) {
+                    if (responseText.status == "success") {  
+                        var html =""
+                        user = responseText.user[0]
+                        for(var i= 0;i < user.followings.length;i++){
+                          var follow = user.followings[i]
+                          if(follow.idFollowing.toString() == id.toString()){
+                              for(var j = 0; j < follow.inbox.length ; j++){
+                                  var inbox = follow.inbox[j]
+                                  if(inbox.from.toString() ==  responseText.id.toString())
+                                  {
+                                      html += '<div class="receiver" id="receiver-'+inbox._id+'">'
+                                        html += '<div class="box-msg">'
+                                            if(inbox.image[1].length > 0){
+                                                  html += '<div class="attach-img">'
+                                                      html += '<div class="edit-img">'
+                                                        html += '<div class="img-msg">'
+                                                            html += '<div class="inner-width">'
+                                                                html += '<div class="gallery">'
+                                                                    for(var n =0 ; n < inbox.image[1].length; n++){
+                                                                        var image = inbox.image[1]
+                                                                        html += '<a href="/demo/' + image[n].originalname + ' " class="image">'
+                                                                          html += '<img src="/demo/' + image[n].originalname + ' " alt="">'
+                                                                        html += '</a>'
+                                                                      }                                                       
+                                                                html += '</div>'
                                                             html += '</div>'
-                                                        html += '</div>'
-                                                        if(inbox.image[0].length > 0){
-                                                            if(inbox.image[0].length > 1){
-                                                              html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
-                                                                html += '<span>'
-                                                                  html += inbox.image[0].length 
-                                                                html += '</span>'
-                                                                html += '<span>'
-                                                                html += '❤️</span>'
-                                                              html += '</div>'
-                                                            }else{
-                                                              for(var i =0 ; i < inbox.image[0].length;i++){
-                                                                 var likeImage = inbox.image[0]
-                                                                  if(likeImage[i].from.toString() == user._id.toString()){
-                                                                    html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
-                                                                      html += '❤️'
-                                                                    html += '</div>'
-                                                                  }else{
-                                                                    html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
-                                                                      html += '	&#128153'
-                                                                    html += '</div>'
+                                                            if(inbox.image[0].length > 0){
+                                                                if(inbox.image[0].length > 1){
+                                                                  html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
+                                                                    html += '<span>'
+                                                                      html += inbox.image[0].length 
+                                                                    html += '</span>'
+                                                                    html += '<span>'
+                                                                    html += '❤️</span>'
+                                                                  html += '</div>'
+                                                                }else{
+                                                                  for(var i =0 ; i < inbox.image[0].length;i++){
+                                                                    var likeImage = inbox.image[0]
+                                                                      if(likeImage[i].from.toString() == user._id.toString()){
+                                                                        html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
+                                                                          html += '❤️'
+                                                                        html += '</div>'
+                                                                      }else{
+                                                                        html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
+                                                                          html += '	&#128153'
+                                                                        html += '</div>'
+                                                                      }
                                                                   }
-                                                              }
-                                                              
+                                                                  
+                                                                }
+                                                        
+                                                      }
+                                                        html += '</div>'
+                                                          html += '<svg class="dot-img-brown img-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                              html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                              html += '</circle>'
+                                                              html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                              html += '</circle>'
+                                                              html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                              html += '</circle>'
+                                                              html += '</svg>'
+                                                          html += '<svg class="dot-img-black img-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                              html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                              html += '</circle>'
+                                                              html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                              html += '</circle>'
+                                                              html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                              html += '</circle>'
+                                                          html += '</svg>'
+                                                      html += '<div class="modal-edit-img modal-img-'+inbox._id+'">'
+                                                        var islike_img_receiver = false
+                                                        var id_created_img_receiver = ''
+                                                        if(inbox.image[0].length > 0){
+                                                          for(var i =0 ; i < inbox.image[0].length;i++){
+                                                            var likeImage = inbox.image[0]
+                                                            if(likeImage[i].from.toString() == user._id.toString()){
+                                                                islike_img_receiver = true
+                                                                id_created_img_receiver = likeImage[i].createdAt
+                                                                break;
                                                             }
-                                                     
-                                                  }
-                                                
-                                                    html += '</div>'
-                                                      html += '<svg class="dot-img-brown img-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                          html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          }
+                                                        }
+                                                        if(islike_img_receiver){
+                                                          html += '<p class="unlike-img" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_img_receiver+"'"+')">'
+                                                              html += 'Unlike&nbsp;'
+                                                          html += '</p>'
+                                                          html += '<p onclick="unsend_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                          html += '</p>'
+                                                          html += '<img class="img-unlike" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                        else{
+                                                          html += '<p class="unlike-img-0" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                            html += 'Like'
+                                                          html += '</p>'
+                                                          html += '<p onclick="unsend_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                          html += '</p>'
+                                                          html += '<img class="img-like" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                    
+                                                      html += '</div>'
+                                                  html += '</div>'
+                                            
+                                              html += '</div>'
+                                        }
+                                            if(inbox.video[1].length > 0){
+                                              html += '<div class="attach-vid">'
+                                                  html += ' <div class="edit-vid">'
+                                                      html += ' <svg class="dot-vid-brown vid-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                          html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
                                                           html += '</circle>'
                                                           html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
                                                           html += '</circle>'
                                                           html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
                                                           html += '</circle>'
-                                                          html += '</svg>'
-                                                      html += '<svg class="dot-img-black img-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                      html += ' </svg>'
+                                                      html += '<svg class="dot-vid-black vid-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                          html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += ' <circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                      html += ' </svg>'
+                                                      html += '<div class="modal-edit-vid modal-vid-'+inbox._id+'">'
+                                                        var islike_vid_receiver = false
+                                                        var id_created_vid_receiver = ''
+                                                        if(inbox.video[0].length > 0){
+                                                          for(var i =0 ; i < inbox.video[0].length;i++){
+                                                            var likeVideo = inbox.video[0]
+                                                            if(likeVideo[i].from.toString() == user._id.toString()){
+                                                                islike_vid_receiver = true
+                                                                id_created_vid_receiver = likeVideo[i].createdAt
+                                                                break;
+                                                            }
+                                                          }
+                                                        }
+                                                        if(islike_vid_receiver){
+                                                          html += '<p class="unlike-vid" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_vid_receiver+"'"+')">'
+                                                              html += 'Unlike&nbsp;'
+                                                          html += '</p>'
+                                                          html += '<p onclick="unsend_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                          html += '</p>'
+                                                          html += '<img class="vid-unlike" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                        else{
+                                                          html += '<p class="unlike-vid-0" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                            html += 'Like'
+                                                          html += '</p>'
+                                                          html += '<p onclick="unsend_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                          html += '</p>'
+                                                          html += '<img class="vid-like" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                    
+                                                      html += '</div>'
+                                                  html += '</div>'
+                                                  for(var n =0 ; n < inbox.video[1].length; n++){
+                                                    var video = inbox.video[1]
+                                                      html += '<a href="demo/' + video[n].originalname + '" class="video-msg">'
+                                                          html += '<iframe src="/demo/' + video[n].originalname + '" frameborder="0" sandbox>'
+                                                          html += '</iframe>'
+                                                          if(inbox.video[0].length > 0){
+                                                              if(inbox.video[0].length > 1){
+                                                                html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                  html += '<span style="color:#333">'
+                                                                    html += inbox.video[0].length 
+                                                                  html += '</span>'
+                                                                  html += '<span>'
+                                                                  html += '❤️</span>'
+                                                                html += '</div>'
+                                                              }else{
+                                                                for(var i =0 ; i < inbox.video[0].length;i++){
+                                                                    var likeVideo = inbox.video[0]
+                                                                    if(likeVideo[i].from.toString() == user._id.toString()){
+                                                                      html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                        html += '❤️'
+                                                                      html += '</div>'
+                                                                    }else{
+                                                                      html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                        html += '	&#128153'
+                                                                      html += '</div>'
+                                                                    }
+                                                                }
+                                                                
+                                                              }
+                                                            }
+                                                      
+                                                      html += '  </a>'
+                                                  }
+                                              html += '</div>'
+                                          }
+                                            if(inbox.message){
+                                                html += '<div class="content-msg">'
+                                                  html += '<div class="edit-msg">'
+                                                      html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
                                                           html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
                                                           html += '</circle>'
                                                           html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
@@ -737,230 +874,288 @@
                                                           html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
                                                           html += '</circle>'
                                                       html += '</svg>'
-                                                  html += '<div class="modal-edit-img modal-img-'+inbox._id+'">'
-                                                    var islike_img_receiver = false
-                                                    var id_created_img_receiver = ''
-                                                    if(inbox.image[0].length > 0){
-                                                      for(var i =0 ; i < inbox.image[0].length;i++){
-                                                        var likeImage = inbox.image[0]
-                                                        if(likeImage[i].from.toString() == user._id.toString()){
-                                                            islike_img_receiver = true
-                                                            id_created_img_receiver = likeImage[i].createdAt
-                                                            break;
+                                                      html += '<svg class="dot-msg-black msg-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                          html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
+                                                          html += '</circle>'
+                                                      html += '</svg>'   
+                                                      html += '<div class="modal-edit-msg modal-msg-'+inbox._id+'">'
+                                                      
+                                                      // check like message
+                                                      var islike_msg_receiver = false
+                                                      var id_created_msg_receiver  = ''
+                                                      if(inbox.likes.length > 0){
+                                                        for(var i =0 ; i < inbox.likes.length;i++){
+                                                          if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                              islike_msg_receiver = true
+                                                              id_created_msg_receiver = inbox.likes[i].createdAt
+                                                              break;
+                                                          }
                                                         }
                                                       }
-                                                    }
-                                                    if(islike_img_receiver){
-                                                      html += '<p class="unlike-img" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_img_receiver+"'"+')">'
-                                                          html += 'Unlike&nbsp;'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="img-unlike" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                    else{
-                                                      html += '<p class="unlike-img-0" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                        html += 'Like'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="img-like" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                
-                                                  html += '</div>'
-                                              html += '</div>'
-                                         
-                                          html += '</div>'
-                                    }
-                                        if(inbox.video[1].length > 0){
-                                          html += '<div class="attach-vid">'
-                                              html += ' <div class="edit-vid">'
-                                                  html += ' <svg class="dot-vid-brown vid-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                      html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                  html += ' </svg>'
-                                                  html += '<svg class="dot-vid-black vid-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                      html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += ' <circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                  html += ' </svg>'
-                                                  html += '<div class="modal-edit-vid modal-vid-'+inbox._id+'">'
-                                                    var islike_vid_receiver = false
-                                                    var id_created_vid_receiver = ''
-                                                    if(inbox.video[0].length > 0){
-                                                      for(var i =0 ; i < inbox.video[0].length;i++){
-                                                        var likeVideo = inbox.video[0]
-                                                        if(likeVideo[i].from.toString() == user._id.toString()){
-                                                            islike_vid_receiver = true
-                                                            id_created_vid_receiver = likeVideo[i].createdAt
-                                                            break;
-                                                        }
+                                                      if(islike_msg_receiver){
+                                                        html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_receiver+"'"+')">'
+                                                            html += 'Unlike&nbsp;'
+                                                        html += '</p>'
+                                                        html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                        html += '</p>'
+                                                        html += '<img class="msg-unlike" src="img/tamgiac.png" alt="">'
                                                       }
-                                                    }
-                                                    if(islike_vid_receiver){
-                                                      html += '<p class="unlike-vid" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_vid_receiver+"'"+')">'
-                                                          html += 'Unlike&nbsp;'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="vid-unlike" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                    else{
-                                                      html += '<p class="unlike-vid-0" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                        html += 'Like'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="vid-like" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                
+                                                      else{
+                                                        html += '<p class="unlike-msg-0" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                          html += 'Like'
+                                                        html += '</p>'
+                                                        html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                        html += '</p>'
+                                                        html += '<img class="msg-like" src="img/tamgiac.png" alt="">'
+                                                      }
+                                                      html += '</div>'                             
                                                   html += '</div>'
-                                              html += '</div>'
-                                              for(var n =0 ; n < inbox.video[1].length; n++){
-                                                var video = inbox.video[1]
-                                                  html += '<a href="demo/' + video[n].originalname + '" class="video-msg">'
-                                                      html += '<iframe src="/demo/' + video[n].originalname + '" frameborder="0" sandbox>'
-                                                      html += '</iframe>'
-                                                      if(inbox.video[0].length > 0){
-                                                          if(inbox.video[0].length > 1){
-                                                            html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
-                                                              html += '<span style="color:#333">'
-                                                                html += inbox.video[0].length 
+                                                  html += '<div class="text-msg">'
+                                                      html += inbox.message
+                                                      if(inbox.likes.length > 0){
+                                                          if(inbox.likes.length > 1){
+                                                            html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
+                                                              html += '<span>'
+                                                                html += inbox.likes.length 
                                                               html += '</span>'
                                                               html += '<span>'
                                                               html += '❤️</span>'
                                                             html += '</div>'
                                                           }else{
-                                                            for(var i =0 ; i < inbox.video[0].length;i++){
-                                                                var likeVideo = inbox.video[0]
-                                                                if(likeVideo[i].from.toString() == user._id.toString()){
-                                                                  html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                            for(var i =0 ; i < inbox.likes.length;i++){
+                                                                if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                                  html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
                                                                     html += '❤️'
                                                                   html += '</div>'
                                                                 }else{
-                                                                  html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                  html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
                                                                     html += '	&#128153'
                                                                   html += '</div>'
                                                                 }
                                                             }
                                                             
                                                           }
-                                                        }
-                                                  
-                                                  html += '  </a>'
-                                              }
-                                          html += '</div>'
-                                      }
-                                        if(inbox.message){
-                                            html += '<div class="content-msg">'
-                                              html += '<div class="edit-msg">'
-                                                  html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                      html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                  html += '</svg>'
-                                                  html += '<svg class="dot-msg-black msg-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                      html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
-                                                      html += '</circle>'
-                                                  html += '</svg>'   
-                                                  html += '<div class="modal-edit-msg modal-msg-'+inbox._id+'">'
-                                                  
-                                                  // check like message
-                                                  var islike_msg_receiver = false
-                                                  var id_created_msg_receiver  = ''
-                                                  if(inbox.likes.length > 0){
-                                                    for(var i =0 ; i < inbox.likes.length;i++){
-                                                      if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                          islike_msg_receiver = true
-                                                          id_created_msg_receiver = inbox.likes[i].createdAt
-                                                          break;
-                                                      }
-                                                    }
-                                                  }
-                                                  if(islike_msg_receiver){
-                                                    html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_receiver+"'"+')">'
-                                                        html += 'Unlike&nbsp;'
-                                                    html += '</p>'
-                                                    html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                    html += '</p>'
-                                                    html += '<img class="msg-unlike" src="img/tamgiac.png" alt="">'
-                                                  }
-                                                  else{
-                                                    html += '<p class="unlike-msg-0" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                    html += 'Like'
-                                                    html += '</p>'
-                                                    html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                    html += '</p>'
-                                                    html += '<img class="msg-like" src="img/tamgiac.png" alt="">'
-                                                  }
-
-                                                  html += '</div>'                             
-                                              html += '</div>'
-                                              html += '<div class="text-msg">'
-                                                  html += inbox.message
-                                                  if(inbox.likes.length > 0){
-                                                      if(inbox.likes.length > 1){
-                                                        html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
-                                                          html += '<span>'
-                                                            html += inbox.likes.length 
-                                                          html += '</span>'
-                                                          html += '<span>'
-                                                          html += '❤️</span>'
-                                                        html += '</div>'
-                                                      }else{
-                                                        for(var i =0 ; i < inbox.likes.length;i++){
-                                                            if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                              html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
-                                                                html += '❤️'
-                                                              html += '</div>'
-                                                            }else{
-                                                              html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
-                                                                html += '	&#128153'
-                                                              html += '</div>'
-                                                            }
-                                                        }
                                                         
                                                       }
-                                                     
+                                                      
+                                                  html += '</div>'
+                                              html += '</div>'
+                                            }   
+                                        html += '</div>'
+                                      html += '</div>'
+                                  }
+                                  else
+                                  {
+                                    html += '<div class="sender" id="sender-'+inbox._id+'">'
+                                      html += '<div class="box-msg">'
+
+                                        if(inbox.image[1].length > 0){
+                                            html += '<div class="attach-img">'
+                                                html += '<div class="edit-img">'
+                                                    html += '<svg class="dot-img-brown img-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                        html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                        html += '</circle>'
+                                                        html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                        html += '</circle>'
+                                                        html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                        html += '</circle>'
+                                                        html += '</svg>'
+                                                    html += '<svg class="dot-img-black img-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                        html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                        html += '</circle>'
+                                                        html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                        html += '</circle>'
+                                                        html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                        html += '</circle>'
+                                                    html += '</svg>'
+                                                html += '<div class="modal-edit-img modal-img-'+inbox._id+'">'
+                                                        var islike_img_sender = false
+                                                        var id_created_img_sender = ''
+                                                        if(inbox.image[0].length > 0){
+                                                          for(var i =0 ; i < inbox.image[0].length;i++){
+                                                            var likeImage = inbox.image[0]
+                                                            if(likeImage[i].from.toString() == user._id.toString()){
+                                                                islike_img_sender = true
+                                                                id_created_img_sender = likeImage[i].createdAt
+                                                                break;
+                                                            }
+                                                          }
+                                                        }
+                                                        if(islike_img_sender){
+                                                          html += '<p class="unlike-img" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_img_sender+"'"+')">'
+                                                              html += 'Unlike'
+                                                          html += '</p>'
+                                                          html += '<img class="img-unlike" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                        else{
+                                                          html += '<p class="unlike-img-0" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                              html += '&nbsp;Like'
+                                                          html += '</p>'
+                                                          html += '<img class="img-like" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                    
+                                                html += '</div>'
+                                            html += '</div>'
+                                              html += '<div class="img-msg">'
+                                                  html += '<div class="inner-width">'
+                                                      html += '<div class="gallery">'
+                                                        for(var n =0 ; n < inbox.image[1].length; n++){
+                                                          var image = inbox.image[1]
+                                                          html += '<a href="/demo/' + image[n].originalname + ' " class="image">'
+                                                            html += '<img src="/demo/' + image[n].originalname + ' " alt="">'
+                                                          html += '</a>'
+                                                        }  
+                                                      html += '</div>'
+                                                  html += '</div>'
+                                                  if(inbox.image[0].length > 0){
+                                                    if(inbox.image[0].length > 1){
+                                                      html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
+                                                        html += '<span>'
+                                                          html += inbox.image[0].length 
+                                                        html += '</span>'
+                                                        html += '<span>'
+                                                        html += '❤️</span>'
+                                                      html += '</div>'
+                                                    }else{
+                                                      for(var i =0 ; i < inbox.image[0].length;i++){
+                                                          var likeImage = inbox.image[0]
+                                                          if(likeImage[i].from.toString() == user._id.toString()){
+                                                            html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
+                                                              html += '❤️'
+                                                            html += '</div>'
+                                                          }else{
+                                                            html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
+                                                              html += '	&#128153'
+                                                            html += '</div>'
+                                                          }
+                                                      }
+                                                      
+                                                    }
+                                                        
                                                   }
-                                                  
+                                                    
                                               html += '</div>'
                                           html += '</div>'
-                                        }   
-                                    html += '</div>'
-                                  html += '</div>'
-                              }
-                              else
-                              {
-                                html += '<div class="sender" id="sender-'+inbox._id+'">'
-                                  html += '<div class="box-msg">'
+                                        }
 
-                                    if(inbox.image[1].length > 0){
-                                        html += '<div class="attach-img">'
-                                            html += '<div class="edit-img">'
-                                                html += '<svg class="dot-img-brown img-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                    html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                    html += '</circle>'
-                                                    html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                    html += '</circle>'
-                                                    html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                    html += '</circle>'
-                                                    html += '</svg>'
-                                                html += '<svg class="dot-img-black img-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                        if(inbox.video[1].length > 0){
+                                                html += '<div class="attach-vid">'
+                                                  html += ' <div class="edit-vid">'
+                                                    for(var n =0 ; n < inbox.video[1].length; n++){
+                                                      var video =  inbox.video[1]
+                                                      html += '<a href="demo/' + video[n].originalname + '" class="video-msg">'
+                                                          html += ' <iframe src="/demo/' + video[n].originalname + '" frameborder="0" sandbox>'
+                                                          html += '</iframe>'
+                                                          if(inbox.video[0].length > 0){
+                                                              if(inbox.video[0].length > 1){
+                                                                html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                  html += '<span style="color:#333">'
+                                                                    html += inbox.video[0].length 
+                                                                  html += '</span>'
+                                                                  html += '<span>'
+                                                                  html += '❤️</span>'
+                                                                html += '</div>'
+                                                              }else{
+                                                                for(var i =0 ; i < inbox.video[0].length;i++){
+                                                                    var likeVideo = inbox.video[0]
+                                                                    if(likeVideo[i].from.toString() == user._id.toString()){
+                                                                      html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                        html += '❤️'
+                                                                      html += '</div>'
+                                                                    }else{
+                                                                      html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
+                                                                        html += '	&#128153'
+                                                                      html += '</div>'
+                                                                    }
+                                                                }
+                                                                
+                                                              }
+                                                            }
+                                                      
+                                                      html += '  </a>'
+                                                    }
+                                                      html += ' <svg class="dot-vid-brown vid-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                          html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                      html += ' </svg>'
+                                                      html += '<svg class="dot-vid-black vid-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                          html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                          html += ' <circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                          html += '</circle>'
+                                                      html += ' </svg>'
+                                                      html += '<div class="modal-edit-vid modal-vid-'+inbox._id+'">'
+                                                        var islike_vid_sender = false
+                                                        var id_created_vid_sender = ''
+                                                        if(inbox.video[0].length > 0){
+                                                          for(var i =0 ; i < inbox.video[0].length;i++){
+                                                            var likeVideo = inbox.video[0]
+                                                            if(likeVideo[i].from.toString() == user._id.toString()){
+                                                                islike_vid_sender = true
+                                                                id_created_vid_sender = likeVideo[i].createdAt
+                                                                break;
+                                                            }
+                                                          }
+                                                        }
+                                                        if(islike_vid_sender){
+                                                          html += '<p class="unlike-vid" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_vid_sender+"'"+')">'
+                                                              html += 'Unlike&nbsp;'
+                                                          html += '</p>'
+                                                          html += '<img class="vid-unlike" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                        else{
+                                                          html += '<p class="unlike-vid-0" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                            html += '&nbsp;Like'
+                                                          html += '</p>'
+                                                          html += '<img class="vid-like" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                      html += '</div>'
+                                                  html += '</div>'
+                                              html += '</div>'
+                                          }
+                                        
+                                        if(inbox.message){
+                                        html += '<div class="content-msg">'
+                                            html += '<div class="text-msg">'
+                                                html += inbox.message
+                                                if(inbox.likes.length > 0){
+                                                    if(inbox.likes.length > 1){
+                                                      html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
+                                                        html += '<span>'
+                                                          html += inbox.likes.length 
+                                                        html += '</span>'
+                                                        html += '<span>'
+                                                        html += '❤️</span>'
+                                                      html += '</div>'
+                                                    }else{
+                                                      for(var i =0 ; i < inbox.likes.length;i++){
+                                                          if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                            html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
+                                                              html += '❤️'
+                                                            html += '</div>'
+                                                          }else{
+                                                            html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
+                                                              html += '	&#128153'
+                                                            html += '</div>'
+                                                          }
+                                                      }
+                                                      
+                                                    }
+                                                    
+                                                }
+                                            html += '</div>'
+                                            html += '<div class="edit-msg">'
+                                                html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
                                                     html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
                                                     html += '</circle>'
                                                     html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
@@ -968,559 +1163,129 @@
                                                     html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
                                                     html += '</circle>'
                                                 html += '</svg>'
-                                            html += '<div class="modal-edit-img modal-img-'+inbox._id+'">'
-                                                    var islike_img_sender = false
-                                                    var id_created_img_sender = ''
-                                                    if(inbox.image[0].length > 0){
-                                                      for(var i =0 ; i < inbox.image[0].length;i++){
-                                                        var likeImage = inbox.image[0]
-                                                        if(likeImage[i].from.toString() == user._id.toString()){
-                                                            islike_img_sender = true
-                                                            id_created_img_sender = likeImage[i].createdAt
-                                                            break;
-                                                        }
-                                                      }
-                                                    }
-                                                    if(islike_img_sender){
-                                                      html += '<p class="unlike-img" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_img_sender+"'"+')">'
-                                                          html += 'Unlike&nbsp;'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="img-unlike" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                    else{
-                                                      html += '<p class="unlike-img-0" onclick="like_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                          html += 'Like'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"image"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="img-like" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                
-                                            html += '</div>'
-                                        html += '</div>'
-                                          html += '<div class="img-msg">'
-                                              html += '<div class="inner-width">'
-                                                  html += '<div class="gallery">'
-                                                    for(var n =0 ; n < inbox.image[1].length; n++){
-                                                      var image = inbox.image[1]
-                                                      html += '<a href="/demo/' + image[n].originalname + ' " class="image">'
-                                                        html += '<img src="/demo/' + image[n].originalname + ' " alt="">'
-                                                      html += '</a>'
-                                                    }  
-                                                  html += '</div>'
-                                              html += '</div>'
-                                              if(inbox.image[0].length > 0){
-                                                if(inbox.image[0].length > 1){
-                                                  html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
-                                                    html += '<span>'
-                                                      html += inbox.image[0].length 
-                                                    html += '</span>'
-                                                    html += '<span>'
-                                                    html += '❤️</span>'
-                                                  html += '</div>'
-                                                }else{
-                                                  for(var i =0 ; i < inbox.image[0].length;i++){
-                                                      var likeImage = inbox.image[0]
-                                                      if(likeImage[i].from.toString() == user._id.toString()){
-                                                        html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
-                                                          html += '❤️'
-                                                        html += '</div>'
-                                                      }else{
-                                                        html += ' <div style="visibility:visible" class="heart-img heart-img-'+inbox._id+'">'
-                                                          html += '	&#128153'
-                                                        html += '</div>'
-                                                      }
-                                                  }
-                                                  
-                                                }
-                                                     
-                                              }
-                                                
-                                          html += '</div>'
-                                      html += '</div>'
-                                    }
-
-                                    if(inbox.video[1].length > 0){
-                                            html += '<div class="attach-vid">'
-                                              html += ' <div class="edit-vid">'
-                                                for(var n =0 ; n < inbox.video[1].length; n++){
-                                                  var video =  inbox.video[1]
-                                                  html += '<a href="demo/' + video[n].originalname + '" class="video-msg">'
-                                                      html += ' <iframe src="/demo/' + video[n].originalname + '" frameborder="0" sandbox>'
-                                                      html += '</iframe>'
-                                                      if(inbox.video[0].length > 0){
-                                                          if(inbox.video[0].length > 1){
-                                                            html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
-                                                              html += '<span style="color:#333">'
-                                                                html += inbox.video[0].length 
-                                                              html += '</span>'
-                                                              html += '<span>'
-                                                              html += '❤️</span>'
-                                                            html += '</div>'
-                                                          }else{
-                                                            for(var i =0 ; i < inbox.video[0].length;i++){
-                                                                var likeVideo = inbox.video[0]
-                                                                if(likeVideo[i].from.toString() == user._id.toString()){
-                                                                  html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
-                                                                    html += '❤️'
-                                                                  html += '</div>'
-                                                                }else{
-                                                                  html += ' <div style="visibility:visible" class="heart-vid heart-vid-'+inbox._id+'">'
-                                                                    html += '	&#128153'
-                                                                  html += '</div>'
-                                                                }
-                                                            }
-                                                            
+                                                html += '<svg class="dot-msg-black msg-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                    html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                    html += '</circle>'
+                                                    html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                    html += '</circle>'
+                                                    html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
+                                                    html += '</circle>'
+                                                html += '</svg>'   
+                                                html += '<div class="modal-edit-msg modal-msg-'+inbox._id+'">'
+                                                    // check like message
+                                                      var islike_msg_sender = false
+                                                      var id_created_msg_sender = ''
+                                                      if(inbox.likes.length > 0){
+                                                        for(var i =0 ; i < inbox.likes.length;i++){
+                                                          if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                            islike_msg_sender = true
+                                                            id_created_msg_sender = inbox.likes[i].createdAt
+                                                              break;
                                                           }
                                                         }
-                                                  
-                                                  html += '  </a>'
-                                                }
-                                                  html += ' <svg class="dot-vid-brown vid-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                      html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                  html += ' </svg>'
-                                                  html += '<svg class="dot-vid-black vid-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                      html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                      html += ' <circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                      html += '</circle>'
-                                                  html += ' </svg>'
-                                                  html += '<div class="modal-edit-vid modal-vid-'+inbox._id+'">'
-                                                    var islike_vid_sender = false
-                                                    var id_created_vid_sender = ''
-                                                    if(inbox.video[0].length > 0){
-                                                      for(var i =0 ; i < inbox.video[0].length;i++){
-                                                        var likeVideo = inbox.video[0]
-                                                        if(likeVideo[i].from.toString() == user._id.toString()){
-                                                            islike_vid_sender = true
-                                                            id_created_vid_sender = likeVideo[i].createdAt
-                                                            break;
-                                                        }
                                                       }
-                                                    }
-                                                    if(islike_vid_sender){
-                                                      html += '<p class="unlike-vid" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_vid_sender+"'"+')">'
-                                                          html += 'Unlike&nbsp;'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="vid-unlike" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                    else{
-                                                      html += '<p class="unlike-vid-0" onclick="like_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                        html += 'Like'
-                                                      html += '</p>'
-                                                      html += '<p onclick="unsend_Msg('+"'"+"video"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                      html += '</p>'
-                                                      html += '<img class="vid-like" src="img/tamgiac.png" alt="">'
-                                                    }
-                                                  html += '</div>'
-                                              html += '</div>'
-                                          html += '</div>'
-                                      }
-                                    
-                                    if(inbox.message){
-                                    html += '<div class="content-msg">'
-                                        html += '<div class="text-msg">'
-                                            html += inbox.message
-                                            if(inbox.likes.length > 0){
-                                                if(inbox.likes.length > 1){
-                                                  html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
-                                                    html += '<span>'
-                                                      html += inbox.likes.length 
-                                                    html += '</span>'
-                                                    html += '<span>'
-                                                    html += '❤️</span>'
-                                                  html += '</div>'
-                                                }else{
-                                                  for(var i =0 ; i < inbox.likes.length;i++){
-                                                      if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                        html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
-                                                          html += '❤️'
-                                                        html += '</div>'
+                                                      if(islike_msg_sender){
+                                                        html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_sender+"'"+')">'
+                                                            html += 'Unlike'
+                                                        html += '</p>'
+                                                        html += '<img class="msg-unlike" src="img/tamgiac.png" alt="">'
                                                       }else{
-                                                        html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
-                                                          html += '	&#128153'
-                                                        html += '</div>'
+                                                        html += '<p class="unlike-msg-0" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                        html += '&nbsp;Like'
+                                                        html += '</p>'
+                                                        html += '<img class="msg-like" src="img/tamgiac.png" alt="">'
                                                       }
-                                                  }
-                                                  
-                                                }
-                                                
-                                            }
+                                                html += '</div>'                             
+                                            html += '</div>'
                                         html += '</div>'
-                                        html += '<div class="edit-msg">'
-                                            html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                html += '</circle>'
-                                                html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                html += '</circle>'
-                                                html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                html += '</circle>'
-                                            html += '</svg>'
-                                            html += '<svg class="dot-msg-black msg-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                html += '</circle>'
-                                                html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                html += '</circle>'
-                                                html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
-                                                html += '</circle>'
-                                            html += '</svg>'   
-                                            html += '<div class="modal-edit-msg modal-msg-'+inbox._id+'">'
-                                                // check like message
-                                                  var islike_msg_sender = false
-                                                  var id_created_msg_sender = ''
-                                                  if(inbox.likes.length > 0){
-                                                    for(var i =0 ; i < inbox.likes.length;i++){
-                                                      if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                        islike_msg_sender = true
-                                                        id_created_msg_sender = inbox.likes[i].createdAt
-                                                          break;
-                                                      }
-                                                    }
-                                                  }
-                                                  if(islike_msg_sender){
-                                                    html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_sender+"'"+')">'
-                                                        html += 'Unlike&nbsp;'
-                                                    html += '</p>'
-                                                    html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                    html += '</p>'
-                                                    html += '<img class="msg-unlike" src="img/tamgiac.png" alt="">'
-                                                  }else{
-                                                    html += '<p class="unlike-msg-0" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                    html += 'Like'
-                                                    html += '</p>'
-                                                    html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                    html += '</p>'
-                                                    html += '<img class="msg-like" src="img/tamgiac.png" alt="">'
-                                                  }
-                                            html += '</div>'                             
-                                        html += '</div>'
+                                      }
+                                        
+                                      html += '</div>'
                                     html += '</div>'
                                   }
-                                    
-                                  html += '</div>'
-                                html += '</div>'
-                              }
-                              hoverReceiver(inbox._id);
-                            }
-                      }
-                   
-                    }
-                    var chat = document.getElementsByClassName("frame-chat")[0]
-                    chat.innerHTML=html
-                    chat.scrollTop=chat.scrollHeight;
-                   
-
-                    $('.receiver').hover(function() {
-                      var a = this.id
-                      a=a.split("receiver-")[1]
-                      hoverReceiver(a)
-	                  });
-                    $('.sender').hover(function() {
-                      var a = this.id
-                      a=a.split("sender-")[1]
-                      hoverSender(a);
-                    })
-                   
-                    
-                    
-                }
-            }
-        })
-  
-  }
-
-  function like_Msg(format,id_mes,id_follow,id_createdAt,id_created){
-    $.ajax({
-          method: "POST",
-          url: "/likeChat",
-          data: {
-              format:format,
-              id_mes:id_mes,
-              id_follow:id_follow,
-              id_createdAt:id_createdAt,
-              id_created:id_created
-          },
-          cache: false,
-          success: function(responseText) {
-              if (responseText.status == "success") {
-                getMessage(id_follow)
-              }
-          },
-          error:function(responseText) {
-              alert(responseText)
-          }
-        });
-  }
-
-  function unsend_Msg(format,id_mes){
-      
-  }
-
-  socket.on("messageReceiver",(msg)=>{
-    var html = ""
-      if(msg.from){
-        html += '<div class="receiver" id="receiver-'+msg.createdAt+'">'
-          html += '<div class="box-msg">'
-            if(msg.image.length > 0){
-                  html += '<div class="attach-img">'
-                      html += '<div class="edit-img">'
-                          html += '<svg class="dot-img-brown img-brown-'+msg.createdAt+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                              html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                              html += '</circle>'
-                              html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                              html += '</circle>'
-                              html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                              html += '</circle>'
-                              html += '</svg>'
-                          html += '<svg class="dot-img-black img-black-'+msg.createdAt+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                              html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                              html += '</circle>'
-                              html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                              html += '</circle>'
-                              html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                              html += '</circle>'
-                          html += '</svg>'
-                      html += '<div class="modal-edit-img modal-img-'+msg.createdAt+'">'
-                          html += '<p>Like'
-                          html += '</p>'
-                          html += '<p>Unsend'
-                          html += '</p>'
-                          html += '<img src="img/tamgiac.png" alt="">'
-                      html += '</div>'
-                  html += '</div>'
-                  html += '<div class="img-msg">'
-                      html += '<div class="inner-width">'
-                          html += '<div class="gallery">'
-                            for(var i = 0; i < msg.image.length;i++){
-                              html += '<a href="demo/' +  msg.image[i].originalname + '" class="image" >'
-                                  html += '<img src="/demo/' +  msg.image[i].originalname + '" alt="">'
-                              html += '</a>'
-                            }
-                          html += '</div>'
-                      html += '</div>'
-                      html += '<div class="heart-img heart-img-'+msg.createdAt+'">'
-                          html += '❤️'
-                      html += '</div>'
-                  html += '</div>'
-              html += '</div>'
-            }
-            if(msg.video.length > 0){
-                  html += '<div class="attach-vid">'
-                  html += ' <div class="edit-vid">'
-                      html += ' <svg class="dot-vid-brown vid-brown-'+msg.createdAt+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                          html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                      html += ' </svg>'
-                      html += '<svg class="dot-vid-black vid-black-'+msg.createdAt+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                          html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += ' <circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                      html += ' </svg>'
-                      html += '<div class="modal-edit-vid modal-vid-'+msg.createdAt+'">'
-                          html += '<p>Like'
-                          html += '</p>'
-                          html += '<p>Unsend'
-                          html += '</p>'
-                          html += ' <img src="img/tamgiac.png" alt="">'
-                      html += '</div>'
-                  html += '</div>'
-                  for(var i = 0;i < msg.video.length;i++){
-                      html += '<a href="demo/' +  msg.video[i].originalname + '" class="video-msg">'
-                        html += ' <iframe src="/demo/' +  msg.video[i].originalname + '" frameborder="0" sandbox>'
-                        html += '</iframe>'
-                        html += '  <div class="heart-vid">'
-                            html += '  ❤️'
-                        html += ' </div>'
-                      html += '  </a>'
-                  }
-                  
-              html += '</div>'
-            }
-            if(msg.message){
-              html += '<div class="content-msg">'
-                html += '<div class="edit-msg">'
-                    html += '<svg class="dot-msg-brown msg-brown-'+msg.createdAt+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                        html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                        html += '</circle>'
-                        html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                        html += '</circle>'
-                        html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                        html += '</circle>'
-                    html += '</svg>'
-                    html += '<svg class="dot-msg-black msg-black-'+msg.createdAt+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                        html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                        html += '</circle>'
-                        html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                        html += '</circle>'
-                        html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
-                        html += '</circle>'
-                    html += '</svg>'   
-                    html += '<div class="modal-edit-msg modal-msg-'+msg.createdAt+'">'
-                        html += '<p>Like'
-                        html += '</p>'
-                        html += '<p>Unsend'
-                        html += '</p>'
-                        html += '<img src="img/tamgiac.png" alt="">'
-                    html += '</div>'                             
-                html += '</div>'
-                html += '<div class="text-msg">'
-                    html += msg.message
-                    html += ' <div class="heart-msg heart-msg-'+msg.createdAt+'">'
-                        html += '❤️'
-                    html += '</div>'
-                html += '</div>'
-            html += '</div>'
-            }
-                    
-          html += '</div>'
-      html += '</div>'
-      }
-      if(msg.to){
-        html += '<div class="sender" id="sender-'+msg.createdAt+'">'
-            html += '<div class="box-msg">'
-              if(msg.image.length > 0){
-                      html += '<div class="attach-img">'
-                          html += '<div class="edit-img">'
-                            html += '<div class="img-msg">'
-                          html += '<div class="inner-width">'
-                              html += '<div class="gallery">'
-                                for(var i = 0; i<msg.image.length;i++){
-                                  html += '<a href="demo/' +  msg.image[i].originalname + '" class="image">'
-                                      html += '<img src="/demo/' +  msg.image[i].originalname + '" alt="">'
-                                  html += '</a>'
+                                  hoverReceiver(inbox._id);
                                 }
-                              html += '</div>'
-                          html += '</div>'
-                          html += '<div class="heart-img heart-img-'+msg.createdAt+'">'
-                              html += '❤️'
-                          html += '</div>'
-                      html += '</div>'
-                      html += '<svg class="dot-img-brown img-brown-'+msg.createdAt+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                          html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '</svg>'
-                      html += '<svg class="dot-img-black img-black-'+msg.createdAt+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                          html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                          html += '</circle>'
-                      html += '</svg>'
-                      html += '<div class="modal-edit-img modal-img-'+msg.createdAt+'">'
-                          html += '<p>Like'
-                          html += '</p>'
-                          html += '<p>Unsend'
-                          html += '</p>'
-                          html += '<img src="img/tamgiac.png" alt="">'
-                      html += '</div>'
-                  html += '</div>'
-              html += '</div>'
-           }
-              if(msg.video.length > 0){
-                html += '<div class="attach-vid">'
-                    html += ' <div class="edit-vid">'
-                      for(var i =0 ; i<msg.video.length;i++ ){
-                        html += '<a href="demo/' +  msg.video[i].originalname + '" class="video-msg">'
-                            html += ' <iframe src="/demo/' +  msg.video[i].originalname + '" frameborder="0" sandbox>'
-                            html += '</iframe>'
-                            html += '  <div class="heart-vid heart-vid-'+msg.createdAt+'">'
-                                html += '  ❤️'
-                            html += ' </div>'
-                        html += '  </a>'
-                      }
-                        html += ' <svg class="dot-vid-brown vid-brown-'+msg.createdAt+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                            html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                        html += ' </svg>'
-                        html += '<svg class="dot-vid-black vid-black-'+msg.createdAt+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                            html += ' <circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += ' <circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                        html += ' </svg>'
-                        html += '<div class="modal-edit-vid modal-vid-'+msg.createdAt+'">'
-                            html += '<p>Like'
-                            html += '</p>'
-                            html += '<p>Unsend'
-                            html += '</p>'
-                            html += ' <img src="img/tamgiac.png" alt="">'
-                        html += '</div>'
-                    html += '</div>'
-                html += '</div>'
+                          }
+                      
+                        }
+                        var chat = document.getElementsByClassName("frame-chat")[0]
+                        chat.innerHTML=html
+                        chat.scrollTop=chat.scrollHeight;
+                      
+
+                        $('.receiver').hover(function() {
+                          var a = this.id
+                          a=a.split("receiver-")[1]
+                          hoverReceiver(a)
+                        });
+                        $('.sender').hover(function() {
+                          var a = this.id
+                          a=a.split("sender-")[1]
+                          hoverSender(a);
+                        })
+                      
+                        
+                        
+                    }
+                }
+            })
+      
+      }
+
+      function like_Msg(format,id_mes,id_follow,id_createdAt,id_created){
+        $.ajax({
+              method: "POST",
+              url: "/likeChat",
+              data: {
+                  format:format,
+                  id_mes:id_mes,
+                  id_follow:id_follow,
+                  id_createdAt:id_createdAt,
+                  id_created:id_created
+              },
+              cache: false,
+              success: function(responseText) {
+                  if (responseText.status == "success") {
+                    getMessage(id_follow)
+                  }
+              },
+              error:function(responseText) {
+                  alert(responseText)
               }
-              if(msg.message){
-                  html += '<div class="content-msg">'
-                    html += '<div class="text-msg">'
-                        html += msg.message
-                        html += ' <div class="heart-msg heart-msg-'+msg.createdAt+'">'
-                            html += '❤️'
-                        html += '</div>'
-                    html += '</div>'
-                    html += '<div class="edit-msg">'
-                        html += '<svg class="dot-msg-brown msg-brown-'+msg.createdAt+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                            html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                        html += '</svg>'
-                        html += '<svg class="dot-msg-black msg-black-'+msg.createdAt+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                            html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                            html += '</circle>'
-                            html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
-                            html += '</circle>'
-                        html += '</svg>'   
-                        html += '<div class="modal-edit-msg modal-msg-'+msg.createdAt+'">'
-                            html += '<p>Like'
-                            html += '</p>'
-                            html += '<p>Unsend'
-                            html += '</p>'
-                            html += '<img src="img/tamgiac.png" alt="">'
-                        html += '</div>'                             
-                    html += '</div>'
-                html += '</div>'
-              }    
-            html += '</div>'
-        html += '</div>'
-      }  
-      var chat = $(".frame-chat")
-      chat.append(html)
-      var c = document.getElementsByClassName("frame-chat")[0]
-      c.scrollTop=c.scrollHeight;
-      hoverReceiver(msg.createdAt);
-      hoverSender(msg.createdAt);
+            });
+      
+      }
+
+      function unsend_Msg(format,id_mes,id_follow,id_createdAt){
+        $.ajax({
+              method: "POST",
+              url: "/unsendChat",
+              data: {
+                  format:format,
+                  id_mes:id_mes,
+                  id_follow:id_follow,
+                  id_createdAt:id_createdAt
+              },
+              cache: false,
+              success: function(responseText) {
+                  if (responseText.status == "success") {
+                    getMessage(id_follow)
+                  }
+              },
+              error:function(responseText) {
+                  alert(responseText)
+              }
+            });
+      
+      }
+
+     socket.on("messageReceiver",(msg)=>{ 
+        if(msg.from){
+          getMessage(msg.id)
+        }
+       if(msg.to){
+          getMessage(msg.id)
+       }
   })
 
   function resetVariable_Msg(){
@@ -1555,16 +1320,27 @@
 
       var formData = new FormData(form);
       if(stored_img.length > 0){  
-          formData.delete('image')
-          for(var i=0, len=stored_img.length; i<len; i++) {
-            formData.append('image', stored_img[i]);	
+          if(stored_img.length > 4){
+            alert("Vui lòng chỉ chọn tối đa là 4 hình")
+            return false;
+          }else{
+            formData.delete('image')
+            for(var i=0, len=stored_img.length; i<len; i++) {
+              formData.append('image', stored_img[i]);	
+            }
           }
+          
       }
       if(stored_vid.length > 0){  
-          formData.delete('video')
-          for(var i=0, len=stored_vid.length; i<len; i++) {
-            formData.append('video', stored_vid[i]);	
-          }
+          if(stored_vid.length > 1){
+            alert("Vui lòng chỉ chọn tối đa là 1 video")
+            return false;
+          }else{
+            formData.delete('video')
+            for(var i=0, len=stored_vid.length; i<len; i++) {
+              formData.append('video', stored_vid[i]);	
+            }
+        }
       }
     
       ajax.send(formData);

@@ -1,0 +1,254 @@
+<%- include ("../shares/header") %>
+    <!-- List user not follow -->
+    
+    <div class="container listUn">
+        <p id="sug">Suggested</p>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="inforUser">
+                    <ul class="listPeople">
+                        <% data.forEach(function(user) {%>
+                            <% if(user._id !=idCurrent) {%>
+                                <li>
+                                    <div class="row belowSuggest1 admin-edit-user">
+                                        <img class="imgUserOther1" width="60" height="60" src="<%=user.profileImage%>" alt="Card image cap"
+                                            style="border-radius: 50% 50%;">
+                                        <% if(user.name){%>
+                                            <span class="card-title "><a href="#" class="nameOfUser1"><%=user.name%></a></span>
+                                        <%}else{%>
+                                            <span class="card-title "><a href="#" class="nameOfUser1"><%=user.fullname%></a></span>
+                                        <%}%>
+                                        <small class="midNameUser1">Instagram recommended</small>
+                                        <% if( user.followers.length > 0){%>               
+                                            <% user.followers.forEach(function(cur) {%>      
+                                                    <% if(cur.idFollower == idCurrent){%>   
+                                                        <div class="option-edit-user">
+                                                            <div class="inside-edit-user">
+                                                                <a class="btn btn-primary unfollow"  id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                                    Unfollow
+                                                                </a>
+                                                                <a class="btn edit" onclick="editInforUser('this','<%=user._id%>')">
+                                                                    <ion-icon name="create-outline"></ion-icon>
+                                                                </a>
+                                                                <a class="btn delete" onclick="deleteUser('this','<%=user._id%>')">
+                                                                    <ion-icon name="trash-outline"></ion-icon>
+                                                                </a>                                                            
+                                                            </div>
+
+                                                        </div>
+                                                    <%}else{%>
+                                                        <div class="option-edit-user">
+                                                            <div class="inside-edit-user">
+                                                                <a class="btn btn-primary follow"  id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                                    Unfollow
+                                                                </a>
+                                                                <a class="btn edit" onclick="editInforUser('this','<%=user._id%>')">
+                                                                    <ion-icon name="create-outline" ></ion-icon>
+                                                                </a>
+                                                                <a class="btn delete" onclick="deleteUser('this','<%=user._id%>')">
+                                                                    <ion-icon name="trash-outline" ></ion-icon>
+                                                                </a>                                                            
+                                                            </div>
+
+                                                        </div>
+                                                    <%}%>
+                                            <%})%>
+                                        <%}else{%>
+                                            <div class="option-edit-user">
+                                                <div class="inside-edit-user">
+                                                    <a class="btn btn-primary follow"  id="lis-<%=user._id%>" onclick="btnFollow('this','<%=user._id%>','wordImg')">
+                                                        Follow
+                                                    </a>
+                                                    <a class="btn edit" onclick="editInforUser('this','<%=user._id%>')">
+                                                        <ion-icon name="create-outline" ></ion-icon>
+                                                    </a>
+                                                    <a class="btn delete"  onclick="deleteUser('this','<%=user._id%>')">
+                                                        <ion-icon name="trash-outline"></ion-icon>
+                                                    </a>                                                            
+                                                </div>
+
+                                            </div>
+                                        <%}%>
+                                      
+                                    </div>
+                                   
+                                </li>
+                            <%}%>
+                        <%})%>
+                    </ul>
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-edit-infor-user" class="modal-edit-user">
+        <div class="modal-content">
+        </div>
+    </div>
+    <script>
+        function editInforUser(self,id){
+            var modal = document.getElementById("modal-edit-infor-user");
+            $.ajax({
+              method: "POST",
+              url: "/updateInforUser",
+              data: {
+                  _id:id
+              },
+              cache: false,
+              success: function(responseText) {
+                var user = responseText.user
+                var html =""
+                if (responseText.status == "success") {
+                        html+='<span class="close-edit-modal-infor">'
+                            html+='<ion-icon name="close">'
+                            html+='</ion-icon>'
+                        html+='</span>'
+                        html+='<div class="row" style="border:1px solid #efefef; border-radius:0 16px 16px 0;">'
+                            html+='<div class="col-3 list-group">'
+                                html+='<a href="#" id ="pgEdit" class="list-group-item list-group-item-action ">'
+                                    html+='Edit profile'
+                                html+='</a>'
+                                html+='<a href="#"  class="list-group-item list-group-item-action ">'
+                                    html+='Change Password'
+                                html+='</a>'
+                            html+='</div>'
+
+                            html+='<div class="col-9" style="border-left:1px solid #DBDBDB; margin-left: -14.5px;">'
+
+                                    html+='<div class="coForm">'
+                        
+                                        html+='<form class="form-infor"  id="uploadForm"  onsubmit="updateInfor(this,'+"'"+user._id+"'"+')">'
+                                            html+='<div class="form-group row in-img" >'
+                                                html+='<label class="col-sm-2 col-form-label">'
+                                                    html+='<img class="img-edit" width="50" height="50" src="'+user.profileImage+'" id="photo_image" alt="Card image cap" style="border-radius: 50% 50%;">'
+                                                html+='</label>'
+                                                html +='<div class="col-sm-10">'
+                                                    html+='<ul id="img-option">'
+                                                        html+='<li id="name-edit">'
+                                                            html+=user.fullname
+                                                        html+='</li>'
+                                        
+                                                        html+='<li id="change-Profile" > '
+                                                            html+='<label  for="file" id="label-upload" style="cursor: pointer;"> Change Profile Photo'
+                                                                html+='<input name="image" type="file" class="upload-photo" id="file" accept="image/*" onchange="displayImage(this)">'
+                                                            html+='</label>'
+                                                        html+='</li>'
+                                                    html+='</ul>'
+                                                html+='</div>'
+                                            html+='</div>' 
+
+                                            html+='<div class="form-group row">'
+                                                html+='<label class="col-sm-2 col-form-label">'
+                                                    html+='Name'
+                                                html+='</label>'
+                                                html+='<div class="col-sm-10">'
+                                                    html+='<input autocomplete="off" type="text" class="form-control " id="fname" name="name"  value="'+user.name+'">'
+                                                    html+='</div>'
+                                            html+='</div>'
+
+                                            html+='<div class="form-group row">'
+                                                html+='<label class="col-sm-2 col-form-label">'
+                                                    html+='Fullname'
+                                                html+='</label>'
+                                                    html+='<div class="col-sm-10">'
+                                                        html+='<input autocomplete="off" type="text" class="form-control abc" id="fullname" name="fullname" placeholder="" value="'+user.fullname+'">'
+                                                    html+='</div>'
+                                            html+='</div>'
+
+                                            html+='<div class="form-group row">'
+                                                    html+='<label class="col-sm-2 col-form-label">'
+                                                        html+='Bio'
+                                                    html+='</label>'
+                                                    html+='<div class="col-sm-10">'
+                                                        html+='<textarea type="text"  id="bio" class="form-control abc" name="bio" >'
+                                                            html+=user.bio
+                                                        html+='</textarea>'
+                                                    html+='</div>'
+                                            html+='</div>'
+
+                                            html+=' <div class="form-group row">'
+                                                html+='<div class="col-sm-10 text-center">'
+                                                    html+='<button type="submit" class="btn btn-primary" id="save" onclick="updateProfile()">'
+                                                        html+='<p id="save1"> '
+                                                            html+='Save'
+                                                        html+='</p> '
+                                                    html+='</button>'
+                                                html+='</div>'
+                                            html+='</div>'
+                            
+                                        html+='</form>'
+                                    html+='</div>'
+                            html+='</div>'
+                        html+='</div>'
+                    
+                        $(".modal-content").html(html)
+                        modal.style.display = "block";
+                        $('.sticky-top').css('z-index','0')
+                        $('body').addClass('stop-scrolling')
+                        // When the user clicks on <span> (x), close the modal
+                        $(".close-edit-modal-infor").click(function(){
+                            modal.style.display = "none";
+                            modal.style.display = "none";
+                            html=""
+                            $('body').removeClass('stop-scrolling')
+                            $('.sticky-top').css('z-index','1')
+                        })
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function(event) {
+                                if (event.target == modal) {
+                                    html=""
+                                    modal.style.display = "none";
+                                }
+                        }
+
+                    }
+                    
+              },
+              error:function(responseText) {
+                  alert(responseText)
+              }
+            });
+      
+
+           
+        }
+
+        function displayImage(input){
+             if (input.files && input.files[0]) {
+                  var reader = new FileReader();
+                  reader.onload = function(event) {
+                     $('#photo_image').attr('src', event.target.result);
+                  }
+                  reader.readAsDataURL(input.files[0]);
+             }
+        }
+
+        function updateInfor(form,id){
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", "/updateInfor", true);
+
+            ajax.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response.status == "success") {
+                        var user = response.data
+                        console.log(user)
+                          // you can see the result here
+                        // $("#fullname").attr("value", user.fullname);
+                        // $("#bio").attr("placeholder", user.bio);
+                        // $("#name").attr("value", user.name);
+                    }
+                }
+            }
+
+            var formData = new FormData(form);
+            formData.append("id_user",id)
+            ajax.send(formData);
+
+            return false;
+        }
+
+    </script>
+    
+<%- include ("../shares/footer") %>

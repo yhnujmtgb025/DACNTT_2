@@ -107,7 +107,7 @@
         <!-- End of profile section -->
         <hr id="zop">
         <div class="feature">
-            <a class="" href="#" tabindex="0">
+            <a class="" onclick="display_MyPost()" tabindex="0">
                 <svg aria-label="Posts" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
                     <path clip-rule="evenodd"
                         d="M45 1.5H3c-.8 0-1.5.7-1.5 1.5v42c0 .8.7 1.5 1.5 1.5h42c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5zm-40.5 3h11v11h-11v-11zm0 14h11v11h-11v-11zm11 25h-11v-11h11v11zm14 0h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11zm14 28h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11z"
@@ -115,7 +115,7 @@
                 </svg>
                 <span class="">Posts</span>
             </a>
-            <a class="" href="/myProfile/saved" tabindex="0">
+            <a class="" onclick="display_savePost()" tabindex="0">
                 <svg aria-label="Saved" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
                     <path
                         d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">
@@ -173,7 +173,7 @@
 
     </div> -->
 
-    <div class="container gallery">
+    <div class="container gallery" id="gallery-profile-mypost" >
         <div class="gallery-content">
             <% post.forEach(function(pos,i) {%>
                 <div class="viewport-gallery gallery-img">
@@ -197,7 +197,7 @@
                             </li>
                         <%}%>
                     </ul>
-                    <div class="gallery-item-info">
+                    <div class="gallery-item-info" onclick="modalComment(this,'<%=pos._id%>')">
                         <ul style="display: flex;">
                             <li class="gallery-item-likes">
                                 <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
@@ -231,7 +231,64 @@
             <%})%>
         </div>
     </div>
-
+    <div class="container gallery" id="gallery-profile-savepost" style="display: none;">
+        <div class="gallery-content">
+            <% saved_post.forEach(function(pos,i) {%>
+                <div class="viewport-gallery gallery-img">
+                    <ul class="list-img-gallery" id="list-img-gallery-<%=pos._id%>">
+                        <%pos.image.forEach(function(img) { %>
+                            <li class="item-gallery">
+                                <img src="/demo/<%=img.originalname %>"   alt="">
+                            </li>
+                        <%})%>
+                        <%pos.video.forEach(function(video) { %>
+                            <li class="item-gallery">
+                                <iframe width="280" height="300" src="/demo/<%=video.originalname%>" frameborder="0" allowfullscreen sandbox>'
+                                </iframe>
+                            </li>
+                        <%})%>
+                        <% if(pos.image == "" && pos.video == "") { %>
+                            <li class="item-gallery" style="border: 2px solid #EFEFEF ;">
+                                <p style="position: relative;top: 6rem ;left: 6rem;">
+                                    <%= pos.caption.split(" ")[0] +'...' %>
+                                </p>
+                            </li>
+                        <%}%>
+                    </ul>
+                    <div class="gallery-item-info" onclick="modalComment(this,'<%=pos._id%>')">
+                        <ul style="display: flex;">
+                            <li class="gallery-item-likes">
+                                <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
+                            </li>
+                        
+                            <li class="gallery-item-comments">
+                                <i class="fas fa-comment"></i><%=post_com[i]%>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <div class="cover-btn-gallery" >
+                        <% if(pos.image.length >1){%>
+                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length%>','<%=pos._id%>')" >
+                            </i>
+                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length%>','<%=pos._id%>')">
+                            </i>
+                        <%}else if (pos.video.length >1){%>
+                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.video.length%>','<%=pos._id%>')" >
+                            </i>
+                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.video.length%>','<%=pos._id%>')">
+                            </i>
+                        <%}else if ((pos.video.length+pos.image.length) >1){%>
+                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')" >
+                            </i>
+                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')">
+                            </i>
+                        <%}%>
+                    </div>
+                </div>
+            <%})%>
+        </div>
+    </div>
     
     </div>
 
@@ -240,7 +297,16 @@
     <div class="loader"></div>
 
     <script>
+    function display_MyPost(){
+        $("#gallery-profile-savepost").css("display","none")
+        $("#gallery-profile-mypost").css("display","block")
+    }
 
+    function display_savePost(){
+        $("#gallery-profile-mypost").css("display","none")
+        $("#gallery-profile-savepost").css("display","block")
+    }
+   
        
 
     function slideGallery(direction,size,id) {

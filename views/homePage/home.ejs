@@ -574,17 +574,35 @@
                         html += '</svg>';
                         html += '</button>';
 
-                        html += '<button >';
-                        html += '  <svg aria-label="Share Post" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
-                        html += '<path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">';
-                        html += '</path>';
-                        html += '</svg>';
+                        html += '<button>';
+                            html += '<a href="/sendMessage">'
+                                html += '  <svg aria-label="Share Post" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                                html += '<path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">';
+                                html += '</path>';
+                                html += '</svg>';
+                            html += '</a>'
                         html += '</button>';
-
-                        html += '<button class="savePost">';
+                        
+                        var saved = false
+                        if(data.saved){
+                            for(var x=0;x<data.saved.length;x++){
+                                var sav = data.saved[x]
+                                if(sav.user_saved.toString() == id){
+                                    saved=true
+                                    break;
+                                }
+                            }
+                        }
+                      
+                        html += '<button class="savePost" onclick="savedPost(this,'+"'"+data._id+"'"+')">';
                         html += '  <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
-                        html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
-                        html += '</path>';
+                        if(saved){
+                            html += '<path class="savePo" d="M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z">';
+                            html += '</path>';
+                        }else{
+                            html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
+                            html += '</path>';
+                        }
                         html += '</svg>';
                         html += '</button>';
 
@@ -684,8 +702,6 @@
 
                         html += '</div>';
 
-                       
-                        
                         html += '</div>';
                         if(a==0){
                             html += '<div class="card nameCard name-card-'+data._id+'">';
@@ -693,18 +709,13 @@
                                 html+='</div>'
                             html+='</div>'
                         }  
-                        
-                     
-                        
-                      
+
                     }
                     document.getElementById("cardShow").innerHTML = html;
-                   
                     loadFollow();
                     inputPost();
                     inputComment();
                     toggleLike();
-                    dropSave();
                     modelCard();
                     slideImage();
                     slideImageModal();
@@ -720,8 +731,32 @@
             ajax.send(formData);
 
         }
+       
+        function savedPost(self,id_post){
+            var setColor = $(self).children().children()
+            var color = $(self).children().children().attr("d")
+            var check = "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z"
+            $.ajax({
+                method: "POST",
+                url: "/savedPost",
+                data: {
+                    id_post: id_post
+                },
+                cache: false,
+                success: function (responseText) {
+                    if (responseText.status == "success") {
+                        if (color == check) {
+                            setColor.attr("d", "M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z")
+                        } else {
+                            setColor.attr("d", "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z")
+                        }
 
+                    }
+                }
+            })
         
+        }
+
         var lastNext = ''
         var s = ''
         function loadNewfeed(arrPost,n){
@@ -921,10 +956,26 @@
                             html += '</svg>';
                             html += '</button>';
 
-                            html += '<button class="savePost">';
-                            html += '  <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
-                            html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
-                            html += '</path>';
+                            var saved = false
+                            if(data.saved){
+                                for(var x=0;x<data.saved.length;x++){
+                                    var sav = data.saved[x]
+                                    if(sav.user_saved.toString() == id){
+                                        saved=true
+                                        break;
+                                    }
+                                }
+                            }
+                           
+                            html += '<button class="savePost" onclick="savedPost(this,'+"'"+data._id+"'"+')">';
+                            html += ' <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
+                            if(saved){
+                                html += '<path class="savePo" d="M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z">';
+                                html += '</path>';
+                            }else{
+                                html += '<path class="savePo" d="M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z">';
+                                html += '</path>';
+                            }
                             html += '</svg>';
                             html += '</button>';
 
@@ -1047,7 +1098,6 @@
                     inputPost();
                     inputComment();
                     toggleLike();
-                    dropSave();
                     modelCard();
                     slideImage();
                     slideImageModal();

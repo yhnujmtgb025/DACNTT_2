@@ -353,16 +353,13 @@
             var ajax = new XMLHttpRequest();
             ajax.open("POST", "/getFollow", true);
             
-            var userCur = []
             ajax.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
-                    var userCur= response.userCur
                     if(response.status == "scroll"){
                     var html = ""
                     var data = response.data
                     var length_user = data.length - 1
- 
                     var idCurrent = response.idCurrent
                     html+='<p class="sugCard">Suggestions For You'
                     html+='</p>'
@@ -405,9 +402,9 @@
                                                         html+='</p>'
                                                     html+='</div>'
                                                     
-                                                    if(userCur[0].followings.length > 0){
-                                                        for(var j = 0 ; j< userCur[0].followings.length ; j++){
-                                                            if(userCur[0].followings[j].idFollowing.toString() == data[i]._id.toString()){
+                                                    if(data[i].followers.length > 0){
+                                                        for(var j = 0 ; j< data[i].followers.length ; j++){
+                                                            if(data[i].followers[j].idFollower.toString() == idCurrent.toString()){
                                                                 html+='<button class="btn btnFollowed btn-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">'
                                                                         html+='<a class="centerFollow clas-'+data[i]._id+'">Unfollow'
                                                                         html+='</a>'
@@ -462,7 +459,7 @@
 
                         for(var i =0; i < data.length;i++){
                             if(data[i]._id !=idCurrent){
-                            
+                                var follower = data[i].followers
                                 html+='<div class="row belowSuggest">'
                                     html+='<img class="imgUserOther" width="50" height="50" src="'+data[i].profileImage+'" alt="Card image cap" style="border-radius: 50% 50%;">'
                                     html+='<span class="card-title ">'
@@ -487,17 +484,21 @@
                                     html+='<small class="midNameUser">Suggested for you'
                                     html+='</small>'
                                     
-                                    if(userCur[0].followings.length > 0){
-                                        for(var j = 0 ; j< userCur[0].followings.length ; j++){
-                                            if(userCur[0].followings[j].idFollowing.toString() == data[i]._id.toString()){      
+                                    if(follower.length > 0){
+                                        for(var j = 0 ; j< follower.length ; j++){
+                                            console.log(data[i]._id)
+                                            if(follower[j].idFollower.toString() == idCurrent.toString()){   
+                                                console.log("1")
                                                 html+=' <a class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Unfollow'
                                                 html+='</a>'
                                             }else{
+                                                console.log("2")
                                                 html+=' <a  class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Follow'
                                                 html+='</a>'
                                             }
                                         }
                                     }else{
+                                        console.log("3")
                                         html+=' <a  class="wordImg" id="right-'+data[i]._id+'" onclick="btnFollow(this,'+"'" +data[i]._id+"'"+","+"'"+"wordImg"+"'"+')">Follow'
                                         html+='</a>'
                                     }
@@ -844,7 +845,7 @@
                     $('.card').css('z-index','0')
                 }
         }
-            // When the user clicks on button cancle the modal
+        // When the user clicks on button cancle the modal
     
         // delete post 
         function deletePost(id){
@@ -1258,14 +1259,13 @@
                 cache: false,
                 success: function (responseText) {
                     if (responseText.status == "success") {
-                     
                         var html =""
                         for (var a = 0; a < responseText.data.length; a++) {
                         var data = responseText.data[a];
                  
                         var user = responseText.user
                         var id = responseText.id
-                        
+                        var post_com = responseText.post_com
                         // modal comment 
                         html += ' <div id="modalComment" class="modal-com-new" >'
                             html += ' <div class="modal-content-comment" id="modal-view" >'
@@ -1363,7 +1363,7 @@
                                         html += '<div class="row nameInfor img-cover-modal">';
                                             html += '<img  src=" ' + data.user.profileImage + ' " id="img-user-modal"  alt="Card image cap" >';
                                             html += ' <span class="card-title ">';
-                                                html += '<a href="' + '/user/' + data.user.fullname + '" class="nameOf-modal">';
+                                                html += '<a href="/userProfile/'+data.user._id+'"  class="nameOf-modal">';
                                                     html += data.user.fullname;
                                                 html += '</a>';
                                             html += '</span>';
@@ -1428,7 +1428,7 @@
                                                         html += '<li class="item-comment">'               
                                                             html += '<div class="user-chat">'
                                                                 html += '<img  src=" ' + commenter.profileImage + ' " class="iconComment user-chat-modal"  alt="Card image cap" >';
-                                                                html += '<a>'
+                                                                html += '<a href="/userProfile/'+commenter.idComment+'" style="cursor:pointer;color:#333;text-decoration:none">'
                                                                     html += '' +  commenter.fullname
                                                                 html += '</a>'
 
@@ -1447,7 +1447,7 @@
                                                                                 html += '0 like'
                                                                             html += '</li>'
                                                                                 html += '<li>'
-                                                                                    html += '<a  onclick="displayName(' + "'" + commenter.fullname + "'"+ "," + "'" + commenter._id + "'"+ "," + "'" + commenter.idComment + "'" + "," + "'" + data._id + "'" +')">'
+                                                                                    html += '<a  onclick="displayName(' + "'" + commenter.fullname + "'"+ "," + "'" + commenter._id + "'"+ "," + "'" + commenter.idComment + "'" + "," + "'" + data._id + "'" +"," + "'" + commenter.createdAt + "'" +')">'
                                                                                         html += 'Reply'
                                                                                     html +='</a>'  
                                                                                 html += '</li>'
@@ -1467,10 +1467,10 @@
                                                                         var reply = commenter.replies[j]
                                                                         html += '<li class="user-reply">'
                                                                             html += '<img  src=" ' + reply.profileImage + ' " class="iconComment user-chat-modal"  alt="Card image cap" >';
-                                                                            html += '<a>'
+                                                                            html += '<a href="/userProfile/'+reply.user_comment+'" style="cursor:pointer;color:#333;text-decoration:none">'
                                                                                 html += '' + reply.fullname
                                                                             html += '</a>'
-                                                                            html += '<a class="name_replied">'
+                                                                            html += '<a href="/userProfile/'+commenter.idComment+'" class="name_replied" style="cursor:pointer;text-decoration:none">'
                                                                                 html +=  reply.name_comment
                                                                             html += '</a>'
                                                                             html += '<span>'                         
@@ -1558,6 +1558,7 @@
                                                         html += '<input type="hidden" name="_id" value="'+data._id+'">'
                                                         html += '<input type="hidden" id="nameReply-'+data._id+'" name="nameReply" value="'+data._id+'">'
                                                         html += '<input type="hidden" id="idComment-'+data._id+'" name="id_comment" value="">'
+                                                        html += '<input type="hidden" id="createdAt-'+data._id+'" name="createdAt_comment" value="">'
                                                         html += '<input type="hidden" id="idUserComment-'+data._id+'" name="id_user_comment" value="">'
                                                         html += '<textarea class="textinput  textComment text-comment-modal" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
                                                         html += '</textarea>';
@@ -1586,7 +1587,6 @@
                 
                 returnNewfeed();
                 inputComment();
-                dropSave();
                 slideImageModal();
                 },
                 error: function (responseText) {
@@ -1596,12 +1596,14 @@
         }
         
         // display name in comment reply
-        function displayName(name,id_comment,id_user_comment,id_post){
+        function displayName(name,id_comment,id_user_comment,id_post,createdAt_comment){
             $('.text-comment-modal').text('@'+name+' ') 
             $('#idComment-'+id_post).val(id_comment)
+            $('#createdAt-'+id_post).val(createdAt_comment)
             $('#nameReply-'+id_post).val('@'+name)
             $('#idUserComment-'+id_post).val(id_user_comment)
         }
+        
         // hide name in comment reply
         function hideName(id_post){
             $('.text-comment-modal').text('') 
@@ -1786,27 +1788,6 @@
                 }
             });
 
-        }
-
-        // Save post
-        function dropSave() {
-            // fill color icon save card
-            var savePost = document.getElementsByClassName("savePost");
-            var savePo = document.getElementsByClassName("savePo");
-            for (var i = 0; i < savePost.length; i++) {
-                (function (index) {
-                    savePost[index].addEventListener("click", function (e) {
-                        var color = savePo[index].getAttribute("d")
-                        var check = "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z"
-                        if (color == check) {
-                            savePo[index].setAttribute("d", "M43.5 48c-.4 0-.8-.2-1.1-.4L24 29 5.6 47.6c-.4.4-1.1.6-1.6.3-.6-.2-1-.8-1-1.4v-45C3 .7 3.7 0 4.5 0h39c.8 0 1.5.7 1.5 1.5v45c0 .6-.4 1.2-.9 1.4-.2.1-.4.1-.6.1zM24 26c.8 0 1.6.3 2.2.9l15.8 16V3H6v39.9l15.8-16c.6-.6 1.4-.9 2.2-.9z")
-                        } else {
-                            savePo[index].setAttribute("d", "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z")
-                        }
-
-                    })
-                })(i);
-            }
         }
 
         // silde image Card

@@ -200,6 +200,11 @@
     height: 28%;
     border-radius: 50% 50%;
     background-color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.gallery-img .item-gallery:hover{
+    cursor: pointer;
 }
 
 .gallery-item-info {
@@ -312,6 +317,9 @@
   }
 
  
+  .feature:hover{
+    cursor: pointer;
+  }
 /* Loader */
 
 /* 

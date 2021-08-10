@@ -16,8 +16,6 @@ btnIcon.addEventListener("click", function(e) {
 
 window.onclick = function (event) {
   if ( event.target == nav) {
-      modProfile.style.display = "none";
-      modProfile.style.display = "none"
       myHeart.classList.remove('showHeart')
   }
 }

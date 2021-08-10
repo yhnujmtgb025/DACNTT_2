@@ -32,6 +32,7 @@ const post_Newfeed = function (req, res) {
     var video = []
     var type = []
     var createdAt = new Date().getTime();  
+    createdAt=createdAt.toString()
     var files = []
     files = files.concat(req.files)
     if (files[0].image != null && files[0].video != null) {
@@ -161,13 +162,11 @@ const get_Newfeed = function (req, res) {
            if(post){
             ids.push(post);
            }
-      
            User.collection.find({
            })
            .toArray(function(err,data){
                 dataUser=data
            })
-  
            Post.collection.find({
             "user._id": {
                 $in: ids
@@ -471,6 +470,8 @@ const get_PostModal = function (req, res) {
     if(user == null){
       res.redirect("/login")
     }else{
+      var a = 0; 
+      var post_com = [];
       Post.collection.find({
         "_id": ObjectId(id_post_current)
       })
@@ -478,6 +479,7 @@ const get_PostModal = function (req, res) {
         res.json({
           "status": "success",
           "data": data,
+          "post_com": post_com,
           "id":id,
           "user":user
         });
@@ -690,8 +692,10 @@ const post_Comment = function (req,res){
   var user= req.session.user;
   var uploader = upload.none()
   uploader(req,res,next =>{
-    var {_id,commentPost,nameReply,id_comment,id_user_comment} = req.body
+    var {_id,commentPost,nameReply,id_comment,id_user_comment,createdAt_comment} = req.body
     var name_comment = ""
+    var createdAt = new Date().getTime()
+    createdAt = createdAt.toString()
     if(commentPost.includes(nameReply)){
       var length_name = nameReply.length
       name_comment = commentPost.substr(0,length_name)
@@ -724,7 +728,7 @@ const post_Comment = function (req,res){
                 "isRead":false,
                 "idCommented": user._id,
                 "idLiked": user._id,
-                "createdAt": new Date().getTime()
+                "createdAt": createdAt
               }
             }
           });
@@ -740,15 +744,17 @@ const post_Comment = function (req,res){
               $push: {
                 "comments.$.replies": {
                   "_id": ObjectId(),
+                  "id_replied":ObjectId(id_comment),
                   "name_comment":name_comment,
                   "user_comment": user._id,
                   "fullname": user.fullname,
                   "profileImage": user.profileImage,
                   "content_reply":commentPost,
-                  "createdAt": new Date().getTime()
+                  "createdAt": createdAt
                 }
               }
             }, function (error, data) {
+              // create notice user replied
               User.collection.findOneAndUpdate(
                 { 
                   "_id":ObjectId(id_user_comment)
@@ -768,40 +774,53 @@ const post_Comment = function (req,res){
                           "createdAt": new Date().getTime()
                         }
                       } 
+              })
+              //  add replies of posts in User
+                User.collection.updateOne(
+                  { 
+                    $and: [{
+                        "_id":ObjectId(post.user._id)
+                    }, {
+                        "posts._id": ObjectId(_id)
+                    }] 
+                  },
+                  { 
+                      "$push": 
+                      { 
+                          "posts.$[pos].comments.$[com].replies": 
+                            {
+                              "_id": ObjectId(),
+                              "name_comment":name_comment,
+                              "user_comment": user._id,
+                              "fullname": user.fullname,
+                              "profileImage": user.profileImage,
+                              "content_reply":commentPost,
+                              "createdAt": createdAt
+                            }
+                      } 
+                  },
+                  { "arrayFilters": [ 
+                      { 
+                          "pos._id": ObjectId(_id)
+                      },
+                      { 
+                          "com.createdAt": createdAt_comment
+                      }
+                  ]
                 })
-              //   User.collection.updateOne(
-              //     { 
-              //       $and: [{
-              //           "_id":ObjectId(post.user._id)
-              //       }, {
-              //           "posts._id": ObjectId(_id)
-              //       }] 
-              //     },
-              //     { 
-              //         "$push": 
-              //         { 
-              //             "posts.$[pos].comments.$[com].replies": 
-              //             {
-              //               "_id": ObjectId(),
-              //               "name_comment":name_comment,
-              //               "user_comment": user._id,
-              //               "fullname": user.fullname,
-              //               "profileImage": user.profileImage,
-              //               "content_reply":commentPost,
-              //               "createdAt": new Date().getTime()
-              //             }
-              //         } 
-              //     },
-              //     { "arrayFilters": [ 
-              //         { 
-              //             "pos._id": ObjectId(_id)
-              //         },
-              //         { 
-              //             "com._id": ObjectId()
-              //         }
-              //     ]
-              // })
                
+               // add id_post had comments's replies of posts into array to query when update
+               User.collection.updateOne({
+                "_id":ObjectId(user._id)
+                },{
+                  $push:{
+                    "post_replies":{
+                      "id_post":post._id,
+                      "id_comment":id_comment,
+                      "id_rep":createdAt
+                    }
+                  }
+                })
             })
           }
           // comment independent for a post
@@ -818,7 +837,7 @@ const post_Comment = function (req,res){
                   "profileImage": user.profileImage,
                   "content_comment":commentPost,
                   "replies":[],
-                  "createdAt": new Date().getTime()
+                  "createdAt": createdAt
                 }
               }
             }, function (error, data) {
@@ -836,10 +855,22 @@ const post_Comment = function (req,res){
                           "profileImage": user.profileImage,
                           "content_comment":commentPost,
                           "replies":[],
-                          "createdAt": new Date().getTime()
+                          "createdAt": createdAt
                         }
                       } 
-                })
+              })
+
+              // add id_post had comments of posts into array to query when update
+              User.collection.updateOne({
+                "_id":ObjectId(user._id)
+              },{
+                $push:{
+                  "post_comment":{
+                    "_id":post._id,
+                    "createdAt":createdAt
+                  }
+                }
+              })
             })
           }
           res.json({
@@ -870,6 +901,7 @@ const get_sendMessage = (req,res)=>{
       var follower =[]
       for(var i = 0;i<user.length;i++){
           id_current = user[i]._id
+          role=user[i].role
           image=user[i].profileImage
           fullname=user[i].fullname
           bio = user[i].bio
@@ -883,6 +915,7 @@ const get_sendMessage = (req,res)=>{
       }
       
       res.render('homePage/sendMessage',{
+          role:role,
           image:image,
           id_current: id_current,
           fullname:fullname,
@@ -1035,8 +1068,7 @@ const post_sendMessage = (req,res)=>{
                   res.io.to(chat[user._id]).emit("messageReceiver",{ 
                         "message":message,
                         "to":user._id,
-                        "image":img[1],
-                        "video":video[1],
+                        "id":user_current._id,
                         "createdAt":createdAt.toString()
                   })
                 }
@@ -1044,8 +1076,7 @@ const post_sendMessage = (req,res)=>{
                   res.io.to(chat[user_current._id]).emit("messageReceiver",{ 
                     "message":message,
                     "from":user_current._id,
-                    "image":img[1],
-                    "video":video[1],
+                    "id":id_follow,
                     "createdAt":createdAt.toString()
                 })
               }
@@ -1130,7 +1161,6 @@ const post_likeChat = (req,res)=>{
   }
   var userCurrent = req.session.user
   var {format,id_mes,id_follow,id_createdAt,id_created}=req.body
-  console.log("id_created "+id_created)
   var createdAt = new Date().getTime();  
   User.collection.findOne({
     "_id":ObjectId(req.session.user._id)
@@ -1213,6 +1243,18 @@ const post_likeChat = (req,res)=>{
                   }
                 ]
               })
+              if ( chat[id_follow]) {
+                res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                      "to":id_follow,
+                      "id":user._id
+                })
+              }
+              if ( chat[user._id]) {
+                res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                  "from":user._id,
+                  "id":id_follow
+                })
+              }
               res.json({
                 "status":"success"
               })
@@ -1271,6 +1313,18 @@ const post_likeChat = (req,res)=>{
                   }
                 ]
               })
+              if ( chat[id_follow]) {
+                res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                      "to":id_follow,
+                      "id":user._id
+                })
+              }
+              if ( chat[user._id]) {
+                res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                  "from":user._id,
+                  "id":id_follow
+                })
+              }
               res.json({
                 "status":"success"
               })
@@ -1296,7 +1350,6 @@ const post_likeChat = (req,res)=>{
             }
           }
           if(like){
-           
             User.collection.updateOne({
               $and:[
                 {
@@ -1350,6 +1403,18 @@ const post_likeChat = (req,res)=>{
                   }
                 ]
               })
+              if ( chat[id_follow]) {
+                res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                      "to":id_follow,
+                      "id":user._id
+                })
+              }
+              if ( chat[user._id]) {
+                res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                  "from":user._id,
+                  "id":id_follow
+                })
+              }
               res.json({
                 "status":"success"
               })
@@ -1408,6 +1473,18 @@ const post_likeChat = (req,res)=>{
                   }
                 ]
               })
+              if ( chat[id_follow]) {
+                res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                      "to":id_follow,
+                      "id":user._id
+                })
+              }
+              if ( chat[user._id]) {
+                res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                  "from":user._id,
+                  "id":id_follow
+                })
+              }
               res.json({
                 "status":"success"
               })
@@ -1433,7 +1510,7 @@ const post_likeChat = (req,res)=>{
               }
           }
         }
-        console.log("like ", like)
+       
         if(like){
          
           User.collection.updateOne({
@@ -1489,6 +1566,18 @@ const post_likeChat = (req,res)=>{
                 }
               ]
             })
+            if ( chat[id_follow]) {
+              res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                    "to":id_follow,
+                    "id":user._id
+              })
+            }
+            if ( chat[user._id]) {
+              res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                "from":user._id,
+                "id":id_follow
+              })
+            }
             res.json({
               "status":"success"
             })
@@ -1547,6 +1636,18 @@ const post_likeChat = (req,res)=>{
                 }
               ]
             })
+            if ( chat[id_follow]) {
+              res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                    "to":id_follow,
+                    "id":user._id
+              })
+            }
+            if ( chat[user._id]) {
+              res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                "from":user._id,
+                "id":id_follow
+              })
+            }
             res.json({
               "status":"success"
             })
@@ -1558,6 +1659,216 @@ const post_likeChat = (req,res)=>{
   })
   
     
+}
+
+// unsend chat
+const post_unsendChat = (req,res)=>{
+  if(!req.session.user){
+    return res.redirect('/login')
+  }
+  var userCurrent = req.session.user
+  var {format,id_mes,id_follow,id_createdAt}=req.body
+  User.collection.findOne({
+    "_id":ObjectId(userCurrent._id)
+  },function(err,user){
+    if(err){
+      return res.json({error:err})
+    }
+    if(user==null){
+      return res.redirect("/login")
+    }else{
+      if(format == "message"){
+        User.collection.updateOne({
+          $and:[
+            {
+              "_id":ObjectId(user._id)
+            },
+            {
+              "followings.idFollowing":ObjectId(id_follow)
+            }
+          ]
+        },{
+            $pull:{
+              "followings.$[fol].inbox":{
+                "_id":ObjectId(id_mes)
+              }
+            }
+        },{
+          "arrayFilters":[
+            {
+              "fol.idFollowing":ObjectId(id_follow)
+            }
+          ]
+        },function(err,data){
+          User.collection.updateOne({
+            $and:[
+              {
+                "_id":ObjectId(id_follow)
+              },
+              {
+                "followings.idFollowing":ObjectId(user._id)
+              }
+            ]
+          },{
+              $pull:{
+                "followings.$[fol].inbox":{
+                  "createdAt":id_createdAt
+                }
+              }
+          },{
+            "arrayFilters":[
+              {
+                "fol.idFollowing":ObjectId(user._id)
+              }
+            ]
+          },function(err,data){
+            if ( chat[id_follow]) {
+              res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                    "to":id_follow,
+                    "id":user._id
+              })
+            }
+            if ( chat[user._id]) {
+              res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                "from":user._id,
+                "id":id_follow
+              })
+            }
+              res.json({
+                "status":"success"
+              })
+          })
+        })
+      }
+      else if(format == "image"){
+        User.collection.updateOne({
+          $and:[
+            {
+              "_id":ObjectId(user._id)
+            },
+            {
+              "followings.idFollowing":ObjectId(id_follow)
+            }
+          ]
+        },{
+            $pull:{
+              "followings.$[fol].inbox":{
+                "_id":ObjectId(id_mes)
+              }
+            }
+        },{
+          "arrayFilters":[
+            {
+              "fol.idFollowing":ObjectId(id_follow)
+            }
+          ]
+        },function(err,data){
+          User.collection.updateOne({
+            $and:[
+              {
+                "_id":ObjectId(id_follow)
+              },
+              {
+                "followings.idFollowing":ObjectId(user._id)
+              }
+            ]
+          },{
+              $pull:{
+                "followings.$[fol].inbox":{
+                  "createdAt":id_createdAt
+                }
+              }
+          },{
+            "arrayFilters":[
+              {
+                "fol.idFollowing":ObjectId(user._id)
+              }
+            ]
+          },function(err,data){
+            if ( chat[id_follow]) {
+              res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                    "to":id_follow,
+                    "id":user._id
+              })
+            }
+            if ( chat[user._id]) {
+              res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                "from":user._id,
+                "id":id_follow
+              })
+            }
+              res.json({
+                "status":"success"
+              })
+          })
+        })
+      }
+      else{
+        User.collection.updateOne({
+          $and:[
+            {
+              "_id":ObjectId(user._id)
+            },
+            {
+              "followings.idFollowing":ObjectId(id_follow)
+            }
+          ]
+        },{
+            $pull:{
+              "followings.$[fol].inbox":{
+                "_id":ObjectId(id_mes)
+              }
+            }
+        },{
+          "arrayFilters":[
+            {
+              "fol.idFollowing":ObjectId(id_follow)
+            }
+          ]
+        },function(err,data){
+          User.collection.updateOne({
+            $and:[
+              {
+                "_id":ObjectId(id_follow)
+              },
+              {
+                "followings.idFollowing":ObjectId(user._id)
+              }
+            ]
+          },{
+              $pull:{
+                "followings.$[fol].inbox":{
+                  "createdAt":id_createdAt
+                }
+              }
+          },{
+            "arrayFilters":[
+              {
+                "fol.idFollowing":ObjectId(user._id)
+              }
+            ]
+          },function(err,data){
+            if ( chat[id_follow]) {
+              res.io.to(chat[id_follow]).emit("messageReceiver",{ 
+                    "to":id_follow,
+                    "id":user._id
+              })
+            }
+            if ( chat[user._id]) {
+              res.io.to(chat[user._id]).emit("messageReceiver",{ 
+                "from":user._id,
+                "id":id_follow
+              })
+            }
+              res.json({
+                "status":"success"
+              })
+          })
+        })
+      }
+     
+    }
+  })
 }
 
 // delete post
@@ -1588,6 +1899,86 @@ const post_deletePost = (req,res)=>{
  
 }
 
+// saved post
+const post_savedPost = (req,res)=>{
+    if(!req.session.user){
+      return res.redirect('/login')
+    }
+    var {id_post}=req.body
+    var createdAt = new Date().getTime();  
+    User.collection.findOne({
+      "_id":ObjectId(req.session.user._id)
+    },function(err,user){
+        if(err){
+          return redirect("/login")
+        }
+        if(user == null){
+          return redirect("/login")
+        }else{
+          var isSaved = false
+          for(var i =0;i < user.savePost.length;i++){
+            var post = user.savePost[i]
+            if(post._id==id_post){
+              isSaved = true
+              break;
+            }
+          }
+          if(isSaved){
+            User.collection.updateOne({
+              $and:[
+                {
+                  "_id":ObjectId(req.session.user._id)
+                },
+                {
+                  "savePost._id":id_post
+                }
+              ]
+            },{
+              $pull:{
+                "savePost":{
+                  "_id":id_post
+                }
+              }
+            },function(err,data){
+              res.json({
+                "status":"success"
+              })
+            })
+          }
+          else{
+            User.collection.updateOne({
+              "_id":ObjectId(req.session.user._id)
+            },{
+              $push:{
+                "savePost":{
+                  "_id":id_post,
+                  "createdAt":createdAt.toString()
+                }
+              }
+            } ,function(err,data){
+              Post.collection.updateOne({
+                "_id":ObjectId(id_post)
+              },{
+                $push:{
+                  "saved":{
+                    "user_saved":ObjectId(user._id)
+                  }
+                }
+              },function(err,data){
+                res.json({
+                  "status":"success"
+                })
+              })
+            })
+          }
+        }
+    })
+
+  
+}
+
+
+
 module.exports = {
   post_Newfeed, 
   get_Newfeed, 
@@ -1602,6 +1993,8 @@ module.exports = {
   post_sendMessage,
   get_Message,
   post_likeChat,
-  post_deletePost
+  post_unsendChat,
+  post_deletePost,
+  post_savedPost
 };
 
