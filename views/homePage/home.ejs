@@ -388,7 +388,7 @@
         })
         var id_posted=[]
         var start = 0
-        var sumPost =0
+        var sumPost = 0
         var posted = 0;
         function showNewsfeed(mode) {
             var ajax = new XMLHttpRequest();
@@ -594,7 +594,7 @@
                             }
                         }
                       
-                        html += '<button class="savePost" onclick="savedPost(this,'+"'"+data._id+"'"+')">';
+                        html += '<button class="savePost" onclick="savedPost(this,'+"'"+data._id+"'"+','+"'"+data.user._id+"'"+')">';
                         html += '  <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
                         if(saved){
                             html += '<path class="savePo" d="M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z">';
@@ -687,7 +687,7 @@
                                     html += '<img src=" ' + user.profileImage + ' " class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
                                 html += '</div>';
 
-                                html += '<form id="post-comment-new" onsubmit="return doPostComment(this)">'
+                                html += '<form id="post-comment-new" onsubmit="return doPostComment(this,'+"'"+data.user._id+"'"+')">'
                                     html += '<div class="comment-text-area">';
                                         html += '<input type="hidden" name="_id" value="'+data._id+'">'
                                         html += '<textarea class="textinput  textComment" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
@@ -732,7 +732,7 @@
 
         }
        
-        function savedPost(self,id_post){
+        function savedPost(self,id_post,id_user_of_post){
             var setColor = $(self).children().children()
             var color = $(self).children().children().attr("d")
             var check = "M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z"
@@ -740,7 +740,8 @@
                 method: "POST",
                 url: "/savedPost",
                 data: {
-                    id_post: id_post
+                    id_post: id_post,
+                    id_user:id_user_of_post
                 },
                 cache: false,
                 success: function (responseText) {
@@ -759,7 +760,7 @@
 
         var lastNext = ''
         var s = ''
-        function loadNewfeed(arrPost,n){
+        function loadNewfeed(arrPost,n){    
             var ajax = new XMLHttpRequest();
             ajax.open("POST", "/getLoadNewfeed", true);
          
@@ -967,7 +968,7 @@
                                 }
                             }
                            
-                            html += '<button class="savePost" onclick="savedPost(this,'+"'"+data._id+"'"+')">';
+                            html += '<button class="savePost" onclick="savedPost(this,'+"'"+data._id+"'"+','+"'"+data.user._id+"'"+')">';
                             html += ' <svg aria-label="Save" class="_8-yf5 " fill="#262626" height="24" viewBox="0 0 48 48" width="24">';
                             if(saved){
                                 html += '<path class="savePo" d="M 43.5 48 c -0.4 0 -0.8 -0.2 -1.1 -0.4 L 24 28.9 L 5.6 47.6 c -0.4 0.4 -1.1 0.6 -1.6 0.3 c -0.6 -0.2 -1 -0.8 -1 -1.4 v -45 C 3 0.7 3.7 0 4.5 0 h 39 c 0.8 0 1.5 0.7 1.5 1.5 v 45 c 0 0.6 -0.4 1.2 -0.9 1.4 c -0.2 0.1 -0.4 0.1 -0.6 0.1 Z">';
@@ -1060,7 +1061,7 @@
                                         html += '<img src=" ' + user.profileImage + ' " class="iconComment" width="40" height="40"  alt="Card image cap" style="border-radius: 50% 50%;">';
                                     html += '</div>';
 
-                                    html += '<form id="post-comment-new" onsubmit="return doPostComment(this)">'
+                                    html += '<form id="post-comment-new" onsubmit="return doPostComment(this,'+"'"+data.user._id+"'"+')">'
                                         html += '<div class="comment-text-area">';
                                             html += '<input type="hidden" name="_id" value="'+data._id+'">'
                                             html += '<textarea class="textinput  textComment" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
@@ -1122,8 +1123,6 @@
             }
         });
   
-               
-        
     </script>
 
 

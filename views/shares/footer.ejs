@@ -138,23 +138,19 @@
 
                             for (var b = 0; b < data.notifications.length; b++) {
                                 var notice = data.notifications[b];
-                                    if( (data._id != notice.idLiked && notice.isRead===false) || data._id != notice.idCommented && (notice.type == 'post_comment' || notice.type == 'reply_comment') ){
-                                        html += " <li> "
+                                    if( data._id != notice.idLiked && data._id != notice.idCommented && (notice.type == "post_comment" || notice.type == "photo_liked" || notice.type == "reply_comment")){
+                                        html += "<li>"
                                             html+= " <img  src=" + notice.profileImage  +" width="+'30'+" height="+'30'+"  style="+'border-'+'radius:'+'50% 50%'+">"
-                                            html+= "<a  data-id="+notice.post._id+" id="+notice._id+" onclick="+'goPost(this)'+">"
+                                            html+= "<a data-id="+notice.post+" id="+notice._id+" onclick="+'goPost(this)'+">"
                                                 html += notice.content
                                             html += "</a>"
                                         html+= "</li>"
-                                    }
-                                    
-                                
-                                    
+                                    }  
                             }
                         document.getElementById("list-noti").innerHTML = html;
                         
                     }
-                  
-               
+
                 }
             };
             var formData = new FormData();
@@ -765,13 +761,14 @@
             };
 
             var formData = new FormData(form);
+            formData.append("id_user_comment",id)
             ajax.send(formData);
 
             return false;
         }
        
         // post comment card modal
-        function doPostCommentModal(form){
+        function doPostCommentModal(form,id){
             var ajax = new XMLHttpRequest();
             ajax.open("POST", "/addComment", true);
             ajax.onreadystatechange = function () {
@@ -787,6 +784,7 @@
                 }
             };
             var formData = new FormData(form);
+            formData.append("id_user_comment",id)
             ajax.send(formData);
             return false;
         }
@@ -849,19 +847,23 @@
     
         // delete post 
         function deletePost(id){
-            $.ajax({
-                method: "POST",
-                url: "/deletePost",
-                data: {
-                    _id: id
-                },
-                cache: false,
-                success: function (responseText) {
-                    if(responseText.status=="success"){
-                        showNewsfeed("delete");
+            var c = confirm("Bạn cố thực sự muốn xóa bài viết này ?");
+            //you can just return c because it will be true or false
+            if(c){
+                $.ajax({
+                    method: "POST",
+                    url: "/deletePost",
+                    data: {
+                        _id: id
+                    },
+                    cache: false,
+                    success: function (responseText) {
+                        if(responseText.status=="success"){
+                            showNewsfeed("delete");
+                        }
                     }
-                }
-            })
+                })
+            }
         }
 
         // post edit new feed
@@ -1553,13 +1555,13 @@
                                                     html += '<img  src=" ' + user.profileImage + ' " class="iconComment icon-comment-modal"  alt="Card image cap" >';
                                                 html += '</div>';
 
-                                                html += '<form id="post-comment-new" onsubmit="return doPostCommentModal(this)">'
+                                                html += '<form id="post-comment-new" onsubmit="return doPostCommentModal(this,'+"'"+data.user._id+"'"+')">'
                                                     html += '<div class="comment-text-area">';
                                                         html += '<input type="hidden" name="_id" value="'+data._id+'">'
                                                         html += '<input type="hidden" id="nameReply-'+data._id+'" name="nameReply" value="'+data._id+'">'
                                                         html += '<input type="hidden" id="idComment-'+data._id+'" name="id_comment" value="">'
                                                         html += '<input type="hidden" id="createdAt-'+data._id+'" name="createdAt_comment" value="">'
-                                                        html += '<input type="hidden" id="idUserComment-'+data._id+'" name="id_user_comment" value="">'
+                                                        html += '<input type="hidden" id="idUserComment-'+data._id+'" name="id_user_com" value="">'
                                                         html += '<textarea class="textinput  textComment text-comment-modal" id="com-'+data._id+'" name="commentPost" placeholder="Add comment ...">'
                                                         html += '</textarea>';
                                                         html += '<button class="btn  btnComment btnOpacity btn-opa" type="submit">Post';

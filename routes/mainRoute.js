@@ -13,9 +13,15 @@ function route(app) {
     app.get('/',UserController.index );
     app.post('/getFollow',UserController.get_Follow );
 
-    // update infor of user different
+    // update infor of user different from admin
     app.post('/updateInforUser',UserController.get_UpdateInforUser );
     app.post('/updateInfor',UserController.post_UpdateInfor );
+
+    // change password for user from admin
+    app.post('/changePasswordUser',UserController.post_changePasswordUser );
+
+    // delete user
+    app.post('/deleteUser',UserController.post_deleteUser );
 
     // handle newfeed
     app.post('/addPost',PostController.post_Newfeed );
@@ -38,6 +44,7 @@ function route(app) {
     // interact chat friends
     app.post("/likeChat",PostController.post_likeChat)
     app.post("/unsendChat",PostController.post_unsendChat)
+
 
     // notification
     app.post("/getNotice", PostController.get_Notice);
@@ -80,6 +87,14 @@ function route(app) {
 
     // handle post
     app.post('/deletePost',PostController.post_deletePost);
+    app.post('/savedPost',PostController.post_savedPost );
+
+    // load page
+    app.post('/getPagePost/:page',PostController.post_pagePost);
+    app.get('/getPagePost',PostController.get_pagePost );
+
+    app.get('/getPagePost/save/',PostController.get_pagePostSaved);  // get saved post 
+    app.post('/getPagePost/save/:page',PostController.post_pagePostSaved);  
 }
 
 

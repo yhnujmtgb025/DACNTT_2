@@ -11,12 +11,11 @@
                             <% if(user._id !=idCurrent) {%>
                                 <li>
                                     <div class="row belowSuggest1 admin-edit-user">
-                                        <img class="imgUserOther1" width="60" height="60" src="<%=user.profileImage%>" alt="Card image cap"
-                                            style="border-radius: 50% 50%;">
+                                        <img class="imgUserOther1" id="img-list-<%=user._id%>" width="60" height="60" src="<%=user.profileImage%>" alt="Card image cap"  style="border-radius: 50% 50%;">
                                         <% if(user.name){%>
-                                            <span class="card-title "><a href="#" class="nameOfUser1"><%=user.name%></a></span>
+                                            <span class="card-title " ><a href="#" id="name-list-<%=user._id%>" class="nameOfUser1"><%=user.name%></a></span>
                                         <%}else{%>
-                                            <span class="card-title "><a href="#" class="nameOfUser1"><%=user.fullname%></a></span>
+                                            <span class="card-title " ><a href="#" id="fullname-list-<%=user._id%>" class="nameOfUser1"><%=user.fullname%></a></span>
                                         <%}%>
                                         <small class="midNameUser1">Instagram recommended</small>
                                         <% if( user.followers.length > 0){%>               
@@ -106,19 +105,20 @@
                         html+='</span>'
                         html+='<div class="row" style="border:1px solid #efefef; border-radius:0 16px 16px 0;">'
                             html+='<div class="col-3 list-group">'
-                                html+='<a href="#" id ="pgEdit" class="list-group-item list-group-item-action ">'
+                                html+='<a href="#" onclick="goEdit(this)" id ="pgEdit" class="list-group-item list-group-item-action edit-in">'
                                     html+='Edit profile'
                                 html+='</a>'
-                                html+='<a href="#"  class="list-group-item list-group-item-action ">'
+                                html+='<a href="#" onclick="goChangePass(this)" class="list-group-item list-group-item-action change-pass">'
                                     html+='Change Password'
                                 html+='</a>'
                             html+='</div>'
-
-                            html+='<div class="col-9" style="border-left:1px solid #DBDBDB; margin-left: -14.5px;">'
+                            
+                            // edit information
+                            html+='<div class="col-9" id="col-9-edit" style="border-left:1px solid #DBDBDB; margin-left: -14.5px;">'
 
                                     html+='<div class="coForm">'
                         
-                                        html+='<form class="form-infor"  id="uploadForm"  onsubmit="updateInfor(this,'+"'"+user._id+"'"+')">'
+                                        html+='<form class="form-infor"  id="uploadForm"  onsubmit="return updateInfor(this,'+"'"+user._id+"'"+')">'
                                             html+='<div class="form-group row in-img" >'
                                                 html+='<label class="col-sm-2 col-form-label">'
                                                     html+='<img class="img-edit" width="50" height="50" src="'+user.profileImage+'" id="photo_image" alt="Card image cap" style="border-radius: 50% 50%;">'
@@ -169,7 +169,7 @@
 
                                             html+=' <div class="form-group row">'
                                                 html+='<div class="col-sm-10 text-center">'
-                                                    html+='<button type="submit" class="btn btn-primary" id="save" onclick="updateProfile()">'
+                                                    html+='<button type="submit" class="btn btn-primary" id="save">'
                                                         html+='<p id="save1"> '
                                                             html+='Save'
                                                         html+='</p> '
@@ -180,6 +180,66 @@
                                         html+='</form>'
                                     html+='</div>'
                             html+='</div>'
+
+                            // change password
+                            html += '<div class="col-9" id="col-9-changepass" style="border-left:1px solid #DBDBDB; margin-left: -14.5px; display:none">'
+
+                                html += '<div class="coForm">'
+
+                                        html += '<form class=" form-infor" onsubmit="return changePassword_Modal(this,'+"'"+user._id+"'"+')" action="/myProfile/editProfile/changePassword">'
+                                            html += '<div class="form-group row in-img">'
+                                                html += '<label class="col-sm-2 col-form-label">'
+                                                    html += '<img class="img-edit" width="50" height="50" src="<%=image%>" alt="Card image cap"  style="border-radius: 50% 50%;">'
+                                                html += '</label>'
+
+                                                html += '<div class="col-sm-10">'
+                                                    html += '<ul id="img-option">'
+                                                        html += '<li id="name-edit" style="margin-top: 15px;">'
+                                                            html += user.fullname
+                                                        html += '</li>'
+                                                    html += '</ul>'
+                                                html += '</div>'
+
+                                            html += '</div>'
+
+                                            html += '<div class="form-group row">'
+                                                html += ' <label class="col-sm-2 col-form-label">Old password'
+                                                html += ' </label>'
+                                                html += ' <div class="col-sm-10">'
+                                                    html += ' <input type="password" name="oldPass"  class="form-control" id="oldPass-'+user._id+'"  style="margin-top: 15px;">'
+                                                html += '</div>'
+                                            html += ' </div>'
+
+                                            html += ' <div class="form-group row">'
+                                                html += ' <label class="col-sm-2 col-form-label">New Password'
+                                                html += '</label>'
+                                                html += ' <div class="col-sm-10">'
+                                                    html += ' <input type="password" name="password"  class="form-control" id="password-'+user._id+'"  style="margin-top: 15px;">'
+                                                html += ' </div>'
+                                            html += ' </div>'
+
+                                            html += ' <div class="form-group row"> '
+                                                html += ' <label class="col-sm-2 col-form-label">Confirm New Password'
+                                                html += '</label> '
+                                                html += ' <div class="col-sm-10">'
+                                                    html += ' <input type="password" name="rePassword" class="form-control" id="rePassword-'+user._id+'" value="" style="margin-top: 15px;"> '
+                                                html += ' </div>'
+                                            html += ' </div>'
+
+                                            html += ' <div class="form-group row">'
+                                                html += ' <div class="col-sm-10 text-center">'
+                                                    html += ' <button type="submit" class="btn btn-primary" id="save">'
+                                                        html += '<a id="save1"> Change Password'
+                                                        html += '</a>'
+                                                    html += ' </button>'
+                                                html += '</div>'
+                                            html += '</div>'
+
+                                            html += ' </form>'
+
+                                html += '</div>'
+                            html += '</div>' 
+
                         html+='</div>'
                     
                         $(".modal-content").html(html)
@@ -193,15 +253,16 @@
                             html=""
                             $('body').removeClass('stop-scrolling')
                             $('.sticky-top').css('z-index','1')
+                            window.location.href = 'http://localhost:3000/homePage/listUser'
                         })
                         // When the user clicks anywhere outside of the modal, close it
                         window.onclick = function(event) {
                                 if (event.target == modal) {
                                     html=""
                                     modal.style.display = "none";
+                                    window.location.href = 'http://localhost:3000/homePage/listUser'
                                 }
                         }
-
                     }
                     
               },
@@ -212,6 +273,74 @@
       
 
            
+        }
+
+        function goChangePass(self) {
+            $("#col-9-edit").css("display","none")
+            $(".edit-in").removeAttr("id")
+
+            $(".change-pass").attr("id","pgPass")
+            $("#col-9-changepass").css("display","block")
+        }
+
+        function goEdit(self) {
+            $("#col-9-changepass").css("display","none")
+            $(".change-pass").removeAttr("id")
+
+            $(".edit-in").attr("id","pgEdit")
+            $("#col-9-edit").css("display","block")
+            
+        }
+
+        function  changePassword_Modal(form,id) {
+            var oldPass = $("#oldPass-"+id)
+            var password = $("#password-"+id)
+            var rePassword = $("#rePassword-"+id)
+            if(password.val().length <6){
+                alert("Password phải tối thiểu 6 kí tự !")
+                return false;
+            }
+            else if(rePassword.val().length < 6){
+                alert("rePassword phải tối thiểu 6 kí tự !")
+                return false;
+            }
+            else if(password.val()!= rePassword.val()){
+                alert("Password không khớp !")
+                return false;
+            }
+            else if(oldPass.val() != "admin"){
+                alert("Old password không khớp !")
+                return false;
+            }
+            else{
+                var ajax = new XMLHttpRequest();
+                ajax.open("POST", "/changePasswordUser", true);
+
+                ajax.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var response = JSON.parse(this.responseText);
+                        if (response.status == "success") {
+                            // editInforUser(self,id)
+                            var modal = document.getElementById("modal-edit-infor-user");
+                            modal.style.display = "block";
+                            $("#oldPass-"+id).val('')
+                            $("#password-"+id).val('')
+                            $("#rePassword-"+id).val('')
+                            $('.sticky-top').css('z-index','0')
+                            $('body').addClass('stop-scrolling')
+                            alert("Cập nhật thành công !")
+                        }else{
+                            alert(response.error)
+                        }
+                    }
+                }
+                var formData = new FormData(form);
+                formData.append("id_user",id)
+                ajax.send(formData);
+
+                return false;
+            }
+        
         }
 
         function displayImage(input){
@@ -225,6 +354,7 @@
         }
 
         function updateInfor(form,id){
+
             var ajax = new XMLHttpRequest();
             ajax.open("POST", "/updateInfor", true);
 
@@ -232,23 +362,42 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var response = JSON.parse(this.responseText);
                     if (response.status == "success") {
-                        var user = response.data
-                        console.log(user)
-                          // you can see the result here
-                        // $("#fullname").attr("value", user.fullname);
-                        // $("#bio").attr("placeholder", user.bio);
-                        // $("#name").attr("value", user.name);
+                        var id = response.id_user
+                        editInforUser(self,id)
                     }
                 }
             }
-
+            var input = document.getElementById('file');
             var formData = new FormData(form);
             formData.append("id_user",id)
+            if(input.files.length <= 0){
+                formData.delete("image")
+                formData.append("image_1",$("#photo_image").attr("src").split("/demo/")[1])
+            }
             ajax.send(formData);
 
             return false;
         }
 
+        function deleteUser(self,id) {
+            var c = confirm("Bạn cố thực sự muốn xóa tài khoản này ?");
+            //you can just return c because it will be true or false
+            if(c){
+                $.ajax({
+                    method: "POST",
+                    url: "/deleteUser",
+                    data: {
+                        _id:id
+                    },
+                    cache: false,
+                    success: function(responseText) {
+                        
+                    }
+                })
+            }
+  
+           
+        }
     </script>
     
 <%- include ("../shares/footer") %>

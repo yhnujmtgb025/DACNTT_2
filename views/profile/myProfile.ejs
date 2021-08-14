@@ -6,16 +6,16 @@
         <div class="inforFile">
             <div class="testimonial">
                 <figure class="inforFile-image">
-                    <% if(userCurrent==""){%>
+                    <% if(userCurrent=="" ){%>
                         <img class="imaProfile testimonial__img" id="photo" src='<%=image%>' alt="hyun">
                         <label class="testimonial__caption" for="file" id="label-upload">
                             Change photo
                         </label>
-                        <input  name="profileImage" type="file" class=" upload-photo" id="file" accept="image/*"
+                        <input name="profileImage" type="file" class=" upload-photo" id="file" accept="image/*"
                             onchange="uploadImage();">
-                    <%}else{%>
-                        <img class="imaProfile " id="photo" src='<%=per.profileImage%>' alt="hyun">
-                    <%}%>
+                        <%}else{%>
+                            <img class="imaProfile " id="photo" src='<%=per.profileImage%>' alt="hyun">
+                            <%}%>
                 </figure>
             </div>
 
@@ -25,27 +25,34 @@
                     <%=fullname%>
                 </h1>
 
-                <% if(userCurrent!=""){%>
-                    <% if(follower.length > 0) {%>
+                <% if(userCurrent!="" ){%>
+                    <% if(follower.length> 0) {%>
                         <% follower.forEach(function(follow) {%>
-                            <% if(follow.idFollower == userCurrent._id){ %>
-                                <a href="" style="background-color:#fff;color:#333;border: 0.5px solid #DBDBDB;" class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>" onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                            <% if(follow.idFollower==userCurrent._id){ %>
+                                <a href="" style="background-color:#fff;color:#333;border: 0.5px solid #DBDBDB;"
+                                    class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
+                                    onclick="btnFollow('this','<%=per._id%>','wordImg')">
                                     Unfollow
                                 </a>
-                            <%}else{%>
-                                <a href="" style="background-color:#0095F6;color:#fff" class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>" onclick="btnFollow('this','<%=per._id%>','wordImg')">
-                                    Follow
-                                </a>
-                            <%}%>
-                        <%})%>
-                    <%}else{%>
-                        <a href="" style="background-color:#0095F6;color:#fff" class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>" onclick="btnFollow('this','<%=per._id%>','wordImg')">
-                            Follow
-                        </a>
-                    <%}%>
-                <%}else{%>
-                    <a href="/myProfile/editProfile" class="btn inforFile-edit-btn" id="btEdit">Edit Profile</a>
-                <%}%>
+                                <%}else{%>
+                                    <a href="" style="background-color:#0095F6;color:#fff"
+                                        class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
+                                        onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                                        Follow
+                                    </a>
+                                    <%}%>
+                                        <%})%>
+                                            <%}else{%>
+                                                <a href="" style="background-color:#0095F6;color:#fff"
+                                                    class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
+                                                    onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                                                    Follow
+                                                </a>
+                                                <%}%>
+                                                    <%}else{%>
+                                                        <a href="/myProfile/editProfile" class="btn inforFile-edit-btn"
+                                                            id="btEdit">Edit Profile</a>
+                                                        <%}%>
 
             </div>
 
@@ -54,39 +61,39 @@
 
                 <ul>
                     <li>
-                        <% if(post.length ==0 || post.length == 1){%>
-                        <span class="inforFile-stat-count" id="amount-post" >
-                                <%=post.length%> 
-                        </span> post
-                        <%}else{%>
-                            <span class="inforFile-stat-count" id="amount-post" >
-                                <%=post.length%> 
-                        </span> posts
-                        <%}%>
+                        <% if(post.length==0 || post.length==1){%>
+                            <span class="inforFile-stat-count" id="amount-post">
+                                <%=post.length%>
+                            </span> post
+                            <%}else{%>
+                                <span class="inforFile-stat-count" id="amount-post">
+                                    <%=post.length%>
+                                </span> posts
+                                <%}%>
                     </li>
 
                     <li>
-                        <% if(follower.length ==0 || follower.length == 1){%>
+                        <% if(follower.length==0 || follower.length==1){%>
                             <span class="inforFile-stat-count">
-                                <%=follower.length%> 
+                                <%=follower.length%>
                             </span> follower
-                        <%}else{%>
-                                <span class="inforFile-stat-count" id="amount-post" >
-                                    <%=follower.length%> 
+                            <%}else{%>
+                                <span class="inforFile-stat-count" id="amount-post">
+                                    <%=follower.length%>
                                 </span> followers
-                        <%}%>
+                                <%}%>
                     </li>
 
                     <li>
-                        <% if(following.length ==0 || following.length == 1){%>
+                        <% if(following.length==0 || following.length==1){%>
                             <span class="inforFile-stat-count">
-                                <%=following.length%> 
+                                <%=following.length%>
                             </span>following
-                        <%}else{%>
-                            <span class="inforFile-stat-count" id="amount-post" >
-                                <%=following.length%> 
-                            </span> followings
-                        <%}%>
+                            <%}else{%>
+                                <span class="inforFile-stat-count" id="amount-post">
+                                    <%=following.length%>
+                                </span> followings
+                                <%}%>
                     </li>
                 </ul>
 
@@ -173,144 +180,251 @@
 
     </div> -->
 
-    <div class="container gallery" id="gallery-profile-mypost" >
-        <div class="gallery-content">
-            <% post.forEach(function(pos,i) {%>
-                <div class="viewport-gallery gallery-img">
-                    <ul class="list-img-gallery" id="list-img-gallery-<%=pos._id%>">
-                        <%pos.image.forEach(function(img) { %>
-                            <li class="item-gallery">
-                                <img src="/demo/<%=img.originalname %>"   alt="">
-                            </li>
-                         <%})%>
-                         <%pos.video.forEach(function(video) { %>
-                            <li class="item-gallery">
-                                <iframe width="280" height="300" src="/demo/<%=video.originalname%>" frameborder="0" allowfullscreen sandbox>'
-                                </iframe>
-                            </li>
-                        <%})%>
-                        <% if(pos.image == "" && pos.video == "") { %>
-                            <li class="item-gallery" style="border: 2px solid #EFEFEF ;">
-                                <p style="position: relative;top: 6rem ;left: 6rem;">
-                                    <%= pos.caption.split(" ")[0] +'...' %>
-                                </p>
-                            </li>
-                        <%}%>
-                    </ul>
-                    <div class="gallery-item-info" onclick="modalComment(this,'<%=pos._id%>')">
-                        <ul style="display: flex;">
-                            <li class="gallery-item-likes">
-                                <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
-                            </li>
-                          
-                            <li class="gallery-item-comments">
-                                <i class="fas fa-comment"></i><%=post_com[i]%>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                    <div class="cover-btn-gallery" >
-                        <% if(pos.image.length >1){%>
-                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length%>','<%=pos._id%>')" >
-                            </i>
-                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length%>','<%=pos._id%>')">
-                            </i>
-                        <%}else if (pos.video.length >1){%>
-                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.video.length%>','<%=pos._id%>')" >
-                            </i>
-                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.video.length%>','<%=pos._id%>')">
-                            </i>
-                        <%}else if ((pos.video.length+pos.image.length) >1){%>
-                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')" >
-                            </i>
-                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')">
-                            </i>
-                        <%}%>
-                    </div>
-                </div>
-            <%})%>
-        </div>
+    <div class="container gallery" id="gallery-profile-mypost">
+        <div class="gallery-content"></div>
+        <div id="page-post"></div>
     </div>
     <div class="container gallery" id="gallery-profile-savepost" style="display: none;">
-        <div class="gallery-content">
-            <% saved_post.forEach(function(pos,i) {%>
-                <div class="viewport-gallery gallery-img">
-                    <ul class="list-img-gallery" id="list-img-gallery-<%=pos._id%>">
-                        <%pos.image.forEach(function(img) { %>
-                            <li class="item-gallery">
-                                <img src="/demo/<%=img.originalname %>"   alt="">
-                            </li>
-                        <%})%>
-                        <%pos.video.forEach(function(video) { %>
-                            <li class="item-gallery">
-                                <iframe width="280" height="300" src="/demo/<%=video.originalname%>" frameborder="0" allowfullscreen sandbox>'
-                                </iframe>
-                            </li>
-                        <%})%>
-                        <% if(pos.image == "" && pos.video == "") { %>
-                            <li class="item-gallery" style="border: 2px solid #EFEFEF ;">
-                                <p style="position: relative;top: 6rem ;left: 6rem;">
-                                    <%= pos.caption.split(" ")[0] +'...' %>
-                                </p>
-                            </li>
-                        <%}%>
-                    </ul>
-                    <div class="gallery-item-info" onclick="modalComment(this,'<%=pos._id%>')">
-                        <ul style="display: flex;">
-                            <li class="gallery-item-likes">
-                                <i class="fas fa-heart" aria-hidden="true"></i> <%=pos.likers.length%>
-                            </li>
-                        
-                            <li class="gallery-item-comments">
-                                <i class="fas fa-comment"></i><%=post_com[i]%>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                    <div class="cover-btn-gallery" >
-                        <% if(pos.image.length >1){%>
-                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length%>','<%=pos._id%>')" >
-                            </i>
-                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length%>','<%=pos._id%>')">
-                            </i>
-                        <%}else if (pos.video.length >1){%>
-                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.video.length%>','<%=pos._id%>')" >
-                            </i>
-                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.video.length%>','<%=pos._id%>')">
-                            </i>
-                        <%}else if ((pos.video.length+pos.image.length) >1){%>
-                            <i class="fas fa-chevron-circle-right next-gal" id="next-gal-<%=pos._id%>" onclick="slideGallery('right','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')" >
-                            </i>
-                            <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-<%=pos._id%>" onclick="slideGallery('left','<%=pos.image.length+pos.video.length%>','<%=pos._id%>')">
-                            </i>
-                        <%}%>
-                    </div>
-                </div>
-            <%})%>
-        </div>
+            <div class="gallery-content"></div>
+            <div id="page-post-save"></div>
     </div>
-    
+
     </div>
 
 
 
     <div class="loader"></div>
-
+    <script src="/js/pagination.js"> </script>
     <script>
-    function display_MyPost(){
-        $("#gallery-profile-savepost").css("display","none")
-        $("#gallery-profile-mypost").css("display","block")
-    }
+        $('#page-post').pagination({
+            dataSource: '/getPagePost',
+            totalNumberLocator: function (response) {
+                if(response.page_size ==  response.total){
+                    return response.total-1
+                }else{
+                    return response.total
+                }
+                
+            },
+            locator: 'data',
+            pageSize: 2,
+            afterPageOnClick: function (event, pageNumber) {
+                loadPage(pageNumber)
+            },
+            afterNextOnClick:function(event,pageNumber){
+                loadPage(pageNumber)
+            },
+            afterPreviousOnClick:function(event,pageNumber){
+                loadPage(pageNumber)
+            }
+        })
 
-    function display_savePost(){
-        $("#gallery-profile-mypost").css("display","none")
-        $("#gallery-profile-savepost").css("display","block")
-    }
-   
-       
+        $('#page-post-save').pagination({
+            dataSource: '/getPagePost/save/',
+            totalNumberLocator: function (response) {
+                if(response.page_size ==  response.total){
+                    return response.total-1
+                }else{
+                    return response.total
+                }
+            },
+            locator: 'data',
+            pageSize: 2,
+            afterPageOnClick: function (event, pageNumber) {
+                loadPageSave(pageNumber)
+            },
+            afterNextOnClick:function(event,pageNumber){
+                loadPageSave(pageNumber)
+            },
+            afterPreviousOnClick:function(event,pageNumber){
+                loadPageSave(pageNumber)
+            }
+        })
 
-    function slideGallery(direction,size,id) {
-            var container = document.getElementById('list-img-gallery-'+id);
+        function loadPage(page) {
+            $("#gallery-profile-mypost .gallery-content").html('')
+            $.ajax({
+                method: "POST",
+                url: '/getPagePost/' + page,
+                cache: false,
+                success: function (responseText) {
+                    var post = responseText.data
+                    var item = ''
+                    for (var i = 0; i < post.length; i++) {
+                        var pos = post[i]
+                        item += ' <div class="viewport-gallery gallery-img">'
+
+                        item += ' <ul class="list-img-gallery" id="list-img-gallery-'+pos._id+'>">'
+                        for(var j =0 ; j < pos.image.length ; j++){
+                            item += '<li class="item-gallery">'
+                                item += ' <img src="/demo/'+pos.image[j].originalname+'"   alt="">'
+                            item += ' </li>'
+                        }
+                        
+                        for(var j =0 ; j < pos.video.length ; j++){
+                            item += ' <li class="item-gallery">'
+                                item += '<iframe width="280" height="300" src="/demo/'+pos.video[j].originalname+'" frameborder="0" allowfullscreen sandbox>'
+                                item += ' </iframe>'
+                            item += ' </li>'
+                        }
+
+                        if(pos.image == "" && pos.video == "") {
+                            item += '  <li class="item-gallery" style="border: 2px solid #EFEFEF ;">'
+                                item += ' <p style="position: relative;top: 6rem ;left: 6rem;">'
+                                    item += post.caption.split(" ")[0] + '...'
+                                item += ' </p>'
+                            item += '</li>'
+                        }
+                        
+
+                        item += ' </ul>'
+                        item += ' <div class="gallery-item-info" onclick="modalComment(this, '+pos._id+' )">'
+                        item += ' <ul style="display: flex;">'
+                        item += '  <li class="gallery-item-likes">'
+                        item += ' <i class="fas fa-heart" aria-hidden="true">'
+                            item += pos.likers.length
+                        item += '</i>'
+                        item += '</li>'
+
+                        item += '<li class="gallery-item-comments">'
+                        item += '<i class="fas fa-comment">'
+                            var a=0
+                            for(var j = 0; j < pos.comments.length; j++){
+                                a += pos.comments[j].replies.length
+                            }
+                            item += a + pos.comments.length
+                        item += '</i>'
+                        item += '</li>'
+
+                        item += ' </ul>'
+                        item += ' </div>'
+                        item += ' <div class="cover-btn-gallery" >'
+                        if(pos.image.length >1){
+                            item += ' <i class="fas fa-chevron-circle-right next-gal" id="next-gal-'+pos._id+'" onclick="slideGallery('+"right"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')" >'
+                            item += '</i>'
+                            item += ' <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-'+pos._id+'" onclick="slideGallery('+"left"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')">'
+                            item += '  </i>'
+                        }else if (pos.video.length >1){
+                            item += '  <i class="fas fa-chevron-circle-right next-gal" id="next-gal-'+pos._id+'" onclick="slideGallery('+"right"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')" >'
+                            item += '  </i>'
+                            item += '   <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-'+pos._id+'" onclick="slideGallery('+"left"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')">'
+                            item += '   </i>'
+                        }else if ((pos.video.length+pos.image.length) >1){
+                            item += '   <i class="fas fa-chevron-circle-right next-gal" id="next-gal-'+pos._id+'" onclick="slideGallery('+"right"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')" >'
+                            item += '  </i>'
+                            item += '  <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-'+pos._id+'" onclick="slideGallery('+"left"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')">'
+                            item += '  </i>'
+                        }
+                        item += '</div>'
+                    item += '  </div>'
+                    }
+                    $("#gallery-profile-mypost .gallery-content").append(item)
+                   
+                }
+            })
+        }
+
+        loadPage(1)
+      
+        function loadPageSave(page) {
+            $("#gallery-profile-savepost .gallery-content").html('')
+            $.ajax({
+                method: "POST",
+                url: '/getPagePost/save/' + page,
+                cache: false,
+                success: function (responseText) {
+                    var post = responseText.data
+                    var item = ''
+                    for (var i = 0; i < post.length; i++) {
+                        var pos = post[i]
+                        item += ' <div class="viewport-gallery gallery-img">'
+
+                        item += ' <ul class="list-img-gallery" id="list-img-gallery-'+pos._id+'>">'
+                        for(var j =0 ; j < pos.image.length ; j++){
+                            item += '<li class="item-gallery">'
+                                item += ' <img src="/demo/'+pos.image[j].originalname+'"   alt="">'
+                            item += ' </li>'
+                        }
+                        
+                        for(var j =0 ; j < pos.video.length ; j++){
+                            item += ' <li class="item-gallery">'
+                                item += '<iframe width="280" height="300" src="/demo/'+pos.video[j].originalname+'" frameborder="0" allowfullscreen sandbox>'
+                                item += ' </iframe>'
+                            item += ' </li>'
+                        }
+
+                        if(pos.image == "" && pos.video == "") {
+                            item += '  <li class="item-gallery" style="border: 2px solid #EFEFEF ;">'
+                                item += ' <p style="position: relative;top: 6rem ;left: 6rem;">'
+                                    item += post.caption.split(" ")[0] + '...'
+                                item += ' </p>'
+                            item += '</li>'
+                        }
+                        
+
+                        item += ' </ul>'
+                        item += ' <div class="gallery-item-info" onclick="modalComment(this, '+"'"+pos._id+"'"+' )">'
+                        item += ' <ul style="display: flex;">'
+                        item += '  <li class="gallery-item-likes">'
+                        item += ' <i class="fas fa-heart" aria-hidden="true">'
+                            item += pos.likers.length
+                        item += '</i>'
+                        item += '</li>'
+
+                        item += '<li class="gallery-item-comments">'
+                        item += '<i class="fas fa-comment">'
+                            var a=0
+                            for(var j = 0; j < pos.comments.length; j++){
+                                a += pos.comments[j].replies.length
+                            }
+                            item += a + pos.comments.length
+                        item += '</i>'
+                        item += '</li>'
+
+                        item += ' </ul>'
+                        item += ' </div>'
+                        item += ' <div class="cover-btn-gallery" >'
+                        if(pos.image.length >1){
+                            item += ' <i class="fas fa-chevron-circle-right next-gal" id="next-gal-'+pos._id+'" onclick="slideGallery('+"right"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')" >'
+                            item += '</i>'
+                            item += ' <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-'+pos._id+'" onclick="slideGallery('+"left"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')">'
+                            item += '  </i>'
+                        }else if (pos.video.length >1){
+                            item += '  <i class="fas fa-chevron-circle-right next-gal" id="next-gal-'+pos._id+'" onclick="slideGallery('+"right"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')" >'
+                            item += '  </i>'
+                            item += '   <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-'+pos._id+'" onclick="slideGallery('+"left"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')">'
+                            item += '   </i>'
+                        }else if ((pos.video.length+pos.image.length) >1){
+                            item += '   <i class="fas fa-chevron-circle-right next-gal" id="next-gal-'+pos._id+'" onclick="slideGallery('+"right"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')" >'
+                            item += '  </i>'
+                            item += '  <i class="fas fa-chevron-circle-left prev-gal"  id="prev-gal-'+pos._id+'" onclick="slideGallery('+"left"+','+"'"+pos.image.length+"'"+','+"'"+pos._id+"'"+')">'
+                            item += '  </i>'
+                        }
+                        item += '</div>'
+                    item += '  </div>'
+                    }
+                    $("#gallery-profile-savepost .gallery-content").append(item)
+                   
+                }
+            })
+        }
+
+        loadPageSave(1)
+
+        function display_MyPost() {
+            $("#gallery-profile-savepost").css("display", "none")
+            $("#gallery-profile-mypost").css("display", "block")
+        }
+
+        function display_savePost() {
+            $("#gallery-profile-mypost").css("display", "none")
+            $("#gallery-profile-savepost").css("display", "block")
+        }
+
+
+
+        function slideGallery(direction, size, id) {
+            var container = document.getElementById('list-img-gallery-' + id);
             var x;
             var x1;
             var temp;
@@ -321,20 +435,20 @@
                         container.scrollLeft += 29;
                         x = container.scrollLeft
                         if (x == (size * 290) - 290) {
-                            $('#next-gal-' + id).css("opacity","0")   
+                            $('#next-gal-' + id).css("opacity", "0")
                         } else {
-                            $('#prev-gal-' + id).css("opacity","0.8") 
-                            $('#next-gal-' + id).css("opacity","0.8")  
+                            $('#prev-gal-' + id).css("opacity", "0.8")
+                            $('#next-gal-' + id).css("opacity", "0.8")
                         }
                     }
                     if (direction == "left") {
                         container.scrollLeft -= 29;
                         x1 = container.scrollLeft
                         if (x1 == 0) {
-                            $('#prev-gal-' + id).css("opacity","0") 
+                            $('#prev-gal-' + id).css("opacity", "0")
                         } else {
-                            $('#prev-gal-' + id).css("opacity","0.8") 
-                            $('#next-gal-' + id).css("opacity","0.8")  
+                            $('#prev-gal-' + id).css("opacity", "0.8")
+                            $('#next-gal-' + id).css("opacity", "0.8")
                         }
 
                     }

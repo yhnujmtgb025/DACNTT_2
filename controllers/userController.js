@@ -481,7 +481,6 @@ const reset_post=(req,res)=>{
 
 }
 
-
 // trang profile
 const profile_get = (req, res) => {
     if(!req.session.user){
@@ -519,46 +518,18 @@ const profile_get = (req, res) => {
         if(like == ""){
             like = 0
         }
-        var save = []
-        Post.collection.find({
-        })
-        .toArray(function(err,post){
-            for(var i = 0; i < post.length ; i++){
-                var pos = post[i]._id
-                if(user[0].savePost){
-                    for(var j =0 ; j < user[0].savePost.length;j++){
-                        if(pos ==  user[0].savePost[j]._id){
-                            saved_post.push(post[i])
-                        }
-                    }
-                }
-            }
-            Post.collection.find({"user._id":ObjectId(req.session.user._id)})
-            .toArray( function(err,post){
-                for(var i = 0; i < post.length ; i++){
-                    for(var j = 0; j < post[i].comments.length; j++){
-                         a += post[i].comments[j].replies.length 
-                    }
-                    a+=post[i].comments.length
-                    post_com.push(a)
-                    a=0
-                }
-                res.render('profile/myProfile',{
-                    role:role,
-                    image:image,
-                    fullname:fullname,
-                    bio:bio,
-                    name:name,
-                    post:post,
-                    saved_post,
-                    like:like,
-                    following:following,
-                    follower:follower,
-                    post_com,
-                    userCurrent:"",
-                    plane:""
-                })
-            })
+        res.render('profile/myProfile',{
+            role:role,
+            image:image,
+            fullname:fullname,
+            bio:bio,
+            name:name,
+            post:post,
+            like:like,
+            following:following,
+            follower:follower,
+            userCurrent:"",
+            plane:""
         })
 
      
@@ -576,71 +547,175 @@ const profile_post = (req, res) => {
     let uploader = upload.single('file-')
     uploader(req,res,err=>{
     req.session.user.profileImage = '/demo/'+req.file.filename
-    var _idPost = {}
-    var id_post = []
-    for(var i= 0 ; i< user.posts.length;i++){
-        var post = user.posts[i]
-       _idPost.id=post._id
-       var list = [_idPost]
-        $.each(list, function(index, value){
-            //  ko tim thay gia tri trong mang thi push
-            if(id_post.indexOf(value.id) === -1){
-                id_post.push(value.id);
-            }
-        });
-    }
-    var obj = Object.assign({}, id_post);
-    User.updateOne({ _id: id}, {$set:{'profileImage':'/demo/'+req.file.filename}},function (err, result) {
+    User.findByIdAndUpdate({ _id: ObjectId(id)}, {$set:{"profileImage":"/demo/"+req.file.filename}},function (err, result) {
         if (err) {
-            return res.send("Loi");
-        }
-        Post.collection.updateMany({
-            'user._id':ObjectId(id)
-        }, {
-            $set: { 
-                "user.profileImage" :'/demo/'+req.file.filename 
-            }
-        },function(err,data){
-            Post.collection.updateMany(
-                { "user._id": ObjectId(user._id)},
-                { 
-                    "$set": 
-                    { 
-                        "comments.$[elem].profileImage":'/demo/'+req.file.filename 
-                    } 
-                },
-                { "arrayFilters": [ 
-                    { 
-                        "elem.idComment": ObjectId(user._id)
-                    }
-                ], "multi": true 
-            },function(err,data){
-                Object.entries(obj).map(([key, value]) =>
-                    Post.collection.updateMany(
-                    {"user._id": ObjectId(user._id) },
-                    { 
-                        "$set": 
-                        { 
-                            "comments.$[com].replies.$[rep].fullname": fullname
-                        } 
-                    },
-                    { "arrayFilters": [ 
-                        { 
-                            "com.id_post": ObjectId(value)
-                        },
-                        { 
-                            "rep.user_comment": ObjectId(user._id)
+            res.end("Lỗi hệ thống!")
+        } else {
+            // update image on notifications, includes (notice of follow, comment, like, replies)
+            User.collection.find({})
+            .toArray(function(err,data){
+                for(var i= 0; i < data.length;i++){
+                    if(data[i].notifications){
+                        if(data[i].notifications.length>0){
+                            for(var j = 0; j < data[i].notifications.length;j++){
+                                var noti =  data[i].notifications[j]
+                                if(noti.idCommented){
+                                    if(noti.idCommented == user._id){
+                                        User.collection.updateMany({
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            $set: 
+                                            { 
+                                                "notifications.$[noti].profileImage" :"/demo/"+req.file.filename
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                   "noti.idCommented":ObjectId(user._id) 
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                                else if(noti.idLiked){
+                                    if(noti.idLiked == user._id){
+                                        User.collection.updateMany({
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            $set: 
+                                            { 
+                                                "notifications.$[noti].profileImage" :"/demo/"+req.file.filename
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                   "noti.idLiked":ObjectId(user._id) 
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                                else if(noti.id_reply_comment){
+                                    if(noti.id_reply_comment == user._id){
+                                        User.collection.updateMany({
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            $set: 
+                                            { 
+                                                "notifications.$[noti].profileImage" :"/demo/"+req.file.filename
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                   "noti.id_reply_comment":ObjectId(user._id) 
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                                else if(noti.idFollowed){
+                                    if(noti.idFollowed == user._id){
+                                        User.collection.updateMany({ 
+                                            "_id":ObjectId(data[i]._id)                                      
+                                        },{
+                                            $set: 
+                                            { 
+                                                "notifications.$[noti].profileImage" :"/demo/"+req.file.filename
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                   "noti.idFollowed":ObjectId(user._id) 
+                                                }
+                                            ]
+                                        }
+                                        )
+                                    }
+                                }
+                            }
                         }
-                    ]
-                    })
-                )
-             return res.json({data: '/demo/'+req.file.filename})
-               
+                    }
+                   
+                }
             })
-        })
-       
-        
-        
+
+            // update user of my post
+            Post.collection.updateMany({'user._id':ObjectId(user._id)}, 
+            {
+               $set: 
+               { 
+                   "user.profileImage" :'/demo/'+req.file.filename
+               }
+            })
+
+            Post.collection.find({})
+            .toArray(function(err,post){
+                for(var i = 0; i < post.length;i++){
+                    for(var j = 0; j < post[i].comments.length;j++){
+                        var com = post[i].comments[j]
+                            if(com.replies.length > 0){
+                                for(var k=0;k<com.replies.length;k++){
+                                    var rep = com.replies[k]
+                                    if(rep.user_comment.toString() == user._id.toString()){
+                                        Post.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(post[i]._id)
+                                                },
+                                                {
+                                                    "comments._id":ObjectId(com._id)
+                                                }
+                                            ]
+                                            
+                                        },{
+                                            "$set":{
+                                                "comments.$[com].replies.$[rep].profileImage": '/demo/'+req.file.filename
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                    "com._id":ObjectId(com._id)
+                                                },
+                                                {
+                                                    "rep._id":ObjectId(rep._id)
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                            }
+                    }
+                }
+            })
+            // update post contain comment, replies of user
+            User.collection.find({})
+            .toArray(function(err,data){
+                for(var i =0 ; i< data.length;i++){
+                    if(data[i].post_comment){
+                        for(var j = 0;j < data[i].post_comment.length;j++){
+                            var post_id = data[i].post_comment[j]._id
+                            Post.collection.updateMany({
+                                "_id":ObjectId(post_id)
+                            },{
+                                $set:{
+                                    "comments.$[com].profileImage":'/demo/'+req.file.filename
+                                }
+                            },{
+                                "arrayFilters":[
+                                    {
+                                        "com.idComment":ObjectId(user._id)
+                                    }
+                                ]
+                            })
+                        }
+                    }
+                   
+                }
+            })
+            return res.json({data: '/demo/'+req.file.filename}) 
+        }
+                
+      
     })
     
     })
@@ -685,7 +760,6 @@ const user_follow_post = (req, res) => {
                 if(following.idFollowing.toString() == current_user._id.toString()){
                     isFollowing = true
                     break;
-                   
                 } 
             }
              if( isFollowing ){
@@ -700,6 +774,7 @@ const user_follow_post = (req, res) => {
               
             }
             if(isFollower){
+                // handle message
                 if(isFollowing && box_message.length>0){
                     User.collection.updateOne(
                         { $and: [{
@@ -721,34 +796,338 @@ const user_follow_post = (req, res) => {
                         ]
                       })
                 }
-               User.collection.updateOne(
-                {
-                    "_id":ObjectId(user._id)
-                },{
-                    $pull:{
-                        "followers":{
-                            "_id":idfollow
-                        },
-                        "notifications":{
-                            "_id":user._id
+                // delete follow
+                User.collection.updateOne(
+                    {
+                        "_id":ObjectId(user._id)
+                    },{
+                        $pull:{
+                            "followers":{
+                                "_id":idfollow
+                            },
+                            "notifications":{
+                                "_id":user._id
+                            }
                         }
-                    }
-                },function(err,data){
-                 
-                    User.collection.updateOne({
-                          "_id": ObjectId(current_user._id)
-                      }, {
-                        $pull: {
-                          "followings": {
-                            "idFollowing":ObjectId(user._id)
-                          }
-                        }
-                      },function(err,data){
-                        res.json({
-                            "status": "unfollow"
-                          });
-                      });
-                    
+                    },function(err,data){
+                        // delete infor on notifications, includes (notice of follow, comment, like, replies)
+                        User.collection.find({
+                            "_id":ObjectId(user._id)    
+                        })
+                        .toArray(function(err,data){
+                            for(var i= 0; i < data.length;i++){
+                                if(data[i].notifications){
+                                    if(data[i].notifications.length>0){
+                                        for(var j = 0; j < data[i].notifications.length;j++){
+                                            var noti =  data[i].notifications[j]
+                                            if(noti.idCommented){
+                                                if(noti.idCommented.toString() == current_user._id){
+                                                    User.collection.updateMany({
+                                                        $and:[
+                                                            {
+                                                                "_id":ObjectId(data[i]._id)  
+                                                            },{
+                                                                "notifications._id" :ObjectId(noti._id)
+                                                            }
+                                                        ]
+                                                    
+                                                    },{ 
+                                                        $pull: 
+                                                        { 
+                                                            "notifications" :{
+                                                                "_id":ObjectId(noti._id)
+                                                            }
+                                                        } 
+                                                    })
+                                                }
+                                            }
+                                            else if(noti.idLiked){
+                                                if(noti.idLiked.toString() == current_user._id){
+                                                    User.collection.updateMany({
+                                                        $and:[
+                                                            {
+                                                                "_id":ObjectId(data[i]._id)  
+                                                            },{
+                                                                "notifications._id" :ObjectId(noti._id)
+                                                            }
+                                                        ] 
+                                                    },{
+                                                        $pull: 
+                                                        { 
+                                                            "notifications" :{
+                                                                "_id":ObjectId(noti._id)
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                            else if(noti.id_reply_comment){
+                                                if(noti.id_reply_comment.toString() == current_user._id){
+                                                    User.collection.updateMany({
+                                                        $and:[
+                                                            {
+                                                                "_id":ObjectId(data[i]._id)  
+                                                            },{
+                                                                "notifications._id" :ObjectId(noti._id)
+                                                            }
+                                                        ]  
+                                                    },{
+                                                        $pull: 
+                                                        { 
+                                                            "notifications" :{
+                                                                "_id":ObjectId(noti._id)
+                                                            }
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                            else if(noti.idFollowed){
+                                                if(noti.idFollowed.toString() == current_user._id){
+                                                    User.collection.updateMany({ 
+                                                        $and:[
+                                                            {
+                                                                "_id":ObjectId(data[i]._id)  
+                                                            },{
+                                                                "notifications._id" :ObjectId(noti._id)
+                                                            }
+                                                        ]                                    
+                                                    },{
+                                                        $pull: 
+                                                        { 
+                                                            "notifications" :{
+                                                                "_id":ObjectId(noti._id)
+                                                            }
+                                                        }
+                                                    }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                              
+                                for(var j=0;j < data[i].posts.length;j++){
+                                    var post = data[i].posts[j]
+                                    if(post.comments.length > 0){
+                                        for(var k=0;k<post.comments.length;k++){
+                                            var com = post.comments[k].idComment
+                                            if(com.toString() == current_user._id){
+                                                User.collection.updateMany({
+                                                    $and:[
+                                                        {
+                                                            "_id":ObjectId(data[i]._id)
+                                                        },{
+                                                            "posts._id":ObjectId(post._id)
+                                                        }
+                                                    ]
+                                                },{
+                                                    $pull:{
+                                                        "posts.$[pos].comments":{
+                                                            "idComment":ObjectId(com)
+                                                        }
+                                                    }
+                                                },{
+                                                    "arrayFilters":[
+                                                        {
+                                                            "pos._id":ObjectId(post._id)
+                                                        }
+                                                    ]
+                                                })
+                                            }
+
+                                            for(var z =0; z < post.comments[k].replies.length;z++){
+                                                var rep = post.comments[k].replies[z].user_comment
+     
+                                                if(rep.toString() == current_user._id){
+                                       
+                                                    User.collection.updateMany({
+                                                        $and:[
+                                                            {
+                                                                "_id":ObjectId(data[i]._id)
+                                                            },{
+                                                                "posts._id":ObjectId(post._id)
+                                                            }
+                                                        ]
+                                                    },{
+                                                        $pull:{
+                                                            "posts.$[pos].comments.$[com].replies":{
+                                                                "user_comment":ObjectId(rep)
+                                                            }
+                                                        }
+                                                    },{
+                                                        "arrayFilters":[
+                                                            {
+                                                                "pos._id":ObjectId(post._id)
+                                                            },
+                                                            {
+                                                                "com.idComment":ObjectId(com)
+                                                            }
+                                                        ]
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        })
+
+                        // update  comment of post
+                        Post.collection.find({
+                            "user._id":ObjectId(user._id)
+                        })
+                        .toArray(function(err,post){
+                            for(var i=0;i<post.length;i++){
+                                for(var j=0;j<post[i].comments.length;j++){
+                                    var com =post[i].comments[j]
+                                    if(com.idComment.toString() == current_user._id){
+                                        Post.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(post[i]._id)
+                                                },
+                                                {
+                                                    "comments.idComment":ObjectId(com.idComment)
+                                                }
+                                            ]
+                                        },{
+                                            $pull:{
+                                                "comments":{
+                                                   "idComment": ObjectId(com.idComment)
+                                                }
+                                            }
+                                        })
+                                    }
+
+                                    for(var k =0;k < post[i].comments[j].replies.length;k++){
+                                        var rep = post[i].comments[j].replies[k].user_comment
+                                        if(rep.toString() == current_user._id){
+                                            Post.collection.updateMany({
+                                                "_id":ObjectId(post[i]._id)
+                                            },{
+                                                $pull:{
+                                                    "comments.$[com].replies":{
+                                                        "_id":ObjectId(post[i].comments[j].replies[k]._id)
+                                                    }
+                                                }
+                                            },{
+                                                "arrayFilters":[
+                                                    {
+                                                        "com._id":ObjectId(post[i].comments[j]._id)
+                                                    }
+                                                ]
+                                            })
+                                        }
+                                    }
+                                }
+                                for(var j =0 ; j<post[i].saved.length;j++){
+                                    if(post[i].saved[j].user_saved.toString() == current_user._id){
+ 
+                                        Post.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(post[i]._id)
+                                                },
+                                                {
+                                                    "saved._id":post[i].saved[j]._id
+                                                }
+                                            ]
+                                        },{
+                                            $pull:{
+                                                "saved":{
+                                                    "_id":post[i].saved[j]._id
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                            }
+                        })
+
+                        User.collection.updateOne({
+                            "_id": ObjectId(current_user._id)
+                        }, {
+                            $pull: {
+                                "followings": {
+                                    "idFollowing":ObjectId(user._id)
+                                }
+                            }
+                        },function(err,data){
+                            User.collection.find({
+                                "_id":ObjectId(current_user._id)
+                            })
+                            .toArray(function(err,data){
+                                if(data[i].post_comment){
+                                    for(var j = 0; j < data[i].post_comment.length;j++){
+                                        if(data[i].post_comment[j].id_user_comment == user._id.toString()){
+                                            User.collection.updateMany({
+                                                $and:[
+                                                    {
+                                                        "_id":ObjectId(data[i]._id)
+                                                    },
+                                                    {
+                                                        "post_comment._id":ObjectId(data[i].post_comment[j]._id)
+                                                    }
+                                                ]
+                                            },{
+                                                 $pull:{
+                                                     "post_comment":{
+                                                         "_id":ObjectId(data[i].post_comment[j]._id)
+                                                     }
+                                                 }  
+                                            })
+                                        }
+    
+                                    }
+                                }
+                                if(data[i].savePost){
+                                    for(var j = 0; j < data[i].savePost.length;j++){
+                                        if(data[i].savePost[j].id_ofUser_post == user._id.toString()){
+                                            User.collection.updateMany({
+                                                $and:[
+                                                    {
+                                                        "_id":ObjectId(data[i]._id)
+                                                    },
+                                                    {
+                                                        "savePost._id":data[i].savePost[j]._id
+                                                    }
+                                                ]
+                                            },{
+                                                 $pull:{
+                                                     "savePost":{
+                                                         "_id":data[i].savePost[j]._id
+                                                     }
+                                                 }  
+                                            })
+                                        }
+    
+                                    }
+                                }
+                            })
+
+                            User.collection.updateMany({
+                                $and:[
+                                    {
+                                        "_id":ObjectId(current_user._id)
+                                    },
+                                    {
+                                        "notifications.id_reply_comment":ObjectId(user._id)
+                                    }
+                                   
+                                ]
+                            },{
+                                $pull:{
+                                    "notifications":{
+                                        "id_reply_comment":ObjectId(user._id)
+                                    }
+                                }
+                            })
+                            res.json({
+                                "status": "unfollow"
+                            });
+                        });
+                        
                 })
             }
             else{
@@ -983,20 +1362,39 @@ const edit_profile_post = (req, res) => {
     }
     var user= req.session.user;
     var {fullname,bio,name} = req.body
-    var _idPost = {}
-    var id_post = []
-    for(var i= 0 ; i< user.posts.length;i++){
-        var post = user.posts[i]
-       _idPost.id=post._id
-       var list = [_idPost]
-        $.each(list, function(index, value){
-            //  ko tim thay gia tri trong mang thi push
-            if(id_post.indexOf(value.id) === -1){
-                id_post.push(value.id);
-            }
-        });
-    }
-    var obj = Object.assign({}, id_post);
+    // var _idPost = {}
+    // var id_post = []
+    // for(var i= 0 ; i< user.posts.length;i++){
+    //     var post = user.posts[i]
+    //    _idPost.id=post._id
+    //    var list = [_idPost]
+    //     $.each(list, function(index, value){
+    //         //  ko tim thay gia tri trong mang thi push
+    //         if(id_post.indexOf(value.id) === -1){
+    //             id_post.push(value.id);
+    //         }
+    //     });
+    // }
+    // var obj = Object.assign({}, id_post);
+    // Object.entries(obj).map(([key, value]) =>
+    //     Post.collection.updateMany(
+    //     {},
+    //     { 
+    //         "$set": 
+    //         { 
+    //             "comments.$[com].replies.$[rep].fullname": fullname
+    //         } 
+    //     },
+    //     { "arrayFilters": [ 
+    //         { 
+    //             "com.id_post": ObjectId(value)
+    //         },
+    //         { 
+    //             "rep.user_comment": ObjectId(user._id)
+    //         }
+    //     ]
+    //     })
+    // )
     
     User.findByIdAndUpdate({ _id: user._id}, {fullname:fullname,bio:bio,name:name},function (err, result) {
         if (err) {
@@ -1102,6 +1500,7 @@ const edit_profile_post = (req, res) => {
                 for(var i = 0; i < post.length;i++){
                     for(var j = 0; j < post[i].comments.length;j++){
                         var com = post[i].comments[j]
+                        // update name_comment
                         if(com.idComment.toString() == user._id.toString() && com.replies.length > 0 ){
                             for(var d = 0 ; d<com.replies.length; d++ ){
                                 var id_replied = com.replies[d].id_replied
@@ -1133,6 +1532,7 @@ const edit_profile_post = (req, res) => {
                                 }
                             }
                         }else{
+                            // update name replied
                             if(com.replies.length > 0){
                                 for(var k=0;k<com.replies.length;k++){
                                     var rep = com.replies[k]
@@ -1168,7 +1568,7 @@ const edit_profile_post = (req, res) => {
                     }
                 }
             })
-            // update post contain comment, replies of user
+            // update post contain comment user
             User.collection.find({})
             .toArray(function(err,data){
                 for(var i =0 ; i< data.length;i++){
@@ -1185,29 +1585,6 @@ const edit_profile_post = (req, res) => {
                                 "arrayFilters":[
                                     {
                                         "com.idComment":ObjectId(user._id)
-                                    }
-                                ]
-                            })
-                        }
-                    }
-                    else if(data[i].post_replies){
-                        for(var j = 0;j < data[i].post_replies.length;j++){
-                            var post_id = data[i].post_replies[j].id_post
-                            var com_id = data[i].post_replies[j].id_comment
-                            var rep_id = data[i].post_replies[j].id_rep
-                            Post.collection.updateMany({
-                                "_id":ObjectId(post_id)
-                            },{
-                                $set:{
-                                    "comments.$[com].replies.$[rep].fullname":fullname
-                                }
-                            },{
-                                "arrayFilters":[
-                                    {
-                                        "com.idComment":ObjectId(com_id)
-                                    },
-                                    {
-                                        "rep.createdAt":rep_id
                                     }
                                 ]
                             })
@@ -1339,67 +1716,224 @@ const post_UpdateInfor = (req,res)=>{
     var user= req.session.user;
     var uploader = upload.single("image")
     uploader(req, res, next => {
-        var {fullname,bio,name,id_user} = req.body
-        var image = req.file.filename
-        var _idPost = {}
-        var id_post = []
-        for(var i= 0 ; i< user.posts.length;i++){
-            var post = user.posts[i]
-           _idPost.id=post._id
-           var list = [_idPost]
-            $.each(list, function(index, value){
-                //  ko tim thay gia tri trong mang thi push
-                if(id_post.indexOf(value.id) === -1){
-                    id_post.push(value.id);
-                }
-            });
+        var {fullname,bio,name,id_user,image_1} = req.body
+        var image = ''
+        if(req.file){
+            image =  '/demo/'+ req.file.filename
+        }else{
+            image ='/demo/'+ image_1
         }
-        var obj = Object.assign({}, id_post);
-        User.findByIdAndUpdate({ _id: ObjectId(id_user)}, {fullname:fullname,bio:bio,name:name,profileImage:'/demo/'+image},function (err, result) {
+        User.findByIdAndUpdate({ _id:ObjectId(id_user)}, {fullname:fullname,bio:bio,name:name,profileImage:image},function (err, result) {
             if (err) {
                 res.end("Lỗi hệ thống!")
             } else {
-                Post.collection.updateMany(
-                    { "user._id": ObjectId(id_user)},
-                    { 
-                        "$set": 
-                        { 
-                            "comments.$[elem].fullname": fullname
-                        } 
-                    },
-                    { "arrayFilters": [ 
-                        { 
-                            "elem.idComment": ObjectId(id_user)
+                // update infor on notifications, includes (notice of follow, comment, like, replies)
+                User.collection.find({})
+                .toArray(function(err,data){
+                    for(var i= 0; i < data.length;i++){
+                        if(data[i].notifications){
+                            if(data[i].notifications.length>0){
+                                for(var j = 0; j < data[i].notifications.length;j++){
+                                    var noti =  data[i].notifications[j]
+                                    if(noti.idCommented){
+                                        if(noti.idCommented == id_user){
+                                            User.collection.updateMany({
+                                                "_id":ObjectId(data[i]._id)  
+                                            },{ 
+                                                $set: 
+                                                { 
+                                                    "notifications.$[noti].profileImage" :image,
+                                                    "notifications.$[noti].content" :fullname + ' has commented your post'
+                                                } 
+                                            },{
+                                                "arrayFilters":[
+                                                    {
+                                                       "noti.idCommented":ObjectId(id_user) 
+                                                    }
+                                                ]
+                                            })
+                                        }
+                                    }
+                                    else if(noti.idLiked){
+                                        if(noti.idLiked == id_user){
+                                            User.collection.updateMany({
+                                                "_id":ObjectId(data[i]._id)  
+                                            },{
+                                                $set: 
+                                                { 
+                                                    "notifications.$[noti].profileImage" :image,
+                                                    "notifications.$[noti].content" :fullname + ' has liked your post'
+                                                }
+                                            },{
+                                                "arrayFilters":[
+                                                    {
+                                                       "noti.idLiked":ObjectId(id_user) 
+                                                    }
+                                                ]
+                                            })
+                                        }
+                                    }
+                                    else if(noti.id_reply_comment){
+                                        if(noti.id_reply_comment == id_user){
+                                            User.collection.updateMany({
+                                                "_id":ObjectId(data[i]._id)  
+                                            },{
+                                                $set: 
+                                                { 
+                                                    "notifications.$[noti].profileImage" :image,
+                                                    "notifications.$[noti].content" :fullname + ' has commented your comment'
+                                                }
+                                            },{
+                                                "arrayFilters":[
+                                                    {
+                                                       "noti.id_reply_comment":ObjectId(id_user) 
+                                                    }
+                                                ]
+                                            })
+                                        }
+                                    }
+                                    else if(noti.idFollowed){
+                                        if(noti.idFollowed == id_user){
+                                            User.collection.updateMany({ 
+                                                "_id":ObjectId(data[i]._id)                                      
+                                            },{
+                                                $set: 
+                                                { 
+                                                    "notifications.$[noti].profileImage" :image,
+                                                    "notifications.$[noti].content" :fullname + ' has followed your!'
+                                                }
+                                            },{
+                                                "arrayFilters":[
+                                                    {
+                                                       "noti.idFollowed":ObjectId(id_user) 
+                                                    }
+                                                ]
+                                            }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    ], "multi": true 
-                },function(err,data){
-                    Object.entries(obj).map(([key, value]) =>
-                    Post.collection.updateMany(
-                     {"user._id": ObjectId(id_user) },
-                     { 
-                         "$set": 
-                         { 
-                             "comments.$[com].replies.$[rep].fullname": fullname
-                         } 
-                     },
-                     { "arrayFilters": [ 
-                         { 
-                             "com.id_post": ObjectId(value)
-                         },
-                         { 
-                             "rep.user_comment": ObjectId(id_user)
-                         }
-                     ]
-                 })
-                 )
-                 return res.json({
-                    data: {
-                        name:name,
-                        fullname:fullname,
-                        bio:bio
+                      
                     }
-                });
                 })
+    
+                // update user of my post
+                Post.collection.updateMany({'user._id':ObjectId(id_user)}, 
+                {
+                   $set: 
+                   { 
+                       "user.name" :name,
+                       "user.fullname": fullname,
+                       "user.profileImage":image
+                   }
+                })
+    
+                Post.collection.find({})
+                .toArray(function(err,post){
+                    for(var i = 0; i < post.length;i++){
+                        for(var j = 0; j < post[i].comments.length;j++){
+                            var com = post[i].comments[j]
+                            // update name_comment
+                            if(com.idComment.toString() == id_user.toString() && com.replies.length > 0 ){
+                                for(var d = 0 ; d<com.replies.length; d++ ){
+                                    var id_replied = com.replies[d].id_replied
+                                    if(id_replied.toString() == com._id.toString()){
+                                        Post.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(post[i]._id)
+                                                },
+                                                {
+                                                    "comments.idComment":ObjectId(id_user)
+                                                }
+                                            ]
+                                            
+                                        },{
+                                            "$set":{
+                                                "comments.$[com].replies.$[rep].name_comment": "@"+fullname
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                    "com._id":ObjectId(com._id)
+                                                },
+                                                {
+                                                    "rep._id":ObjectId(com.replies[d]._id)
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                            }else{
+                                // update name,image replied
+                                if(com.replies.length > 0){
+                                    for(var k=0;k<com.replies.length;k++){
+                                        var rep = com.replies[k]
+                                        if(rep.user_comment.toString() == id_user.toString()){
+                                            Post.collection.updateMany({
+                                                $and:[
+                                                    {
+                                                        "_id":ObjectId(post[i]._id)
+                                                    },
+                                                    {
+                                                        "comments._id":ObjectId(com._id)
+                                                    }
+                                                ]
+                                                
+                                            },{
+                                                "$set":{
+                                                    "comments.$[com].replies.$[rep].profileImage": image,
+                                                    "comments.$[com].replies.$[rep].fullname": fullname
+                                                }
+                                            },{
+                                                "arrayFilters":[
+                                                    {
+                                                        "com._id":ObjectId(com._id)
+                                                    },
+                                                    {
+                                                        "rep._id":ObjectId(rep._id)
+                                                    }
+                                                ]
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+                // update post contain comment user
+                User.collection.find({})
+                .toArray(function(err,data){
+                    for(var i =0 ; i< data.length;i++){
+                        if(data[i].post_comment){
+                            for(var j = 0;j < data[i].post_comment.length;j++){
+                                var post_id = data[i].post_comment[j]._id
+                                Post.collection.updateMany({
+                                    "_id":ObjectId(post_id)
+                                },{
+                                    $set:{
+                                        "comments.$[com].profileImage":image,
+                                        "comments.$[com].fullname":fullname
+                                    }
+                                },{
+                                    "arrayFilters":[
+                                        {
+                                            "com.idComment":ObjectId(id_user)
+                                        }
+                                    ]
+                                })
+                            }
+                        }
+                    }
+                })
+
+                return res.json({
+                    "status":"success",
+                    "id_user":id_user
+                });
             }
                     
           
@@ -1408,6 +1942,358 @@ const post_UpdateInfor = (req,res)=>{
     })
 
 }
+
+// change password
+const post_changePasswordUser = (req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    var uploader = upload.none()
+    uploader(req,res,err=>{
+        const {id_user,oldPass,password,rePassword} = req.body
+        if(!oldPass || !password || !rePassword){
+            return res.json({
+                "status":"error",
+                "error":"Không được để trống"
+            })
+        }else if(password != rePassword){
+            return res.json({
+                "status":"error",
+                "error":"Password không khớp !"
+            })
+        }else if(password.length < 6 || rePassword.length <6){
+            return res.json({
+                "status":"error",
+                "error":"Password và rePassword phải tối thiểu 6 kí tự"
+            })
+        }
+        else{
+            if(oldPass == "admin"){
+                const hash_password =  bcrypt.hashSync(password,10)
+                User.collection.updateOne({
+                    "_id":ObjectId(id_user)
+                },{
+                    $set:{
+                        "password":hash_password
+                    }
+                },function(err,data){
+                    res.json({
+                        "status":"success"
+                    })
+                })
+            }else{
+                res.json({
+                    "status":"error",
+                    "error":"Sai oldPassword !"
+                })
+            }
+          
+        }
+     
+    })
+
+}
+
+// delete user
+const post_deleteUser = (req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    var {_id}=req.body
+    User.collection.deleteOne({ _id:ObjectId(_id)},function (err, result) {
+        if (err) {
+            res.end("Lỗi hệ thống!")
+        } else {
+            // delete infor on notifications, includes (notice of follow, comment, like, replies)
+            User.collection.find({})
+            .toArray(function(err,data){
+                for(var i= 0; i < data.length;i++){
+                    if(data[i].notifications){
+                        if(data[i].notifications.length>0){
+                            for(var j = 0; j < data[i].notifications.length;j++){
+                                var noti =  data[i].notifications[j]
+                                if(noti.idCommented){
+                                    if(noti.idCommented == _id){
+                                        User.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(data[i]._id)  
+                                                },{
+                                                    "notifications._id" :ObjectId(noti._id)
+                                                }
+                                            ]
+                                          
+                                        },{ 
+                                            $pull: 
+                                            { 
+                                                "notifications" :{
+                                                    "_id":ObjectId(noti._id)
+                                                }
+                                            } 
+                                        })
+                                    }
+                                }
+                                else if(noti.idLiked){
+                                    if(noti.idLiked == _id){
+                                        User.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(data[i]._id)  
+                                                },{
+                                                    "notifications._id" :ObjectId(noti._id)
+                                                }
+                                            ] 
+                                        },{
+                                            $pull: 
+                                            { 
+                                                "notifications" :{
+                                                    "_id":ObjectId(noti._id)
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                                else if(noti.id_reply_comment){
+                                    if(noti.id_reply_comment ==_id){
+                                        User.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(data[i]._id)  
+                                                },{
+                                                    "notifications._id" :ObjectId(noti._id)
+                                                }
+                                            ]  
+                                        },{
+                                            $pull: 
+                                            { 
+                                                "notifications" :{
+                                                    "_id":ObjectId(noti._id)
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+                                else if(noti.idFollowed){
+                                    if(noti.idFollowed ==_id){
+                                        User.collection.updateMany({ 
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(data[i]._id)  
+                                                },{
+                                                    "notifications._id" :ObjectId(noti._id)
+                                                }
+                                            ]                                    
+                                        },{
+                                            $pull: 
+                                            { 
+                                                "notifications" :{
+                                                    "_id":ObjectId(noti._id)
+                                                }
+                                            }
+                                        }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+            // delte post of user
+            Post.collection.deleteMany({'user._id':ObjectId(_id)})
+
+            Post.collection.find({})
+            .toArray(function(err,post){
+                for(var i = 0; i < post.length;i++){
+                    // delete comment
+                    for(var j = 0; j < post[i].comments.length;j++){
+                        var com = post[i].comments[j]
+                        // delete comment
+                        if(com.idComment.toString() == _id.toString() ){
+                            Post.collection.updateMany({
+                                $and:[
+                                    {
+                                        "_id":ObjectId(post[i]._id)
+                                    },
+                                    {
+                                        "comments.idComment":ObjectId(_id)
+                                    }
+                                ]
+                                
+                            },{
+                                $pull:{
+                                    "comments" :{
+                                        "_id":ObjectId(com._id)
+                                    }
+                                }
+                            })
+                        }
+                        else{
+                            // delele comment reply contains id deleted
+                            if(com.replies.length > 0){
+                                for(var k=0;k<com.replies.length;k++){
+                                    var rep = com.replies[k]
+                                    if(rep.user_comment.toString() == _id.toString()){
+                                        Post.collection.updateMany({
+                                            $and:[
+                                                {
+                                                    "_id":ObjectId(post[i]._id)
+                                                },
+                                                {
+                                                    "comments._id":ObjectId(com._id)
+                                                }
+                                            ]
+                                            
+                                        },{
+                                            $pull:{
+                                                "comments.$[com].replies":{
+                                                    "_id":ObjectId(rep._id)
+                                                } 
+                                            }
+                                        },{
+                                            "arrayFilters":[
+                                                {
+                                                    "com._id":ObjectId(com._id)
+                                                }
+                                            ]
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // delete saved of post
+                    if(post[i].saved){
+                        for(var p = 0 ; p < post[i].saved.length;p++){
+                            if(post[i].saved[p].user_saved.toString() == _id.toString()){
+                                Post.collection.updateMany({
+                                    $and:[
+                                        {
+                                            "_id":ObjectId(post[i]._id)
+                                        },
+                                        {
+                                            "saved.user_saved":ObjectId(post[i].saved[p].user_saved)
+                                        }
+                                    ]
+                                },{
+                                    $pull:{
+                                        "saved":{
+                                            "user_saved":ObjectId(post[i].saved[p].user_saved)
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+
+                }
+            })
+            // delete following,follower,post_comment, savePost contain _id
+            User.collection.find({})
+            .toArray(function(err,data){
+                for(var i =0 ; i< data.length;i++){
+                    if(data[i].followings.length > 0){
+                        for(var j = 0; j < data[i].followings.length; j++){
+                            if(data[i].followings[j].idFollowing.toString() == _id.toString()){
+                                console.log("following")
+                                User.collection.updateMany({
+                                    $and:[
+                                        {
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            "followings._id":ObjectId(data[i].followings[j]._id)
+                                        }
+                                    ]
+                                },{
+                                    $pull:{
+                                        "followings":{
+                                            "_id":ObjectId(data[i].followings[j]._id)
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                    if (data[i].followers.length > 0 ){
+                        for(var j = 0; j < data[i].followers.length; j++){
+                            if(data[i].followers[j].idFollower.toString() == _id.toString()){
+                                console.log("follower")
+                                User.collection.updateMany({
+                                    $and:[
+                                        {
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            "followers._id":ObjectId(data[i].followers[j]._id)
+                                        }
+                                    ]
+                                },{
+                                    $pull:{
+                                        "followers":{
+                                            "_id":ObjectId(data[i].followers[j]._id)
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                    if(data[i].post_comment){
+                       for(var k = 0; k < data[i].post_comment.length;k++){
+                            if(data[i].post_comment[k].id_user_comment == _id.toString()){
+                                User.collection.updateMany({
+                                    $and:[
+                                        {
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            "post_comment.id_user_comment":data[i].post_comment[k].id_user_comment
+                                        }
+                                    ]
+                                },
+                                {
+                                    $pull:{
+                                        "post_comment":{
+                                            "id_user_comment":_id.toString()
+                                        }
+                                    }
+                                })
+                            }
+                       }
+                    }
+                     if(data[i].savePost){
+                        for(var p = 0; p< data[i].savePost.length;p++){
+                            if(data[i].savePost[p].id_ofUser_post.toString() == _id.toString()){
+                                User.collection.updateMany({
+                                    $and:[
+                                        {
+                                            "_id":ObjectId(data[i]._id)  
+                                        },{
+                                            "savePost.id_ofUser_post":data[i].savePost[p].id_ofUser_post
+                                        }
+                                    ]
+                                },{
+                                    $pull:{
+                                        "savePost":{
+                                            "id_ofUser_post": _id.toString()
+                                        }
+                                    }
+                                })
+                            }
+                           }
+                    }
+                }
+            })
+
+            return res.json({
+                "status":"success"
+            });
+        }
+                
+        
+    })
+}
+
+
 module.exports = {
 
     index,
@@ -1442,7 +2328,9 @@ module.exports = {
     change_password_post,
 
     get_UpdateInforUser,
-    post_UpdateInfor
+    post_UpdateInfor,
+    post_changePasswordUser,
+    post_deleteUser
 }
 
 
