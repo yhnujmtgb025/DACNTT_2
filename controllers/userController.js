@@ -35,6 +35,7 @@ const index = (req, res) => {
         return res.redirect('/login')
     }
     var user = req.session.user
+
     User.collection.find({
     })
     .limit(5)
@@ -498,13 +499,14 @@ const profile_get = (req, res) => {
         var post =[]
         var following='' 
         var follower='' 
+        var idCur = ''
         for(var i = 0;i<user.length;i++){
             role=user[i].role
             image=user[i].profileImage
             fullname=user[i].fullname
             bio = user[i].bio
             name=user[i].name
-            
+            idCur = user[i]._id
             if(user[i].posts && user[i].posts != null && user[i].posts != undefined){
                 for(var j =0;j<user[i].posts.length;j++){
                     post = user[i].posts
@@ -520,6 +522,7 @@ const profile_get = (req, res) => {
         }
         res.render('profile/myProfile',{
             role:role,
+            idCur:idCur ,
             image:image,
             fullname:fullname,
             bio:bio,
@@ -2293,6 +2296,36 @@ const post_deleteUser = (req,res)=>{
     })
 }
 
+// search user
+const post_searchUser =(req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/login')
+    }
+    var filter = req.params.filter 
+  
+    var regex = new RegExp('('+filter+')',"i");
+    User.collection.find({
+        "fullname":{
+            $regex:regex 
+        }
+    })
+    .limit(5)
+    .toArray(function(err,data){
+        if(data){
+            res.json({
+                "status":"success",
+                data:data,
+                id:req.session.user._id
+            })
+        }else{
+            res.json({
+                data:'hello'
+            })
+        }
+    })
+
+}
+
 
 module.exports = {
 
@@ -2330,7 +2363,8 @@ module.exports = {
     get_UpdateInforUser,
     post_UpdateInfor,
     post_changePasswordUser,
-    post_deleteUser
+    post_deleteUser,
+    post_searchUser
 }
 
 

@@ -136,6 +136,11 @@
     margin-left: -3rem !important;
 }
 
+.inforFile-bio .bio {
+    margin-top: -0.85rem;
+}
+
+
 .inforFile-real-name, .inforFile-stat-count, .inforFile-edit-btn {
     font-weight: 600;
 }
@@ -285,7 +290,7 @@
   
   .viewport-gallery {
     max-width: 290px;
-    width: calc(100% - 100px);
+    /* width: calc(100% - 100px); */
     margin-left: 10px;
   }
 
@@ -442,7 +447,7 @@
 }
 
 @media screen and (max-width:375px) {
-    .inforFile {
+    /* .inforFile {
         position: relative;
         top: 0;
         left: 1.5rem !important; 
@@ -454,11 +459,16 @@
     }
     .inforFile-stats ul {
         margin: 0.5rem -2.5rem !important;
-    }
+    } */
 }
 
 
-@media screen and (max-width: 574px) {
+/* @media screen and (max-width: 574px) {
+    .container.Pro{
+        max-width: 0rem;
+        margin: 1rem auto;
+        padding: 0 0.25rem;
+    }
     .inforFile {
         position: relative;
         top: 0;
@@ -477,7 +487,7 @@
         top: 0;
         left: 2rem;
     }
-}
+} */
 
 @media screen and (max-width: 640px) {
     #zop {
@@ -506,8 +516,13 @@
         margin-left: 4rem !important;
     }
     .inforFile-user-name {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
+
+    .inforFile-real-name{
+        font-size: 1.2rem;
+    }
+
     .inforFile-edit-btn {
         order: 1;
         padding: 0;
@@ -521,8 +536,14 @@
         font-size: 1.4rem;
         margin-top: 1.5rem;
         margin-left: 0.75rem !important;
-        border-bottom: 0.1rem solid #dadada;
+        border-bottom: 0.05rem solid #dadada;
     }
+
+    .inforFile-bio .bio {
+        font-size: 1rem;
+        /* margin-top: -0.85rem; */
+    }
+ 
     .inforFile-edit-btn, .inforFile-bio, .inforFile-stats {
         flex-basis: 100%;
     }
@@ -536,7 +557,7 @@
         margin: 0.5rem -1.5rem;
     }
     .inforFile-stats li {
-        font-size: 1.4rem;
+        font-size: 1.1rem;
         flex: 1;
     }
     .inforFile-stats li {
@@ -550,7 +571,7 @@
         margin-top: -1rem;
         padding-bottom: 1rem;
         margin-left: 2rem;
-        border-top: 0.1rem solid #dadada;
+        border-top: 0.05rem solid #dadada;
     }
     .feature a svg {
         margin-top: 1rem;
@@ -562,6 +583,10 @@
     }
     .feature a+a {
         padding-left: 6em;
+    }
+
+    #gallery-profile-mypost .gallery-content img{
+        
     }
 }
 

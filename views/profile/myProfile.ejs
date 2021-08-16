@@ -34,25 +34,25 @@
                                     onclick="btnFollow('this','<%=per._id%>','wordImg')">
                                     Unfollow
                                 </a>
-                                <%}else{%>
-                                    <a href="" style="background-color:#0095F6;color:#fff"
-                                        class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
-                                        onclick="btnFollow('this','<%=per._id%>','wordImg')">
-                                        Follow
-                                    </a>
-                                    <%}%>
-                                        <%})%>
-                                            <%}else{%>
-                                                <a href="" style="background-color:#0095F6;color:#fff"
-                                                    class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
-                                                    onclick="btnFollow('this','<%=per._id%>','wordImg')">
-                                                    Follow
-                                                </a>
-                                                <%}%>
-                                                    <%}else{%>
-                                                        <a href="/myProfile/editProfile" class="btn inforFile-edit-btn"
-                                                            id="btEdit">Edit Profile</a>
-                                                        <%}%>
+                            <%}else{%>
+                                <a href="" style="background-color:#0095F6;color:#fff"
+                                    class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
+                                    onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                                    Follow
+                                </a>
+                                <%}%>
+                            <%})%>
+                    <%}else{%>
+                        <a href="" style="background-color:#0095F6;color:#fff"
+                            class="btn inforFile-edit-btn" id="btFollow-<%=per._id%>"
+                            onclick="btnFollow('this','<%=per._id%>','wordImg')">
+                            Follow
+                        </a>
+                    <%}%>
+                <%}else{%>
+                    <a href="/myProfile/editProfile" class="btn inforFile-edit-btn"
+                        id="btEdit">Edit Profile</a>
+                <%}%>
 
             </div>
 
@@ -102,11 +102,13 @@
             <!-- infor personal -->
             <div class="inforFile-bio">
                 <p>
-                    <span class="inforFile-real-name">
+                    <span class="inforFile-real-name" >
                         <%=name%>
                     </span>
-                    <br>
-                    <%=bio%>
+                    <p class="bio">
+                        <%=bio%>
+                    </p>
+                   
                 </p>
 
             </div>
@@ -180,16 +182,25 @@
 
     </div> -->
 
-    <div class="container gallery" id="gallery-profile-mypost">
-        <div class="gallery-content"></div>
-        <div id="page-post"></div>
-    </div>
-    <div class="container gallery" id="gallery-profile-savepost" style="display: none;">
-            <div class="gallery-content"></div>
-            <div id="page-post-save"></div>
-    </div>
-
-    </div>
+    <%if(userCurrent!=""){%>
+        <div class="container gallery" id="gallery-profile-mypost">
+            <div class="gallery-content" id="<%=per._id%>"></div>
+            <div id="page-post"></div>
+        </div>
+        <div class="container gallery gallery-save" id="gallery-profile-savepost" style="display: none;">
+                <div class="gallery-content" id="<%=per._id%>"></div>
+                <div id="page-post-save" style="display: none;"></div>
+        </div>
+    <%}else{%>
+        <div class="container gallery" id="gallery-profile-mypost">
+            <div class="gallery-content" id="<%=idCur%>"></div>
+            <div id="page-post"></div>
+        </div>
+        <div class="container gallery" id="gallery-profile-savepost" style="display: none;">
+                <div class="gallery-content" id="<%=idCur%>"></div>
+                <div id="page-post-save"></div>
+        </div>
+    <%}%>
 
 
 
@@ -204,7 +215,6 @@
                 }else{
                     return response.total
                 }
-                
             },
             locator: 'data',
             pageSize: 2,
@@ -242,10 +252,13 @@
         })
 
         function loadPage(page) {
+            var id=$("#gallery-profile-mypost .gallery-content").attr("id")
+            console.log("id:"+id)
             $("#gallery-profile-mypost .gallery-content").html('')
             $.ajax({
                 method: "POST",
                 url: '/getPagePost/' + page,
+                data:{id:id},
                 cache: false,
                 success: function (responseText) {
                     var post = responseText.data
@@ -317,20 +330,26 @@
                         }
                         item += '</div>'
                     item += '  </div>'
+                    item+='<div id="page-post">'
+                    item+='</div>'
                     }
                     $("#gallery-profile-mypost .gallery-content").append(item)
                    
                 }
             })
+        
         }
 
         loadPage(1)
-      
-        function loadPageSave(page) {
+        
+        if(!$("#gallery-profile-savepost").hasClass("gallery-save")){
+            function loadPageSave(page) {
+            var id =$("#gallery-profile-savepost .gallery-content").attr("id")
             $("#gallery-profile-savepost .gallery-content").html('')
             $.ajax({
                 method: "POST",
                 url: '/getPagePost/save/' + page,
+                data:{id:id},
                 cache: false,
                 success: function (responseText) {
                     var post = responseText.data
@@ -402,6 +421,8 @@
                         }
                         item += '</div>'
                     item += '  </div>'
+                    item += ' <div id="page-post-save">'
+                    item += ' </div>'
                     }
                     $("#gallery-profile-savepost .gallery-content").append(item)
                    
@@ -411,6 +432,8 @@
 
         loadPageSave(1)
 
+        }
+       
         function display_MyPost() {
             $("#gallery-profile-savepost").css("display", "none")
             $("#gallery-profile-mypost").css("display", "block")

@@ -254,7 +254,7 @@
   cursor: pointer;
 }
 /* responsive */
-@media screen and (max-width: 280px)  {
+/* @media screen and (max-width: 280px)  {
   .coverList{
     position: relative;
     top: 0;
@@ -299,4 +299,4 @@
     position: absolute;
     left: -1.25rem;
   }
-}
+} */

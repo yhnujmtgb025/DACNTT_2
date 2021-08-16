@@ -45,12 +45,17 @@
             <img src="/img/instagram-logo.png" class="img-brand" width="350" height="45" alt="">
         </a>
 
-        <form class="form-inline" id="searchNav">
-            <input class="form-control mr-sm-2 mainLoginInput" type="search" placeholder="&#61442; Search"
-                aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
-                style="visibility: hidden; ">Search</button>
-        </form>
+        <div class="cover-input-search">
+            <form class="form-inline" id="searchNav">
+                <input onkeyup="searchUser()" onclick="turnOff()" class="form-control mr-sm-2 mainLoginInput" id="mainLoginInput" type="search" placeholder="&#61442; Search" aria-label="Search">
+            </form>
+            <div class="model-user" id="model-user">
+                <div class="content-user">
+                 
+                </div>
+            </div>
+        </div>
+      
         <div class="topnav-right">
             <div class="row">
                 <a href="/" id="a1"><svg aria-label="Home" class="_8-yf5 " fill="#262626" height="25"
@@ -181,5 +186,101 @@
     </nav>
 
     <script>
-     
+
+    function searchUser() {
+        var input, filter,modal;
+        input = document.getElementById("mainLoginInput");
+        modal =document.getElementById("model-user")
+        filter = input.value.toLowerCase();
+        if(filter){
+            $(".content-user").html('')
+            $.ajax({
+            method:"POST",
+            url:"/searchUser/"+filter,
+            cache:false,
+            success:function (responseText) {
+                if(responseText.status == "success"){
+                    var data = responseText.data
+                    var id = responseText.id
+                    var html =''
+                    html +='<div class="search-sta">'
+                        html +='<p>Recent'
+                        html +='</p>'
+                        html +='<p>Clear All'
+                        html +='</p>'
+                    html +='</div>'
+                    html +='<ul>'
+                        for(var i =0 ;i < data.length;i++){
+                            if(data[i]._id != id){
+                                html +='<li class="infor-'+data[i]._id+'">'
+                                html +='<img src="'+data[i].profileImage+'" width="40" height="40" alt="" >'
+                                html +='<div class="infor-search">'
+                                    html +='<a href="/userProfile/'+data[i]._id+'"">'
+                                        html+= data[i].fullname
+                                    html +='</a>'
+                                    if(data[i].name){
+                                        html +='<p>'
+                                            html += data[i].name
+                                        html +='</p>'
+                                    }
+                                    else{
+                                        html +='<p>'
+                                            html += data[i].fullname
+                                        html +='</p>'
+                                    }
+                                html +='</div>'
+                                html +='<ion-icon class="icon-close" onclick="removeUser('+"'"+data[i]._id+"'"+')" name="close-outline">'
+                                html +='</ion-icon>'
+                            html +='</li>'
+                            }else{
+                                html +='<li class="infor-'+data[i]._id+'">'
+                                html +='<img src="'+data[i].profileImage+'" width="40" height="40" alt="" >'
+                                html +='<div class="infor-search">'
+                                    html +='<a href="/myProfile">'
+                                        html+= data[i].fullname
+                                    html +='</a>'
+                                    if(data[i].name){
+                                        html +='<p>'
+                                            html += data[i].name
+                                        html +='</p>'
+                                    }
+                                    else{
+                                        html +='<p>'
+                                            html += data[i].fullname
+                                        html +='</p>'
+                                    }
+                                  
+                                html +='</div>'
+                                html +='<ion-icon class="icon-close" onclick="removeUser('+"'"+data[i]._id+"'"+')" name="close-outline">'
+                                html +='</ion-icon>'
+                            html +='</li>'
+                            }
+                         
+                        }
+                    html +='</ul>'
+                    modal.style.display = 'block'
+                    $(".content-user").append(html)
+                    $('.card').css('z-index','-1')
+                    $("body").addClass("cover-body")
+                }
+            }
+        })
+        }else{
+            modal.style.display = 'none'
+            $('body').removeClass('cover-body')
+            $('.card').css('z-index','0')
+        }
+       
+        
+    }
+    
+    function turnOff(){
+        modal =document.getElementById("model-user")
+        modal.style.display = 'none'
+    }
+
+    function removeUser(id){
+        $(".infor-"+id).remove();
+    }
+            
    </script>

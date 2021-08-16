@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
-    name:{type: String,require: true},
+    name:{type: String},
     fullname: {type: String,require: true},
     password: {type: String},
     email: {type: String,
@@ -25,5 +25,5 @@ const UserSchema = new Schema({
 },{
     timestamps:true
 })
-
+// UserSchema.index({name: 'text', 'fullname': 'text'});
 module.exports = mongoose.model('User', UserSchema)

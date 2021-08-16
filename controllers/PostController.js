@@ -407,7 +407,6 @@ const post_UpdateNewFeed = function (req, res) {
           Post.collection.findOne({
             "_id":ObjectId(_id)
           },function(err,post){
-              console.log(post._id)
               Post.collection.updateOne({
                 "_id":ObjectId(post._id)
               },{
@@ -2032,13 +2031,13 @@ const post_savedPost = (req,res)=>{
                     "_id":ObjectId(id_post)
                   },
                   {
-                    "saved.id_post":id_post
+                    "saved.user_saved":ObjectId(user._id)
                   }
                 ]
               },{
                 $pull:{
                   "saved":{
-                    "id_post":id_post
+                    "user_saved":ObjectId(user._id)
                   }
                 }
               })
@@ -2087,20 +2086,38 @@ const post_pagePost = (req,res)=>{
     return res.redirect('/login')
   }
   var page = req.params.page
+  var id=req.body.id
   var user = req.session.user
-  if(page){
-    page=parseInt(page)
-    var skip = (page-1) * PAGE_SIZE
-      Post.collection.find({"user._id":ObjectId(req.session.user._id)})
-      .skip(skip)
-      .limit(PAGE_SIZE)
-      .toArray(function(err,posst){
-        res.json({
-          data:posst
-        })
-      
-    })
+  if(id != user._id){
+    if(page){
+      page=parseInt(page)
+      var skip = (page-1) * PAGE_SIZE
+        Post.collection.find({"user._id":ObjectId(id)})
+        .skip(skip)
+        .limit(PAGE_SIZE)
+        .toArray(function(err,posst){
+          res.json({
+            data:posst
+          })
+        
+      })
+    }
+  }else{
+    if(page){
+      page=parseInt(page)
+      var skip = (page-1) * PAGE_SIZE
+        Post.collection.find({"user._id":ObjectId(user._id)})
+        .skip(skip)
+        .limit(PAGE_SIZE)
+        .toArray(function(err,posst){
+          res.json({
+            data:posst
+          })
+        
+      })
+    }
   }
+
   
 }
 
@@ -2162,46 +2179,80 @@ const post_pagePostSaved = (req,res)=>{
     return res.redirect('/login')
   }
   var page = req.params.page
+  var id=req.body.id
   var user = req.session.user
-  if(page){
-    page=parseInt(page)
-    var skip = (page-1) * PAGE_SIZE
-    var saved = []
-   User.collection.findOne({
-      "_id":ObjectId(user._id)
-   },function(err,userr){
-      Post.collection.find({})
-      .toArray(function(err,data){
-        if(user.savePost){
-          for(var i=0; i < userr.savePost.length; i++){
-            for(var k=0;k< data.length;k++){
-                if(data[k]._id.toString()==userr.savePost[i]._id){
-                  saved.push(data[k]._id)
-                }
+  if(id && id != user._id){
+    if(page){
+      page=parseInt(page)
+      var skip = (page-1) * PAGE_SIZE
+      var saved = []
+     User.collection.findOne({
+        "_id":ObjectId(id)
+     },function(err,userr){
+        Post.collection.find({})
+        .toArray(function(err,data){
+          if(user.savePost){
+            for(var i=0; i < userr.savePost.length; i++){
+              for(var k=0;k< data.length;k++){
+                  if(data[k]._id.toString()==userr.savePost[i]._id){
+                    saved.push(data[k]._id)
+                  }
+              }
             }
           }
-        }
-        Post.collection.find({
-          "_id":{
-            $in:saved
-          } 
-        })
-        .skip(skip)
-        .limit(PAGE_SIZE)
-        .toArray(function(err,posst){
-          res.json({
-            data:posst
+          Post.collection.find({
+            "_id":{
+              $in:saved
+            } 
           })
-        
+          .skip(skip)
+          .limit(PAGE_SIZE)
+          .toArray(function(err,posst){
+            res.json({
+              data:posst
+            })
+          
+          })
         })
-      })
-   })
-   
-
-       
-  
-   
+     })
+    }
+  }else{
+    if(page){
+      page=parseInt(page)
+      var skip = (page-1) * PAGE_SIZE
+      var saved = []
+     User.collection.findOne({
+        "_id":ObjectId(user._id)
+     },function(err,userr){
+        Post.collection.find({})
+        .toArray(function(err,data){
+          if(user.savePost){
+            for(var i=0; i < userr.savePost.length; i++){
+              for(var k=0;k< data.length;k++){
+                  if(data[k]._id.toString()==userr.savePost[i]._id){
+                    saved.push(data[k]._id)
+                  }
+              }
+            }
+          }
+          Post.collection.find({
+            "_id":{
+              $in:saved
+            } 
+          })
+          .skip(skip)
+          .limit(PAGE_SIZE)
+          .toArray(function(err,posst){
+            res.json({
+              data:posst
+            })
+          
+          })
+        })
+     })
+    }
   }
+
 }
 module.exports = {
   post_Newfeed, 

@@ -95,6 +95,9 @@ function route(app) {
 
     app.get('/getPagePost/save/',PostController.get_pagePostSaved);  // get saved post 
     app.post('/getPagePost/save/:page',PostController.post_pagePostSaved);  
+
+    // search user
+    app.post('/searchUser/:filter',UserController.post_searchUser)
 }
 
 

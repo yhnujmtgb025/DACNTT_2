@@ -579,10 +579,7 @@
             var output = document.getElementById('gal');
         
             filesArr=  Array.prototype.slice.call(input.files); 
-           
-            if($(".check-image").hasClass("image-tag")){
-                html=''
-            }
+            html=''
             for (var i = 0; i < filesArr.length; ++i) {
                 storedFiles.push(filesArr[i])
             }
@@ -621,9 +618,7 @@
             var input = document.getElementById('fileVideo');
             var output = document.getElementById('vid');
             filesArr_Video=  Array.prototype.slice.call(input.files); 
-            if($(".check-video").hasClass("video-tag")){
-                html_v=''
-            }
+            html_v=''
             for (var i = 0; i < filesArr_Video.length; ++i) {
                 storedFiles_Video.push(filesArr_Video[i])
             }
