@@ -887,15 +887,18 @@
                                                       // check like message
                                                       var islike_msg_receiver = false
                                                       var id_created_msg_receiver  = ''
-                                                      if(inbox.likes.length > 0){
-                                                        for(var i =0 ; i < inbox.likes.length;i++){
-                                                          if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                              islike_msg_receiver = true
-                                                              id_created_msg_receiver = inbox.likes[i].createdAt
-                                                              break;
+                                                      if(inbox.likes){
+                                                        if(inbox.likes.length > 0){
+                                                          for(var i =0 ; i < inbox.likes.length;i++){
+                                                            if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                                islike_msg_receiver = true
+                                                                id_created_msg_receiver = inbox.likes[i].createdAt
+                                                                break;
+                                                            }
                                                           }
                                                         }
                                                       }
+                                                     
                                                       if(islike_msg_receiver){
                                                         html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_receiver+"'"+')">'
                                                             html += 'Unlike&nbsp;'
@@ -916,7 +919,8 @@
                                                   html += '</div>'
                                                   html += '<div class="text-msg">'
                                                       html += inbox.message
-                                                      if(inbox.likes.length > 0){
+                                                      if(inbox.likes){
+                                                        if(inbox.likes.length > 0){
                                                           if(inbox.likes.length > 1){
                                                             html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
                                                               html += '<span>'
@@ -942,6 +946,8 @@
                                                         
                                                       }
                                                       
+                                                      }
+                                                     
                                                   html += '</div>'
                                               html += '</div>'
                                             }   
@@ -1128,7 +1134,8 @@
                                         html += '<div class="content-msg">'
                                             html += '<div class="text-msg">'
                                                 html += inbox.message
-                                                if(inbox.likes.length > 0){
+                                                if(inbox.likes){
+                                                  if(inbox.likes.length > 0){
                                                     if(inbox.likes.length > 1){
                                                       html += ' <div style="visibility:visible" class="heart-msg heart-msg-'+inbox._id+'">'
                                                         html += '<span>'
@@ -1151,8 +1158,9 @@
                                                       }
                                                       
                                                     }
-                                                    
+                                                  }
                                                 }
+                                             
                                             html += '</div>'
                                             html += '<div class="edit-msg">'
                                                 html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
@@ -1175,15 +1183,18 @@
                                                     // check like message
                                                       var islike_msg_sender = false
                                                       var id_created_msg_sender = ''
-                                                      if(inbox.likes.length > 0){
-                                                        for(var i =0 ; i < inbox.likes.length;i++){
-                                                          if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                            islike_msg_sender = true
-                                                            id_created_msg_sender = inbox.likes[i].createdAt
-                                                              break;
+                                                      if(inbox.likes){
+                                                        if(inbox.likes.length > 0){
+                                                          for(var i =0 ; i < inbox.likes.length;i++){
+                                                            if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                              islike_msg_sender = true
+                                                              id_created_msg_sender = inbox.likes[i].createdAt
+                                                                break;
+                                                            }
                                                           }
                                                         }
                                                       }
+                                                     
                                                       if(islike_msg_sender){
                                                         html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_sender+"'"+')">'
                                                             html += 'Unlike'

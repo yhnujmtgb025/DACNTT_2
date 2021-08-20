@@ -1087,7 +1087,6 @@ const post_sendMessage = (req,res)=>{
               })
           }
           else{
-            console.log("else")
             User.collection.updateOne({
               $and: [{
                 "_id":ObjectId(user_current._id)
