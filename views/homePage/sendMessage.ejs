@@ -354,9 +354,7 @@
        
               </div>
             
-          
             </div>
-        
         </main>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -866,57 +864,57 @@
                                             if(inbox.message){
                                                 html += '<div class="content-msg">'
                                                   html += '<div class="edit-msg">'
-                                                      html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                          html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                          html += '</circle>'
-                                                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                          html += '</circle>'
-                                                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
-                                                          html += '</circle>'
-                                                      html += '</svg>'
-                                                      html += '<svg class="dot-msg-black msg-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
-                                                          html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
-                                                          html += '</circle>'
-                                                          html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
-                                                          html += '</circle>'
-                                                          html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
-                                                          html += '</circle>'
-                                                      html += '</svg>'   
-                                                      html += '<div class="modal-edit-msg modal-msg-'+inbox._id+'">'
-                                                      
-                                                      // check like message
-                                                      var islike_msg_receiver = false
-                                                      var id_created_msg_receiver  = ''
-                                                      if(inbox.likes){
-                                                        if(inbox.likes.length > 0){
-                                                          for(var i =0 ; i < inbox.likes.length;i++){
-                                                            if(inbox.likes[i].from.toString() == user._id.toString()){
-                                                                islike_msg_receiver = true
-                                                                id_created_msg_receiver = inbox.likes[i].createdAt
-                                                                break;
+                                                        html += '<svg class="dot-msg-brown msg-brown-'+inbox._id+'" aria-label="Unsend"  fill="#8e8e8e" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                            html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                            html += '</circle>'
+                                                            html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                            html += '</circle>'
+                                                            html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">'
+                                                            html += '</circle>'
+                                                        html += '</svg>'
+                                                        html += '<svg class="dot-msg-black msg-black-'+inbox._id+'" aria-label="Unsend"  fill="#262626" height="16" role="img" viewBox="0 0 48 48" width="16">'
+                                                            html += '<circle clip-rule="evenodd" cx="8" cy="24" fill-rule="evenodd" r="4.5">'
+                                                            html += '</circle>'
+                                                            html += '<circle clip-rule="evenodd" cx="24" cy="24" fill-rule="evenodd" r="4.5">'
+                                                            html += '</circle>'
+                                                            html += '<circle clip-rule="evenodd" cx="40" cy="24" fill-rule="evenodd" r="4.5">' 
+                                                            html += '</circle>'
+                                                        html += '</svg>'    
+                                                        html += '<div class="modal-edit-msg modal-msg-'+inbox._id+'">'
+                                                        // check like message
+                                                        var islike_msg_receiver = false
+                                                        var id_created_msg_receiver  = ''
+                                                        if(inbox.likes){
+                                                          if(inbox.likes.length > 0){
+                                                            for(var i =0 ; i < inbox.likes.length;i++){
+                                                              if(inbox.likes[i].from.toString() == user._id.toString()){
+                                                                  islike_msg_receiver = true
+                                                                  id_created_msg_receiver = inbox.likes[i].createdAt
+                                                                  break;
+                                                              }
                                                             }
                                                           }
                                                         }
-                                                      }
-                                                     
-                                                      if(islike_msg_receiver){
-                                                        html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_receiver+"'"+')">'
-                                                            html += 'Unlike&nbsp;'
-                                                        html += '</p>'
-                                                        html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                        html += '</p>'
-                                                        html += '<img class="msg-unlike" src="img/tamgiac.png" alt="">'
-                                                      }
-                                                      else{
-                                                        html += '<p class="unlike-msg-0" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
-                                                          html += 'Like'
-                                                        html += '</p>'
-                                                        html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
-                                                        html += '</p>'
-                                                        html += '<img class="msg-like" src="img/tamgiac.png" alt="">'
-                                                      }
-                                                      html += '</div>'                             
+                                                      
+                                                        if(islike_msg_receiver){
+                                                          html += '<p class="unlike-msg" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+","+"'"+id_created_msg_receiver+"'"+')">'
+                                                              html += 'Unlike&nbsp;'
+                                                          html += '</p>'
+                                                          html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                          html += '</p>'
+                                                          html += '<img class="msg-unlike" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                        else{
+                                                          html += '<p class="unlike-msg-0" onclick="like_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">'
+                                                            html += 'Like'
+                                                          html += '</p>'
+                                                          html += '<p onclick="unsend_Msg('+"'"+"message"+"'"+","+"'"+inbox._id+"'"+","+"'"+id+"'"+","+"'"+inbox.createdAt+"'"+')">Unsend'
+                                                          html += '</p>'
+                                                          html += '<img class="msg-like" src="img/tamgiac.png" alt="">'
+                                                        }
+                                                  html += '</div>'        
                                                   html += '</div>'
+                                                 
                                                   html += '<div class="text-msg">'
                                                       html += inbox.message
                                                       if(inbox.likes){

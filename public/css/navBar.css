@@ -169,6 +169,10 @@ path {
     .navbar-brand.ml-3{
         width: 150px;
     }
+
+    .model-user{
+        left: 25%;
+    }
 }
 @media screen and (max-width: 768px)  {
 
@@ -195,12 +199,14 @@ path {
     #searchNav input{
         width: 75%;
     }
+    .model-user{
+        left: 20%;
+    }
 }
 @media screen and (max-width: 574px)  {
-    /* #navColor{
-        width: 120%;
-        max-width: 120%;
-    } */
+    #navColor{
+     border: 1px solid green;
+    }
 
     .topnav-right {
         margin-right: 0.5rem;
@@ -216,33 +222,27 @@ path {
     .topnav-right a + a {
         padding-left: 0.65em;
     }
-    #searchNav input{
-        margin-top: 3.5rem;
-        width: 75%;
-    }
     #searchNav{
-        left: 48%;
+        margin-left: -10px;
+    }
+    .model-user{
+        left: 10%;
     }
 }
 @media screen and (max-width: 500px)  {
-    /* #navColor{
-        width: 120%;
-        min-width: 120% !important;
-    } */
     #searchNav{
         visibility: hidden;
     }
-}
-
-@media screen and (max-width: 540px)  {
-    /* #navColor{
-        width: 120%;
-        max-width: 120%;
-    } */
+    .topnav-right {
+        position:absolute;
+        top: 20%;
+        right: 0;
+    }
 }
 
 @media screen and (max-width: 320px)  {
     html, body {
         min-width: 350px;
+        height:100%;
     }
 }
