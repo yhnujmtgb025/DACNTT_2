@@ -180,13 +180,11 @@ main {
 
 .sender .content-msg{
   display: flex;
+  position: relative;
   padding-right: 1rem;
 }
 
 .sender .content-msg .text-msg{
-  position: relative;
-  top: 0;
-  right: 0;
   padding: 10px 8px;
   text-align: center;
   font-size: 14px;
@@ -200,11 +198,10 @@ main {
 }
 
 .sender .edit-msg{
-  position: relative;
-  top: 0;
-  right: -5px;
-  display: flex;
-  margin-top: 0.75rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 
 .sender .dot-msg-brown{
@@ -537,7 +534,6 @@ cursor: pointer;
   margin-top: 1rem;
 }
 
-
 .receiver .box-msg {
   margin-left: auto;
 }
@@ -545,12 +541,10 @@ cursor: pointer;
 .receiver .content-msg{
   display: flex;
   padding-left: 1rem;
+  position: relative;
 }
 
 .receiver .content-msg .text-msg{
-  position: relative;
-  top: 0;
-  right: 0;
   padding: 10px 8px;
   text-align: center;
   font-size: 14px;
@@ -564,19 +558,18 @@ cursor: pointer;
 
 .receiver .edit-msg{
   margin-left: auto;
-  position: relative;
-  top: 0;
-  right: 5px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-10%, -50%) ;
 }
 
 .receiver .dot-msg-brown{
-  display: none;  
-  margin-top: 0.5rem;
+  display: none; 
 }
 
 .receiver .dot-msg-black{
    display: none;
-   margin-top: 0.5rem;
    cursor: pointer;
 }
 
@@ -864,8 +857,8 @@ cursor: pointer;
 /* modal eidt message */
 .receiver .modal-edit-msg{
     position: absolute;
-    top:-35px;
-    right: -10px;
+    right: -0.5rem;
+    top: -2.25rem;
     display: flex;
     visibility: hidden;
     padding: 5px 7px;
