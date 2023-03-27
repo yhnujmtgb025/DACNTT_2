@@ -1,7 +1,7 @@
 const checkAdmin = require('../auth/CheckAdmin')
-const { ensureAuthenticated,forwardAuthenticated} = require('../auth/checkUser')
+const { ensureAuthenticated,forwardAuthenticated} = require('../auth/CheckUser')
 var multer  = require('multer')
-const UserController = require('../controllers/UserController')
+const UserController = require('../controllers/userController')
 const PostController = require('../controllers/PostController')
 
 const loginValidator = require('../validators/loginValidator')
